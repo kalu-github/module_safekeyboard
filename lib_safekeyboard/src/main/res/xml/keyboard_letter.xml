@@ -151,7 +151,7 @@
             android:keyLabel="del"
             app:codes="-5"
             app:horizontalGap="2%p"
-            app:isRepeatable="true"
+            app:isRepeatable="false"
             app:keyEdgeFlags="right"
             app:keyWidth="12.5%p" />
     </Row>

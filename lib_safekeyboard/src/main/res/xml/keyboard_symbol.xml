@@ -132,9 +132,9 @@
             app:keyWidth="9%p" />
         <Key
             app:codes="-5"
-            app:horizontalGap="3.5%p"
-            app:isRepeatable="true"
-            app:keyWidth="13%p" />
+            app:horizontalGap="4%p"
+            app:isRepeatable="false"
+            app:keyWidth="12.5%p" />
     </Row>
 
     <Row app:rowEdgeFlags="bottom">

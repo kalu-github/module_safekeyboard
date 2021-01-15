@@ -1,6 +1,8 @@
 package lib.kalu.safekeyboard;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -86,17 +88,20 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
             return;
 
         List<Keyboard.Key> keys = getKeyboard().getKeys();
+        Log.d("safe", "drawKeyboard => keys = " + keys);
         if (null == keys || keys.size() == 0)
             return;
+        Log.d("safe", "drawKeyboard => size = " + keys.size());
 
         for (Keyboard.Key key : keys) {
 
-            Log.d("safe", "drawKeyboard => codes = " + key.codes);
             if (null == key.codes || key.codes.length == 0)
                 continue;
 
             // 键盘：删除
             if (key.codes[0] == -5 || key.codes[0] == -35) {
+
+                Log.d("safe", "drawKeyboard => code = " + key.codes[0]);
 
                 // 背景
                 drawBackground(canvas, key, R.drawable.keyboard_background_normal, R.drawable.keyboard_background_press);
@@ -107,6 +112,8 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
             // 键盘：大小写切换
             else if (key.codes[0] == -1) {
 
+                Log.d("safe", "drawKeyboard => code = " + key.codes[0]);
+
                 // 背景
                 drawBackground(canvas, key, R.drawable.keyboard_background_normal, R.drawable.keyboard_background_press);
 
@@ -115,6 +122,8 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
             }
             // 键盘：切换按键
             else if (key.codes[0] == -2 || key.codes[0] == 3000) {
+
+                Log.d("safe", "drawKeyboard => code = " + key.codes[0]);
 
                 // 背景
                 drawBackground(canvas, key, R.drawable.keyboard_background_normal, R.drawable.keyboard_background_press);
@@ -149,14 +158,16 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
     private void drawIcon(@NonNull Canvas canvas, @NonNull Keyboard.Key key, @RawRes int rawNormal, @RawRes int rawPress) {
 
         InputStream inputStream = getResources().openRawResource(key.pressed ? rawPress : rawNormal);
-        BitmapDrawable drawable = new BitmapDrawable(getResources(), inputStream);
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
-        int intrinsicWidth = drawable.getIntrinsicWidth();
-        int intrinsicHeight = drawable.getIntrinsicHeight();
-        int left = key.x + key.width / 5;
-        int top = key.y + key.height / 5 + getPaddingTop();
-        int right = left + key.width / 5 * 3;
-        int bottom = top + key.height / 5 * 3;
+        float width = bitmap.getWidth();
+        float height = bitmap.getHeight();
+
+        float dstWidth = Math.min(key.width, key.height) * 0.6f;
+        float dstHeight = height * (dstWidth / width);
+
+        float left = key.x + key.width * 0.5f - dstWidth * 0.5f;
+        float top = key.y + key.height * 0.5f - dstHeight * 0.5f;
 
         Log.d("safe", "drawIcon => ********************************************");
 
@@ -165,19 +176,50 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         Log.d("safe", "drawIcon => rawNormal = " + rawNormal);
         Log.d("safe", "drawIcon => rawPress = " + rawPress);
 
-        Log.d("safe", "drawIcon => intrinsicWidth = " + intrinsicWidth);
-        Log.d("safe", "drawIcon => intrinsicHeight = " + intrinsicHeight);
-        Log.d("safe", "drawIcon => width = " + key.width);
-        Log.d("safe", "drawIcon => height = " + key.height);
+        Log.d("safe", "drawIcon => dstWidth = " + dstWidth);
+        Log.d("safe", "drawIcon => dstHeight = " + dstHeight);
 
         Log.d("safe", "drawIcon => left = " + left);
         Log.d("safe", "drawIcon => top = " + top);
-        Log.d("safe", "drawIcon => right = " + right);
-        Log.d("safe", "drawIcon => bottom = " + bottom);
 
-        key.icon = drawable;
-        key.icon.setBounds(left, top, right, bottom);
-        key.icon.draw(canvas);
+        Log.d("safe", "drawIcon => x = " + key.x);
+        Log.d("safe", "drawIcon => y = " + key.y);
+
+        Log.d("safe", "drawIcon => x1 = " + (key.x + key.width));
+        Log.d("safe", "drawIcon => y1 = " + (key.y + key.height));
+
+        // drawBitmap
+        Bitmap icon = Bitmap.createScaledBitmap(bitmap, (int) dstWidth, (int) dstHeight, true);
+        canvas.drawBitmap(icon, left, top, null);
+
+        Log.d("safe", "drawIcon => inputStream = " + inputStream);
+        if (null != inputStream) {
+            try {
+                inputStream.close();
+                inputStream = null;
+                Log.d("safe", "drawIcon => inputStream = " + inputStream);
+            } catch (Exception e) {
+            }
+        }
+
+        Log.d("safe", "drawIcon => bitmap = " + bitmap);
+        if (null != bitmap && !bitmap.isRecycled()) {
+            bitmap.recycle();
+            bitmap = null;
+            Log.d("safe", "drawIcon => bitmap = " + bitmap);
+        }
+
+        Log.d("safe", "drawIcon => icon = " + icon);
+        if (null != icon && !icon.isRecycled()) {
+            icon.recycle();
+            icon = null;
+            Log.d("safe", "drawIcon => icon = " + icon);
+        }
+
+        // drawCircle
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        canvas.drawCircle(left, top, 8, paint);
     }
 
     private void drawShift(@NonNull Canvas canvas, @NonNull Keyboard.Key key, @RawRes int rawNormalDefault, @RawRes int rawNormalSelect, @RawRes int rawPressDefault, @RawRes int rawPressSelect) {
@@ -206,14 +248,17 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
             Log.d("safe", "drawShift => 未选中-未按下");
             inputStream = getResources().openRawResource(rawNormalDefault);
         }
-        BitmapDrawable drawable = new BitmapDrawable(getResources(), inputStream);
 
-        int intrinsicWidth = drawable.getIntrinsicWidth();
-        int intrinsicHeight = drawable.getIntrinsicHeight();
-        int left = key.x + key.width / 5;
-        int top = key.y + key.height / 5 + getPaddingTop();
-        int right = left + key.width / 5 * 3;
-        int bottom = top + key.height / 5 * 3;
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+        float width = bitmap.getWidth();
+        float height = bitmap.getHeight();
+
+        float dstWidth = Math.min(key.width, key.height) * 0.6f;
+        float dstHeight = height * (dstWidth / width);
+
+        float left = key.x + key.width * 0.5f - dstWidth * 0.5f;
+        float top = key.y + key.height * 0.5f - dstHeight * 0.5f;
 
         Log.d("safe", "drawShift => code = " + key.codes[0]);
         Log.d("safe", "drawShift => pressed = " + key.pressed);
@@ -222,19 +267,50 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         Log.d("safe", "drawShift => rawPressDefault = " + rawPressDefault);
         Log.d("safe", "drawShift => rawPressSelect = " + rawPressSelect);
 
-        Log.d("safe", "drawShift => intrinsicWidth = " + intrinsicWidth);
-        Log.d("safe", "drawShift => intrinsicHeight = " + intrinsicHeight);
-        Log.d("safe", "drawShift => width = " + key.width);
-        Log.d("safe", "drawShift => height = " + key.height);
+        Log.d("safe", "drawShift => dstWidth = " + dstWidth);
+        Log.d("safe", "drawShift => dstHeight = " + dstHeight);
 
         Log.d("safe", "drawShift => left = " + left);
         Log.d("safe", "drawShift => top = " + top);
-        Log.d("safe", "drawShift => right = " + right);
-        Log.d("safe", "drawShift => bottom = " + bottom);
 
-        key.icon = drawable;
-        key.icon.setBounds(left, top, right, bottom);
-        key.icon.draw(canvas);
+        Log.d("safe", "drawShift => x = " + key.x);
+        Log.d("safe", "drawShift => y = " + key.y);
+
+        Log.d("safe", "drawShift => x1 = " + (key.x + key.width));
+        Log.d("safe", "drawShift => y1 = " + (key.y + key.height));
+
+        // drawBitmap
+        Bitmap icon = Bitmap.createScaledBitmap(bitmap, (int) dstWidth, (int) dstHeight, true);
+        canvas.drawBitmap(icon, left, top, null);
+
+        Log.d("safe", "drawShift => inputStream = " + inputStream);
+        if (null != inputStream) {
+            try {
+                inputStream.close();
+                inputStream = null;
+                Log.d("safe", "drawShift => inputStream = " + inputStream);
+            } catch (Exception e) {
+            }
+        }
+
+        Log.d("safe", "drawShift => bitmap = " + bitmap);
+        if (null != bitmap && !bitmap.isRecycled()) {
+            bitmap.recycle();
+            bitmap = null;
+            Log.d("safe", "drawShift => bitmap = " + bitmap);
+        }
+
+        Log.d("safe", "drawShift => icon = " + icon);
+        if (null != icon && !icon.isRecycled()) {
+            icon.recycle();
+            icon = null;
+            Log.d("safe", "drawShift => icon = " + icon);
+        }
+
+        // drawCircle
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        canvas.drawCircle(left, top, 8, paint);
     }
 
     /**

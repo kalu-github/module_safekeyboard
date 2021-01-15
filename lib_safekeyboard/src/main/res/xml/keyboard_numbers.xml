@@ -52,6 +52,6 @@
             app:keyLabel="0" />
         <Key
             app:codes="-35"
-            app:isRepeatable="true" />
+            app:isRepeatable="false" />
     </Row>
 </Keyboard>
