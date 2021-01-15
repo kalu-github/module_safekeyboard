@@ -18,8 +18,18 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            zipAlignEnabled false
+            shrinkResources false
+            multiDexEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled true
+            zipAlignEnabled false
+            shrinkResources false
+            multiDexEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
         }
     }
     compileOptions {
@@ -28,11 +38,20 @@ android {
     }
 }
 
-dependencies {
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
 
+    // 安全键盘aar
+    implementation(name: 'lib_safekeyboard-release', ext: 'aar')
+
     // 安全键盘
-    implementation project(':lib_safekeyboard')
+    // implementation project(':lib_safekeyboard')
 }
