@@ -1,5 +1,6 @@
 package lib.kalu.safekeyboard;
 
+import android.app.Service;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,8 +9,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -384,23 +385,6 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
     /************************************************************************************/
 
     @Override
-    public void onPress(int primaryCode) {
-
-//        // 大小写
-//        if (primaryCode == Keyboard.KEYCODE_SHIFT) {
-//            setPreviewEnabled(false);
-//        }
-//        // 删除
-//        else if (primaryCode == Keyboard.KEYCODE_DELETE) {
-//            setPreviewEnabled(false);
-//        } else if (primaryCode == 32 || primaryCode == -2 || primaryCode == 3000) {
-//            setPreviewEnabled(false);
-//        } else {
-//            setPreviewEnabled(true);
-//        }
-    }
-
-    @Override
     public void onKey(int primaryCode, int[] keyCodes) {
         Log.d("safe", "onKey => primaryCode = " + primaryCode);
 
@@ -447,6 +431,30 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
                 input(primaryCode);
                 break;
         }
+    }
+
+    @Override
+    public void onPress(int primaryCode) {
+
+        // 震动
+        try {
+            Vibrator vib = (Vibrator) getContext().getSystemService(Service.VIBRATOR_SERVICE);
+            vib.vibrate(20);
+        } catch (Exception e) {
+        }
+
+//        // 大小写
+//        if (primaryCode == Keyboard.KEYCODE_SHIFT) {
+//            setPreviewEnabled(false);
+//        }
+//        // 删除
+//        else if (primaryCode == Keyboard.KEYCODE_DELETE) {
+//            setPreviewEnabled(false);
+//        } else if (primaryCode == 32 || primaryCode == -2 || primaryCode == 3000) {
+//            setPreviewEnabled(false);
+//        } else {
+//            setPreviewEnabled(true);
+//        }
     }
 
     @Override
