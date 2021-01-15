@@ -164,7 +164,7 @@
         <Key
             app:codes="32"
             app:isRepeatable="false"
-            app:keyIcon="@drawable/keyboard_space_normal"
+            app:keyLabel="@string/keyboard_key_space"
             app:keyWidth="58%p" />
         <Key
             app:codes="3000"

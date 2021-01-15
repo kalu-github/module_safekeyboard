@@ -217,9 +217,9 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         }
 
         // drawCircle
-        Paint paint = new Paint();
-        paint.setColor(Color.RED);
-        canvas.drawCircle(left, top, 8, paint);
+//        Paint paint = new Paint();
+//        paint.setColor(Color.RED);
+//        canvas.drawCircle(left, top, 8, paint);
     }
 
     private void drawShift(@NonNull Canvas canvas, @NonNull Keyboard.Key key, @RawRes int rawNormalDefault, @RawRes int rawNormalSelect, @RawRes int rawPressDefault, @RawRes int rawPressSelect) {
@@ -308,9 +308,9 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         }
 
         // drawCircle
-        Paint paint = new Paint();
-        paint.setColor(Color.RED);
-        canvas.drawCircle(left, top, 8, paint);
+//        Paint paint = new Paint();
+//        paint.setColor(Color.RED);
+//        canvas.drawCircle(left, top, 8, paint);
     }
 
     /**
