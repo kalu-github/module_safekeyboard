@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:horizontalGap="1%p"
+    app:keyHeight="47dp"
+    app:verticalGap="1%p"
+    tools:ignore="ResourceName">
+
+    <Row>
+        <Key
+            app:codes="113"
+            app:keyEdgeFlags="left"
+            app:keyLabel="q"
+            app:keyWidth="8.9%p" />
+        <Key
+            app:codes="119"
+            app:keyLabel="w"
+            app:keyWidth="8.9%p" />
+        <Key
+            app:codes="101"
+            app:keyLabel="e"
+            app:keyWidth="8.9%p" />
+        <Key
+            app:codes="114"
+            app:keyLabel="r"
+            app:keyWidth="8.9%p" />
+        <Key
+            app:codes="116"
+            app:keyLabel="t"
+            app:keyWidth="8.9%p" />
+        <Key
+            app:codes="121"
+            app:keyLabel="y"
+            app:keyWidth="8.9%p" />
+        <Key
+            app:codes="117"
+            app:keyLabel="u"
+            app:keyWidth="8.9%p" />
+        <Key
+            app:codes="105"
+            app:keyLabel="i"
+            app:keyWidth="8.9%p" />
+        <Key
+            app:codes="111"
+            app:keyLabel="o"
+            app:keyWidth="8.9%p" />
+        <Key
+            app:codes="112"
+            app:keyEdgeFlags="right"
+            app:keyLabel="p"
+            app:keyWidth="8.9%p" />
+    </Row>
+
+    <Row>
+        <Key
+            app:codes="97"
+            app:horizontalGap="5.5%p"
+            app:keyEdgeFlags="left"
+            app:keyLabel="a"
+            app:keyWidth="9%p" />
+        <Key
+            app:codes="115"
+            app:keyLabel="s"
+            app:keyWidth="9%p" />
+        <Key
+            app:codes="100"
+            app:keyLabel="d"
+            app:keyWidth="9%p" />
+        <Key
+            app:codes="102"
+            app:keyLabel="f"
+            app:keyWidth="9%p" />
+        <Key
+            app:codes="103"
+            app:keyLabel="g"
+            app:keyWidth="9%p" />
+        <Key
+            app:codes="104"
+            app:keyLabel="h"
+            app:keyWidth="9%p" />
+        <Key
+            app:codes="106"
+            app:keyLabel="j"
+            app:keyWidth="9%p" />
+        <Key
+            app:codes="107"
+            app:keyLabel="k"
+            app:keyWidth="9%p" />
+        <Key
+            app:codes="108"
+            app:keyEdgeFlags="right"
+            app:keyLabel="l"
+            app:keyWidth="9%p" />
+    </Row>
+
+    <Row>
+
+        <!--
+
+         codes	按键对应的输出值，可以为unicode值或则逗号(,)分割的多个值，也可以为一个字 符串。在字符串中通过“\”来转义特殊字符，例如 ‘\n’ 或则 ‘\uxxxx’ 。Codes通常用来定义该键的键码，例如上图中的数字按键1对应的为49；如果提供的是逗号分割的多个值则和普通手机输入键盘一样在多个值之间切换
+        keyLabel	按键显示的文本内容
+        keyIcon	按键显示的图标内容，如果指定了该值则在显示的时候显示为图片不显示文本
+        keyWidth	按键的宽度，可以为精确值或则相对值，对于精确值支持多种单位，例如：像素，英寸 等；相对值为相对于基础取值的百分比，为以% 或则%p 结尾，其中%p表示相对于父容器
+        keyHeight	按键的高度，取值同keyWidth
+        horizontalGap	按键前的间隙（水平方向），取值取值同keyWidth
+        isSticky	按键是否为sticky的。例如Shift大小写切换按键，具有两种状态，按下状态和正常状态，取值为true或则false
+        isModifier	按键是否为功能键( modifier key ) ，例如 Alt 或则 Shift 。取值为true或则false
+        keyOutputText	按键输出的文本内容，取值为字符串
+        isRepeatable	按键是否是可重复的，如果长按该键可以触发重复按键事件则为true，否则为false
+        keyEdgeFlags	按键的对齐指令，取值为left或则right
+
+         -->
+
+        <Key
+            app:codes="-1"
+            app:isModifier="true"
+            app:isSticky="true"
+            app:keyEdgeFlags="left"
+            app:keyWidth="12.5%p" />
+        <Key
+            app:codes="122"
+            app:horizontalGap="2%p"
+            app:keyLabel="z"
+            app:keyWidth="9%p" />
+        <Key
+            app:codes="120"
+            app:keyLabel="x"
+            app:keyWidth="9%p" />
+        <Key
+            app:codes="99"
+            app:keyLabel="c"
+            app:keyWidth="9%p" />
+        <Key
+            app:codes="118"
+            app:keyLabel="v"
+            app:keyWidth="9%p" />
+        <Key
+            app:codes="98"
+            app:keyLabel="b"
+            app:keyWidth="9%p" />
+        <Key
+            app:codes="110"
+            app:keyLabel="n"
+            app:keyWidth="9%p" />
+        <Key
+            app:codes="109"
+            app:keyLabel="m"
+            app:keyWidth="9%p" />
+        <Key
+            android:keyLabel="del"
+            app:codes="-5"
+            app:horizontalGap="2%p"
+            app:isRepeatable="true"
+            app:keyEdgeFlags="right"
+            app:keyWidth="12.5%p" />
+    </Row>
+
+    <Row app:rowEdgeFlags="bottom">
+        <Key
+            app:codes="-2"
+            app:keyLabel="123"
+            app:keyWidth="19%p" />
+        <Key
+            app:codes="32"
+            app:isRepeatable="false"
+            app:keyIcon="@drawable/keyboard_space_normal"
+            app:keyWidth="58%p" />
+        <Key
+            app:codes="3000"
+            app:keyEdgeFlags="right"
+            app:keyLabel="#+="
+            app:keyWidth="19%p" />
+    </Row>
+</Keyboard>

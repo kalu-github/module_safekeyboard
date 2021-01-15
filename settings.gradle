@@ -1,0 +1,3 @@
+include ':lib_safekeyboard'
+include ':app'
+rootProject.name = "safekeyboard"

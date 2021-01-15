@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="#e6e6e6"
+    tools:ignore="ResourceName">
+
+    <lib.kalu.safekeyboard.SafeKeyboardView
+        android:id="@+id/safe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/transparent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:keyBackground="@drawable/keyboard_background_selector"
+        app:keyTextColor="#333333"
+        app:keyTextSize="20sp"
+        app:labelTextSize="15sp"
+        app:shadowColor="#333333"
+        app:shadowRadius="0.8" />
+
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="ok" />
+
+</RelativeLayout>
