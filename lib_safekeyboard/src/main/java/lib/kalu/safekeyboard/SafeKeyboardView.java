@@ -592,10 +592,10 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
 
         String[] split = ((String) getTag(R.id.keyboardText)).split("☸");
         Log.d("safe", "delete => split = " + split);
-        Log.d("safe", "delete => splitLength = " + split.length);
 
         if (null == split || split.length == 0)
             return;
+        Log.d("safe", "delete => splitLength = " + split.length);
 
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < split.length - 1; i++) {
@@ -631,17 +631,16 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         String pass = "";
 
         String[] split = ((String) getTag(R.id.keyboardText)).split("☸");
+        Log.d("safe", "parse => split = " + split);
 
         // 强制清空
         if (clear) {
             setTag(R.id.keyboardText, null);
         }
 
-        Log.d("safe", "parse => split = " + split);
-        Log.d("safe", "parse => splitLength = " + split.length);
-
         if (null == split || split.length == 0)
             return null;
+        Log.d("safe", "parse => splitLength = " + split.length);
 
         StringBuilder builder = new StringBuilder();
 

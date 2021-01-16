@@ -148,7 +148,6 @@
             app:keyLabel="m"
             app:keyWidth="9%p" />
         <Key
-            android:keyLabel="del"
             app:codes="-5"
             app:horizontalGap="2%p"
             app:isRepeatable="false"
