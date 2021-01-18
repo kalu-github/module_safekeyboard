@@ -29,7 +29,8 @@ import java.lang.ref.WeakReference;
 @Keep
 public class SafeKeyboardDialog extends DialogFragment implements DialogInterface.OnKeyListener {
 
-    public static String TAG = "lib.kalu.safekeyboard.safekeyboarddialog";
+    @Keep
+    public static final String TAG = "lib.kalu.safekeyboard.safekeyboarddialog";
 
     @Override
     public void onStart() {
