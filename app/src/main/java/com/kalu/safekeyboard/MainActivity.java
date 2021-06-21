@@ -41,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
             if (SafeKeyboardDialog.KEYBOARD_SURE.equalsIgnoreCase(type)) {
                 Toast.makeText(getApplicationContext(), value, Toast.LENGTH_SHORT).show();
             } else {
-                editText.setText(value);
+                String str = editText.getText().toString() + value;
+                editText.setText(str);
+                editText.setSelection(str.length());
             }
         }
     }
