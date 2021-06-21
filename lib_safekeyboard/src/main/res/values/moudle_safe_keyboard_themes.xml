@@ -35,9 +35,9 @@
         // 内容显示延伸至刘海屏
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="p">shortEdges</item>
         // 动画进入
-        <item name="android:windowEnterAnimation">@anim/anim_keyboard_in</item>
+        <item name="android:windowEnterAnimation">@anim/moudle_safe_anim_keyboard_in</item>
         // 动画退出
-        <item name="android:windowExitAnimation">@anim/anim_keyboard_out</item>
+        <item name="android:windowExitAnimation">@anim/moudle_safe_anim_keyboard_out</item>
     </style>
 
 </resources>

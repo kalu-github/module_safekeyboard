@@ -13,6 +13,14 @@ android {
         versionName "1.0"
     }
 
+    libraryVariants.all { variant ->
+        variant.outputs.all {
+            def type = new String(buildType.name).toLowerCase()
+            def time = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
+            outputFileName = "lib_safekeyboard_" + type + "_" + time + ".aar"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -31,7 +39,7 @@ android {
     }
 
     // 给 Module 内的资源名增加前缀, 避免资源名冲突
-    resourcePrefix 'res_safe_'
+    resourcePrefix 'res_safekeyboard_'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

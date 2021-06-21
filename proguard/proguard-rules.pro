@@ -586,4 +586,6 @@ public static final int *;
 #---------- 三方 ----------------
 
 
-# lib_zxing
+# exoplayer
+-dontwarn com.google.android.exoplayer2.**
+-keep class com.google.android.exoplayer2.** { *; }

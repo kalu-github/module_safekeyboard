@@ -49,9 +49,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
 
-    // 安全键盘aar
-    implementation(name: 'lib_safekeyboard-release', ext: 'aar')
-
     // 安全键盘
-    // implementation project(':lib_safekeyboard')
+    implementation(name: 'lib_safekeyboard_release_20210621', ext: 'aar')
+//    implementation project(':lib_safekeyboard')
 }

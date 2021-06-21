@@ -39,18 +39,22 @@ import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.util.Xml;
+
+import androidx.annotation.XmlRes;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import lib.kalu.safekeyboard.R;
+import lib.kalu.safekeyboard.SafeKeyboardLogUtil;
 
 
 /**
@@ -78,7 +82,8 @@ import lib.kalu.safekeyboard.R;
  */
 public class Keyboard {
 
-    static final String TAG = "Keyboard";
+    // 随机键盘数组
+    private final List<Character> KEY_LABELS_NUMBER_RANDOM = Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
     // Keyboard XML Tags
     private static final String TAG_KEYBOARD = "Keyboard";
@@ -524,7 +529,7 @@ public class Keyboard {
                 try {
                     values[count++] = Integer.parseInt(st.nextToken());
                 } catch (NumberFormatException nfe) {
-                    Log.e(TAG, "Error parsing keycodes " + value);
+                    SafeKeyboardLogUtil.log("Error parsing keycodes " + value);
                 }
             }
             return values;
@@ -599,14 +604,18 @@ public class Keyboard {
         }
     }
 
+    public Keyboard(Context context, int xmlLayoutResId) {
+        this(context, xmlLayoutResId, 0, true);
+    }
+
     /**
      * Creates a keyboard from the given xml key layout file.
      *
      * @param context        the application or service context
      * @param xmlLayoutResId the resource file that contains the keyboard layout and keys.
      */
-    public Keyboard(Context context, int xmlLayoutResId) {
-        this(context, xmlLayoutResId, 0);
+    public Keyboard(Context context, int xmlLayoutResId, boolean randomNumber) {
+        this(context, xmlLayoutResId, 0, randomNumber);
     }
 
     /**
@@ -620,7 +629,7 @@ public class Keyboard {
      * @param height         sets height of keyboard
      */
     public Keyboard(Context context, int xmlLayoutResId, int modeId, int width,
-                    int height) {
+                    int height, boolean randomNumber) {
         mDisplayWidth = width;
         mDisplayHeight = height;
 
@@ -631,7 +640,7 @@ public class Keyboard {
         mKeys = new ArrayList<>();
         mModifierKeys = new ArrayList<>();
         mKeyboardMode = modeId;
-        loadKeyboard(context, context.getResources().getXml(xmlLayoutResId));
+        loadKeyboard(context, context.getResources().getXml(xmlLayoutResId), randomNumber, xmlLayoutResId);
     }
 
     /**
@@ -642,7 +651,7 @@ public class Keyboard {
      * @param xmlLayoutResId the resource file that contains the keyboard layout and keys.
      * @param modeId         keyboard mode identifier
      */
-    public Keyboard(Context context, int xmlLayoutResId, int modeId) {
+    public Keyboard(Context context, int xmlLayoutResId, int modeId, boolean randomNumber) {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         mDisplayWidth = dm.widthPixels;
         mDisplayHeight = dm.heightPixels;
@@ -655,7 +664,7 @@ public class Keyboard {
         mKeys = new ArrayList<>();
         mModifierKeys = new ArrayList<>();
         mKeyboardMode = modeId;
-        loadKeyboard(context, context.getResources().getXml(xmlLayoutResId));
+        loadKeyboard(context, context.getResources().getXml(xmlLayoutResId), randomNumber, xmlLayoutResId);
     }
 
     /**
@@ -673,9 +682,15 @@ public class Keyboard {
      *                            number of keys that can fit in a row, it will be ignored. If this number is -1, the
      *                            keyboard will fit as many keys as possible in each row.
      */
+
     public Keyboard(Context context, int layoutTemplateResId,
                     CharSequence characters, int columns, int horizontalPadding) {
-        this(context, layoutTemplateResId);
+        this(context, layoutTemplateResId, characters, columns, horizontalPadding, true);
+    }
+
+    public Keyboard(Context context, int layoutTemplateResId,
+                    CharSequence characters, int columns, int horizontalPadding, boolean randomNumber) {
+        this(context, layoutTemplateResId, randomNumber);
         int x = 0;
         int y = 0;
         int column = 0;
@@ -881,7 +896,7 @@ public class Keyboard {
         return new Key(res, parent, x, y, parser);
     }
 
-    private void loadKeyboard(Context context, XmlResourceParser parser) {
+    private void loadKeyboard(Context context, XmlResourceParser parser, boolean randomNumber, @XmlRes int xmlLayoutResId) {
         boolean inKey = false;
         boolean inRow = false;
         boolean leftMostKey = false;
@@ -947,10 +962,31 @@ public class Keyboard {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "Parse error:" + e);
+            SafeKeyboardLogUtil.log("Parse error:" + e);
             e.printStackTrace();
         }
         mTotalHeight = y - mDefaultVerticalGap;
+
+        // 随机数字键盘
+        if(xmlLayoutResId == R.xml.moudle_safe_keyboard_numbers){
+            SafeKeyboardLogUtil.log("Keyboard => keyboard_numbers");
+            if(randomNumber){
+                List<Keyboard.Key> keys = getKeys();
+                SafeKeyboardLogUtil.log( "Keyboard => size = "+keys.size());
+                Collections.shuffle(KEY_LABELS_NUMBER_RANDOM);
+                int i = 0;
+                for (Keyboard.Key temp : keys) {
+                    if (48 <= temp.codes[0] && 57 >= temp.codes[0]) {
+                        temp.label = KEY_LABELS_NUMBER_RANDOM.get(i).toString();
+                        temp.codes[0] = KEY_LABELS_NUMBER_RANDOM.get(i).charValue();
+                        i++;
+                    }
+                }
+            }
+        }
+        else{
+            SafeKeyboardLogUtil.log( "Keyboard => keyboard_letter");
+        }
     }
 
     private void skipToEndOfRow(XmlResourceParser parser)

@@ -9,7 +9,7 @@
     tools:ignore="ResourceName">
 
     <lib.kalu.safekeyboard.SafeKeyboardView
-        android:id="@+id/safe"
+        android:id="@+id/moudle_id_safe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
@@ -17,7 +17,7 @@
         android:background="@android:color/transparent"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        app:keyBackground="@drawable/keyboard_background_selector"
+        app:keyBackground="@drawable/moudle_safe_keyboard_background_selector"
         app:keyTextColor="#333333"
         app:keyTextSize="20sp"
         app:labelTextSize="15sp"
@@ -25,7 +25,7 @@
         app:shadowRadius="0.8" />
 
     <Button
-        android:id="@+id/ok"
+        android:id="@+id/moudle_id_ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

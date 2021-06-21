@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -23,6 +24,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import java.lang.ref.WeakReference;
 
@@ -31,6 +33,22 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
 
     @Keep
     public static final String TAG = "lib.kalu.safekeyboard.safekeyboarddialog";
+
+    @Keep
+    public static final int INTENT_CALLBACK_CODE = 119110120;
+    @Keep
+    public static final String INTENT_CALLBACK_TYPE = "intent_callback_type";
+    @Keep
+    public static final String INTENT_CALLBACK_VALUE = "intent_callback_value";
+
+    @Keep
+    public static final String KEYBOARD_DELETE = "keyboard_delete";
+    @Keep
+    public static final String KEYBOARD_INPUT = "keyboard_input";
+    @Keep
+    public static final String KEYBOARD_SURE = "keyboard_sure";
+    @Keep
+    public static final String KEYBOARD_CANCEL = "keyboard_cancel";
 
     @Override
     public void onStart() {
@@ -54,7 +72,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
             }
         };
 
-        dialog.setContentView(R.layout.keyboard_dialog);
+        dialog.setContentView(R.layout.moudle_safe_keyboard_dialog);
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
         dialog.setOnKeyListener(this);
@@ -79,16 +97,60 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         // window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
 
-        // 监听
-        getDialog().findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+        // 确定
+        getDialog().findViewById(R.id.moudle_id_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                SafeKeyboardView safe = getDialog().findViewById(R.id.safe);
-                String parse = safe.parse();
-                Toast.makeText(getContext(), parse, Toast.LENGTH_SHORT).show();
+                SafeKeyboardView safe = getDialog().findViewById(R.id.moudle_id_safe);
+                String input = safe.getInput();
+
+                Intent intent = new Intent();
+                intent.putExtra(INTENT_CALLBACK_TYPE, KEYBOARD_SURE);
+                intent.putExtra(INTENT_CALLBACK_VALUE, input);
+
+                Activity activity = getActivity();
+                activity.onActivityReenter(INTENT_CALLBACK_CODE, intent);
 
                 dismiss();
+            }
+        });
+
+        // 安全键盘
+        SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_id_safe);
+        safeKeyboardView.setOnSafeKeyboardChangeListener(new SafeKeyboardView.OnSafeKeyboardChangeListener() {
+            @Override
+            public void onInput(@NonNull CharSequence letter) {
+                SafeKeyboardLogUtil.log("onInput => letter = " + letter);
+
+                Intent intent = new Intent();
+                intent.putExtra(INTENT_CALLBACK_TYPE, KEYBOARD_INPUT);
+                intent.putExtra(INTENT_CALLBACK_VALUE, letter);
+
+                Activity activity = getActivity();
+                activity.onActivityReenter(INTENT_CALLBACK_CODE, intent);
+            }
+
+            @Override
+            public void onInputReal(@NonNull CharSequence letter, @NonNull CharSequence news) {
+                SafeKeyboardLogUtil.log("onInputReal => letter = " + letter + ", news = " + news);
+            }
+
+            @Override
+            public void onDelete(@NonNull CharSequence letter) {
+                SafeKeyboardLogUtil.log("onDelete => letter = " + letter);
+
+                Intent intent = new Intent();
+                intent.putExtra(INTENT_CALLBACK_TYPE, KEYBOARD_DELETE);
+                intent.putExtra(INTENT_CALLBACK_VALUE, letter);
+
+                Activity activity = getActivity();
+                activity.onActivityReenter(INTENT_CALLBACK_CODE, intent);
+            }
+
+            @Override
+            public void onDeleteReal(@NonNull CharSequence letter, @NonNull CharSequence news) {
+                SafeKeyboardLogUtil.log("onDeleteReal => letter = " + letter + ", news = " + news);
             }
         });
 

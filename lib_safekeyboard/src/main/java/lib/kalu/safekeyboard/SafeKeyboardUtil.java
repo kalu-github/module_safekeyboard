@@ -1,8 +1,5 @@
 package lib.kalu.safekeyboard;
 
-import android.text.TextUtils;
-import android.util.Log;
-
 import androidx.annotation.Nullable;
 
 import java.io.UnsupportedEncodingException;
@@ -24,7 +21,7 @@ public class SafeKeyboardUtil {
      * @return SecretKeySpec 实例
      */
     private static SecretKeySpec createKey(@Nullable String key) {
-        Log.d("safe", "createKey => key = " + key);
+        SafeKeyboardLogUtil.log("createKey => key = " + key);
 
         if (null == key) {
             key = "";
@@ -42,7 +39,7 @@ public class SafeKeyboardUtil {
             byte[] bytes = sb.toString().getBytes("UTF-8");
             return new SecretKeySpec(bytes, "AES");
         } catch (Exception e) {
-            Log.d("safe", "createKey => " + e.getMessage(), e);
+            SafeKeyboardLogUtil.log("createKey => " + e.getMessage());
             byte[] bytes = new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'};
             return new SecretKeySpec(bytes, "AES");
         }
@@ -57,7 +54,7 @@ public class SafeKeyboardUtil {
     private static byte[] encryptBytes(byte[] bytes, String key, String iv) {
 
 //        if(TextUtils.isEmpty(iv)){
-            iv = "9876543210fedcba";
+        iv = "9876543210fedcba";
 //        }
 
         try {
@@ -67,12 +64,12 @@ public class SafeKeyboardUtil {
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
 //            cipher.init(Cipher.ENCRYPT_MODE, key);
             byte[] result = cipher.doFinal(bytes);
-            Log.d("safe", "encryptBytes => result = " + result);
-            Log.d("safe", "encryptBytes => resultLength = " + result.length);
+            SafeKeyboardLogUtil.log("encryptBytes => result = " + result);
+            SafeKeyboardLogUtil.log("encryptBytes => resultLength = " + result.length);
 
             return result;
         } catch (Exception e) {
-            Log.d("safe", "encryptBytes => " + e.getMessage(), e);
+            SafeKeyboardLogUtil.log("encryptBytes => " + e.getMessage());
             return null;
         }
     }
@@ -85,27 +82,27 @@ public class SafeKeyboardUtil {
      */
     public static String encryptCode(int code, String key, String iv) {
 
-        Log.d("safe", "encryptCode => code = " + code);
-        Log.d("safe", "encryptCode => key = " + key);
-        Log.d("safe", "encryptCode => iv = " + iv);
+        SafeKeyboardLogUtil.log("encryptCode => code = " + code);
+        SafeKeyboardLogUtil.log("encryptCode => key = " + key);
+        SafeKeyboardLogUtil.log("encryptCode => iv = " + iv);
 
         try {
 
             byte[] bytes = String.valueOf(code).getBytes("UTF-8");
-            Log.d("safe", "encryptCode => bytes = " + bytes);
-            Log.d("safe", "encryptCode => bytesLength = " + bytes.length);
+            SafeKeyboardLogUtil.log("encryptCode => bytes = " + bytes);
+            SafeKeyboardLogUtil.log("encryptCode => bytesLength = " + bytes.length);
 
             byte[] encrypt = encryptBytes(bytes, key, iv);
-            Log.d("safe", "encryptCode => encrypt = " + encrypt);
-            Log.d("safe", "encryptCode => encryptLength = " + encrypt.length);
+            SafeKeyboardLogUtil.log("encryptCode => encrypt = " + encrypt);
+            SafeKeyboardLogUtil.log("encryptCode => encryptLength = " + encrypt.length);
 
             String hex = byte2hex(encrypt);
-            Log.d("safe", "encryptCode => hex = " + hex);
+            SafeKeyboardLogUtil.log("encryptCode => hex = " + hex);
 
             return hex;
 
         } catch (Exception e) {
-            Log.d("safe", "encrypt => " + e.getMessage(), e);
+            SafeKeyboardLogUtil.log("encrypt => " + e.getMessage());
             return null;
         }
     }
