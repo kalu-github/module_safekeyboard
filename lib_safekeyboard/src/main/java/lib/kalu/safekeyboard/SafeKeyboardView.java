@@ -39,11 +39,11 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
     public static final int TYPE_SYMBOL = 3;
 
     // 加密key
-    private final String key = "0123456789abcdef";
+    private final String ENCRYPTION_KEY = "0123456789abcdef";
     // 加密向量
-    private final String iv = "9876543210fedcba";
+    private final String ENCRYPTION_IV = "9876543210fedcba";
     // 加密密码
-    private final String pass = "";
+    private final String ENCRYPTION_PASS = "";
 
     @Deprecated
     public SafeKeyboardView(Context context, AttributeSet attrs) {
@@ -629,11 +629,11 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
             onSafeKeyboardChangeListener.onDelete("*");
             if (BuildConfig.DEBUG) {
                 try {
-                    String decryptLetter = SafeKeyboardUtil.decrypt(split[split.length - 1], key, iv);
+                    String decryptLetter = SafeKeyboardUtil.decrypt(split[split.length - 1], ENCRYPTION_KEY, ENCRYPTION_IV);
                     String letter = String.valueOf((char) Integer.parseInt(decryptLetter));
                     StringBuilder builderAll = new StringBuilder();
                     for (int i = 0; i < split.length - 1; i++) {
-                        String decrypt = SafeKeyboardUtil.decrypt(split[i], key, iv);
+                        String decrypt = SafeKeyboardUtil.decrypt(split[i], ENCRYPTION_KEY, ENCRYPTION_IV);
                         String valueOf = String.valueOf((char) Integer.parseInt(decrypt));
                         builderAll.append(valueOf);
                     }
@@ -676,7 +676,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
 
         for (int i = 0; i < split.length; i++) {
 
-            String decrypt = SafeKeyboardUtil.decrypt(split[i], key, iv);
+            String decrypt = SafeKeyboardUtil.decrypt(split[i], ENCRYPTION_KEY, ENCRYPTION_IV);
             SafeKeyboardLogUtil.log("parse => decrypt = " + decrypt);
             if (TextUtils.isEmpty(decrypt))
                 continue;
