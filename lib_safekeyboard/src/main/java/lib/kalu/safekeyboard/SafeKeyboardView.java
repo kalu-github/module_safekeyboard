@@ -42,6 +42,8 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
     private final String ENCRYPTION_KEY = "0123456789abcdef";
     // 加密向量
     private final String ENCRYPTION_IV = "9876543210fedcba";
+    // 加密密码
+    private final String ENCRYPTION_PW = "☸";
 
     // 字母键盘随机
     private boolean randomLetter = false;
@@ -448,7 +450,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         // 震动
         try {
             Vibrator vib = (Vibrator) getContext().getSystemService(Service.VIBRATOR_SERVICE);
-            vib.vibrate(20);
+            vib.vibrate(10);
         } catch (Exception e) {
         }
 
@@ -555,34 +557,16 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
     private void input(int code) {
         SafeKeyboardLogUtil.log("input => code = " + code);
 
-        // 加密key
-        String key = "0123456789abcdef";
-        // 加密向量
-        String iv = "9876543210fedcba";
-        // 加密密码
-        String pass = "";
-
-        String value = SafeKeyboardUtil.encryptCode(code, key, iv);
+        String value = SafeKeyboardUtil.encryptCode(code, ENCRYPTION_KEY, ENCRYPTION_IV);
         SafeKeyboardLogUtil.log("input => value = " + value);
 
         if (TextUtils.isEmpty(value))
             return;
 
-        if (!TextUtils.isEmpty(pass)) {
-
-            StringBuffer buffer = new StringBuffer();
-            buffer.append(pass);
-            buffer.append(value);
-
-            String toString = buffer.toString();
-            value = toString;
-            SafeKeyboardLogUtil.log("input => value = " + value);
-        }
-
         StringBuilder builder = new StringBuilder();
         if (null != getTag(R.id.keyboardText) && !TextUtils.isEmpty((String) getTag(R.id.keyboardText))) {
             builder.append((String) getTag(R.id.keyboardText));
-            builder.append("☸");
+            builder.append(ENCRYPTION_PW);
         }
         builder.append(value);
 
@@ -611,7 +595,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         if (null == getTag(R.id.keyboardText) || TextUtils.isEmpty((String) getTag(R.id.keyboardText)))
             return;
 
-        String[] split = ((String) getTag(R.id.keyboardText)).split("☸");
+        String[] split = ((String) getTag(R.id.keyboardText)).split(ENCRYPTION_PW);
         SafeKeyboardLogUtil.log("delete => split = " + split);
 
         if (null == split || split.length == 0)
@@ -621,7 +605,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < split.length - 1; i++) {
             builder.append(split[i]);
-            builder.append("☸");
+            builder.append(ENCRYPTION_PW);
         }
 
         String update = builder.toString();
@@ -663,7 +647,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         if (null == getTag(R.id.keyboardText) || TextUtils.isEmpty((String) getTag(R.id.keyboardText)))
             return null;
 
-        String[] split = ((String) getTag(R.id.keyboardText)).split("☸");
+        String[] split = ((String) getTag(R.id.keyboardText)).split(ENCRYPTION_PW);
         SafeKeyboardLogUtil.log("parse => split = " + split);
 
         // 强制清空

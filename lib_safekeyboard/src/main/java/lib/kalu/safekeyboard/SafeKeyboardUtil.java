@@ -1,5 +1,6 @@
 package lib.kalu.safekeyboard;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.UnsupportedEncodingException;
@@ -51,11 +52,7 @@ public class SafeKeyboardUtil {
      * @param bytes 需要加密的字节数组
      * @return 加密完后的字节数组
      */
-    private static byte[] encryptBytes(byte[] bytes, String key, String iv) {
-
-//        if(TextUtils.isEmpty(iv)){
-        iv = "9876543210fedcba";
-//        }
+    private static byte[] encryptBytes(@NonNull byte[] bytes, @NonNull String key, @NonNull String iv) {
 
         try {
             SecretKeySpec keySpec = createKey(key);
