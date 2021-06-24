@@ -42,8 +42,11 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
     private final String ENCRYPTION_KEY = "0123456789abcdef";
     // 加密向量
     private final String ENCRYPTION_IV = "9876543210fedcba";
-    // 加密密码
-    private final String ENCRYPTION_PASS = "";
+
+    // 字母键盘随机
+    private boolean randomLetter = false;
+    // 数字键盘随机
+    private boolean randomNumber = false;
 
     @Deprecated
     public SafeKeyboardView(Context context, AttributeSet attrs) {
@@ -56,7 +59,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         setEnabled(true);
         setPreviewEnabled(false);
         setOnKeyboardActionListener(this);
-        setKeyboard(new Keyboard(getContext(), R.xml.moudle_safe_keyboard_letter, true));
+        setKeyboard(new Keyboard(getContext(), R.xml.moudle_safe_keyboard_letter, randomNumber, randomLetter));
     }
 
     public SafeKeyboardView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -68,7 +71,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         setEnabled(true);
         setPreviewEnabled(false);
         setOnKeyboardActionListener(this);
-        setKeyboard(new Keyboard(getContext(), R.xml.moudle_safe_keyboard_letter, true));
+        setKeyboard(new Keyboard(getContext(), R.xml.moudle_safe_keyboard_letter, randomNumber, randomLetter));
     }
 
     @Override
@@ -407,7 +410,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
 
                 int type1 = (int) getTag(R.id.keyboardType);
                 setTag(R.id.keyboardType, type1 == TYPE_LETTER ? TYPE_NUMBER : TYPE_LETTER);
-                setKeyboard(new Keyboard(getContext(), type1 == TYPE_LETTER ? R.xml.moudle_safe_keyboard_numbers : R.xml.moudle_safe_keyboard_letter, true));
+                setKeyboard(new Keyboard(getContext(), type1 == TYPE_LETTER ? R.xml.moudle_safe_keyboard_numbers : R.xml.moudle_safe_keyboard_letter, randomNumber, randomLetter));
 
                 break;
 
@@ -416,7 +419,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
 
                 int type2 = (int) getTag(R.id.keyboardType);
                 setTag(R.id.keyboardType, type2 == TYPE_LETTER ? TYPE_SYMBOL : TYPE_LETTER);
-                setKeyboard(new Keyboard(getContext(), type2 == TYPE_LETTER ? R.xml.moudle_safe_keyboard_symbol : R.xml.moudle_safe_keyboard_letter, true));
+                setKeyboard(new Keyboard(getContext(), type2 == TYPE_LETTER ? R.xml.moudle_safe_keyboard_symbol : R.xml.moudle_safe_keyboard_letter, randomNumber, randomLetter));
 
                 break;
 
@@ -689,6 +692,14 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
 
         String result = builder.toString();
         return result;
+    }
+
+    protected void setRandomLetter(boolean randomLetter){
+        this.randomLetter = randomLetter;
+    }
+
+    protected void setRandomNumber(boolean randomNumber){
+        this.randomNumber = randomNumber;
     }
 
     /********************************/

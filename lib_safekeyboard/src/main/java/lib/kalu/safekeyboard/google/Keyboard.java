@@ -84,6 +84,18 @@ public class Keyboard {
 
     // 随机键盘数组
     private final List<Character> KEY_LABELS_NUMBER_RANDOM = Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+    // 随机字母数组
+    private final List<Character> KEY_LABELS_LETTER_RANDOM_LOWER_CASE = Arrays.asList(
+            'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
+            'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
+            'z', 'x', 'c', 'v', 'b', 'n', 'm'
+    );
+    // 随机字母数组
+    private final List<Character> KEY_LABELS_LETTER_RANDOM_UPPER_CASE = Arrays.asList(
+            'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
+            'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',
+            'Z', 'X', 'C', 'V', 'B', 'N', 'M'
+    );
 
     // Keyboard XML Tags
     private static final String TAG_KEYBOARD = "Keyboard";
@@ -605,7 +617,7 @@ public class Keyboard {
     }
 
     public Keyboard(Context context, int xmlLayoutResId) {
-        this(context, xmlLayoutResId, 0, true);
+        this(context, xmlLayoutResId, 0, true, true);
     }
 
     /**
@@ -614,8 +626,8 @@ public class Keyboard {
      * @param context        the application or service context
      * @param xmlLayoutResId the resource file that contains the keyboard layout and keys.
      */
-    public Keyboard(Context context, int xmlLayoutResId, boolean randomNumber) {
-        this(context, xmlLayoutResId, 0, randomNumber);
+    public Keyboard(Context context, int xmlLayoutResId, boolean randomNumber, boolean randomLetter) {
+        this(context, xmlLayoutResId, 0, randomNumber, randomLetter);
     }
 
     /**
@@ -629,7 +641,7 @@ public class Keyboard {
      * @param height         sets height of keyboard
      */
     public Keyboard(Context context, int xmlLayoutResId, int modeId, int width,
-                    int height, boolean randomNumber) {
+                    int height, boolean randomNumber, boolean randomLetter) {
         mDisplayWidth = width;
         mDisplayHeight = height;
 
@@ -640,7 +652,7 @@ public class Keyboard {
         mKeys = new ArrayList<>();
         mModifierKeys = new ArrayList<>();
         mKeyboardMode = modeId;
-        loadKeyboard(context, context.getResources().getXml(xmlLayoutResId), randomNumber, xmlLayoutResId);
+        loadKeyboard(context, context.getResources().getXml(xmlLayoutResId), randomNumber, randomLetter, xmlLayoutResId);
     }
 
     /**
@@ -651,7 +663,7 @@ public class Keyboard {
      * @param xmlLayoutResId the resource file that contains the keyboard layout and keys.
      * @param modeId         keyboard mode identifier
      */
-    public Keyboard(Context context, int xmlLayoutResId, int modeId, boolean randomNumber) {
+    public Keyboard(Context context, int xmlLayoutResId, int modeId, boolean randomNumber, boolean randomLetter) {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         mDisplayWidth = dm.widthPixels;
         mDisplayHeight = dm.heightPixels;
@@ -664,7 +676,7 @@ public class Keyboard {
         mKeys = new ArrayList<>();
         mModifierKeys = new ArrayList<>();
         mKeyboardMode = modeId;
-        loadKeyboard(context, context.getResources().getXml(xmlLayoutResId), randomNumber, xmlLayoutResId);
+        loadKeyboard(context, context.getResources().getXml(xmlLayoutResId), randomNumber, randomLetter, xmlLayoutResId);
     }
 
     /**
@@ -685,12 +697,12 @@ public class Keyboard {
 
     public Keyboard(Context context, int layoutTemplateResId,
                     CharSequence characters, int columns, int horizontalPadding) {
-        this(context, layoutTemplateResId, characters, columns, horizontalPadding, true);
+        this(context, layoutTemplateResId, characters, columns, horizontalPadding, true, true);
     }
 
     public Keyboard(Context context, int layoutTemplateResId,
-                    CharSequence characters, int columns, int horizontalPadding, boolean randomNumber) {
-        this(context, layoutTemplateResId, randomNumber);
+                    CharSequence characters, int columns, int horizontalPadding, boolean randomNumber, boolean randomLetter) {
+        this(context, layoutTemplateResId, randomNumber, randomLetter);
         int x = 0;
         int y = 0;
         int column = 0;
@@ -892,11 +904,11 @@ public class Keyboard {
     }
 
     protected Key createKeyFromXml(Resources res, Row parent, int x, int y,
-                                            XmlResourceParser parser) {
+                                   XmlResourceParser parser) {
         return new Key(res, parent, x, y, parser);
     }
 
-    private void loadKeyboard(Context context, XmlResourceParser parser, boolean randomNumber, @XmlRes int xmlLayoutResId) {
+    private void loadKeyboard(Context context, XmlResourceParser parser, boolean randomNumber, boolean randomLetter, @XmlRes int xmlLayoutResId) {
         boolean inKey = false;
         boolean inRow = false;
         boolean leftMostKey = false;
@@ -968,24 +980,44 @@ public class Keyboard {
         mTotalHeight = y - mDefaultVerticalGap;
 
         // 随机数字键盘
-        if(xmlLayoutResId == R.xml.moudle_safe_keyboard_numbers){
+        if (xmlLayoutResId == R.xml.moudle_safe_keyboard_numbers) {
             SafeKeyboardLogUtil.log("Keyboard => keyboard_numbers");
-            if(randomNumber){
+            if (randomNumber) {
                 List<Keyboard.Key> keys = getKeys();
-                SafeKeyboardLogUtil.log( "Keyboard => size = "+keys.size());
+                SafeKeyboardLogUtil.log("Keyboard => size = " + keys.size());
                 Collections.shuffle(KEY_LABELS_NUMBER_RANDOM);
+
                 int i = 0;
                 for (Keyboard.Key temp : keys) {
-                    if (48 <= temp.codes[0] && 57 >= temp.codes[0]) {
-                        temp.label = KEY_LABELS_NUMBER_RANDOM.get(i).toString();
-                        temp.codes[0] = KEY_LABELS_NUMBER_RANDOM.get(i).charValue();
+                    if (temp.codes[0] >= 48 && temp.codes[0] <= 57) {
+                        Character code = KEY_LABELS_NUMBER_RANDOM.get(i);
+                        temp.label = code.toString();
+                        temp.codes[0] = code.charValue();
                         i++;
                     }
                 }
             }
-        }
-        else{
-            SafeKeyboardLogUtil.log( "Keyboard => keyboard_letter");
+        } else if (xmlLayoutResId == R.xml.moudle_safe_keyboard_letter) {
+            SafeKeyboardLogUtil.log("Keyboard => keyboard_letter");
+            if (randomLetter) {
+                List<Keyboard.Key> keys = getKeys();
+                SafeKeyboardLogUtil.log("Keyboard => size = " + keys.size());
+                Collections.shuffle(isShifted() ? KEY_LABELS_LETTER_RANDOM_UPPER_CASE : KEY_LABELS_LETTER_RANDOM_LOWER_CASE);
+                int i = 0;
+                for (Keyboard.Key temp : keys) {
+                    if (temp.codes[0] >= 65 && temp.codes[0] <= 90) {
+                        Character code = isShifted() ? KEY_LABELS_LETTER_RANDOM_UPPER_CASE.get(i) : KEY_LABELS_LETTER_RANDOM_LOWER_CASE.get(i);
+                        temp.label = code.toString();
+                        temp.codes[0] = code.charValue();
+                        i++;
+                    } else if (temp.codes[0] >= 97 && temp.codes[0] <= 122) {
+                        Character code = isShifted() ? KEY_LABELS_LETTER_RANDOM_UPPER_CASE.get(i) : KEY_LABELS_LETTER_RANDOM_LOWER_CASE.get(i);
+                        temp.label = code.toString();
+                        temp.codes[0] = code.charValue();
+                        i++;
+                    }
+                }
+            }
         }
     }
 

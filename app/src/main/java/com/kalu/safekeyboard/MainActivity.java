@@ -24,7 +24,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(SafeKeyboardDialog.BUNDLE_RANDOM_NUMBER, true);
+                bundle.putBoolean(SafeKeyboardDialog.BUNDLE_RANDOM_LETTER, false);
+
                 SafeKeyboardDialog dialog = new SafeKeyboardDialog();
+                dialog.setArguments(bundle);
                 dialog.show(getSupportFragmentManager(), SafeKeyboardDialog.TAG);
             }
         });

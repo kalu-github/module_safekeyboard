@@ -50,6 +50,17 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
     @Keep
     public static final String KEYBOARD_CANCEL = "keyboard_cancel";
 
+    /**
+     * 字母键盘随机
+     */
+    @Keep
+    public static final String BUNDLE_RANDOM_LETTER = "bundle_random_letter";
+    /**
+     * 数字键盘随机
+     */
+    @Keep
+    public static final String BUNDLE_RANDOM_NUMBER = "bundle_random_number";
+
     @Override
     public void onStart() {
         if (null != getActivity().getCurrentFocus() && null != getActivity().getCurrentFocus().getWindowToken()) {
@@ -116,8 +127,17 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
             }
         });
 
+        boolean randomLetter = false;
+        boolean randomNumber = false;
+        if (null != getArguments()) {
+            randomLetter = getArguments().getBoolean(BUNDLE_RANDOM_LETTER, false);
+            randomNumber = getArguments().getBoolean(BUNDLE_RANDOM_NUMBER, false);
+        }
+
         // 安全键盘
         SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_id_safe);
+        safeKeyboardView.setRandomLetter(randomLetter);
+        safeKeyboardView.setRandomNumber(randomNumber);
         safeKeyboardView.setOnSafeKeyboardChangeListener(new SafeKeyboardView.OnSafeKeyboardChangeListener() {
             @Override
             public void onInput(@NonNull CharSequence letter) {
