@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <item name="keyboardView" type="id" tools:ignore="ResourceName" />
-    <item name="closeButton" type="id" tools:ignore="ResourceName" />
-    <item name="keyboardText" type="id" tools:ignore="ResourceName" />
-    <item name="keyboardType" type="id" tools:ignore="ResourceName" />
+    <item name="safe_keyboard_id_action_view" type="id" tools:ignore="ResourceName" />
+    <item name="safe_keyboard_id_action_close" type="id" tools:ignore="ResourceName" />
+    <item name="safe_keyboard_id_input_text" type="id" tools:ignore="ResourceName" />
+    <item name="safe_keyboard_id_input_type" type="id" tools:ignore="ResourceName" />
 </resources>

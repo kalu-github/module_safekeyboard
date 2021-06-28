@@ -45,13 +45,13 @@
 
     <Row>
         <Key
-            app:codes="-2"
+            app:codes="-21"
             app:keyLabel="ABC" />
         <Key
             app:codes="48"
             app:keyLabel="0" />
         <Key
-            app:codes="-35"
+            app:codes="-24"
             app:isRepeatable="false" />
     </Row>
 </Keyboard>

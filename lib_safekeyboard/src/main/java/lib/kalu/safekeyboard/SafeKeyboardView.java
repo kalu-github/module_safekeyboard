@@ -55,8 +55,8 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
     public SafeKeyboardView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        setTag(R.id.keyboardType, TYPE_LETTER);
-        setTag(R.id.keyboardText, null);
+        setTag(R.id.safe_keyboard_id_input_type, TYPE_LETTER);
+        setTag(R.id.safe_keyboard_id_input_text, null);
 
 
         setEnabled(true);
@@ -68,8 +68,8 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
     public SafeKeyboardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        setTag(R.id.keyboardType, TYPE_LETTER);
-        setTag(R.id.keyboardText, null);
+        setTag(R.id.safe_keyboard_id_input_type, TYPE_LETTER);
+        setTag(R.id.safe_keyboard_id_input_text, null);
 
         setEnabled(true);
         setPreviewEnabled(false);
@@ -115,7 +115,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
             SafeKeyboardLogUtil.log("drawKeyboard => code = " + key.codes[0]);
 
             // 功能键：删除
-            if (key.codes[0] == -5 || key.codes[0] == -35) {
+            if (key.codes[0] == -24) {
 
                 // 背景
                 drawBackground(canvas, key, R.drawable.moudle_safe_keyboard_background_normal, R.drawable.moudle_safe_keyboard_background_press);
@@ -124,7 +124,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
                 drawIcon(canvas, key, R.raw.moudle_safe_keyboard_delete_normal, R.raw.moudle_safe_keyboard_delete_press);
             }
             // 功能键：切换大小写
-            else if (key.codes[0] == -1) {
+            else if (key.codes[0] == -25) {
 
                 // 背景
                 drawBackground(canvas, key, R.drawable.moudle_safe_keyboard_background_normal, R.drawable.moudle_safe_keyboard_background_press);
@@ -133,7 +133,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
                 drawShift(canvas, key, R.raw.moudle_safe_keyboard_shift_normal_dafault, R.raw.moudle_safe_keyboard_shift_normal_select, R.raw.moudle_safe_keyboard_shift_press_dafault, R.raw.moudle_safe_keyboard_shift_press_select);
             }
             // 功能键：切换键盘类型
-            else if (key.codes[0] == -2 || key.codes[0] == 3000) {
+            else if (key.codes[0] == -21 || key.codes[0] == -22 || key.codes[0] == -23) {
 
                 // 背景
                 drawBackground(canvas, key, R.drawable.moudle_safe_keyboard_background_normal, R.drawable.moudle_safe_keyboard_background_press);
@@ -417,42 +417,41 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
 
         switch (primaryCode) {
 
-            // 大小写切换
-            case android.inputmethodservice.Keyboard.KEYCODE_SHIFT:
+            // 切换字母键盘
+            case -21:
 
-                shiftKeyboard();
-                break;
-
-            // 数字与字母键盘互换
-            case android.inputmethodservice.Keyboard.KEYCODE_MODE_CHANGE:
-
-                int type1 = (int) getTag(R.id.keyboardType);
-                setTag(R.id.keyboardType, type1 == TYPE_LETTER ? TYPE_NUMBER : TYPE_LETTER);
-                setKeyboard(new Keyboard(getContext(), type1 == TYPE_LETTER ? R.xml.moudle_safe_keyboard_numbers : R.xml.moudle_safe_keyboard_letter, randomNumber, randomLetter));
+                setTag(R.id.safe_keyboard_id_input_type, TYPE_LETTER);
+                setKeyboard(new Keyboard(getContext(), R.xml.moudle_safe_keyboard_letter, randomNumber, randomLetter));
 
                 break;
 
-            // 字母与符号切换
-            case 3000:
+            // 切换数字键盘
+            case -22:
+                setTag(R.id.safe_keyboard_id_input_type, TYPE_NUMBER);
+                setKeyboard(new Keyboard(getContext(), R.xml.moudle_safe_keyboard_numbers, randomNumber, randomLetter));
+                break;
 
-                int type2 = (int) getTag(R.id.keyboardType);
-                setTag(R.id.keyboardType, type2 == TYPE_LETTER ? TYPE_SYMBOL : TYPE_LETTER);
-                setKeyboard(new Keyboard(getContext(), type2 == TYPE_LETTER ? R.xml.moudle_safe_keyboard_symbol : R.xml.moudle_safe_keyboard_letter, randomNumber, randomLetter));
+            // 切换符号键盘
+            case -23:
+
+                setTag(R.id.safe_keyboard_id_input_type, TYPE_SYMBOL);
+                setKeyboard(new Keyboard(getContext(), R.xml.moudle_safe_keyboard_symbol, randomNumber, randomLetter));
 
                 break;
 
-            // 回退键,删除字符
-            case -35:
-            case android.inputmethodservice.Keyboard.KEYCODE_DELETE:
+            // 删除
+            case -24:
 
                 delete();
                 break;
 
-            // 隐藏键盘
-            case android.inputmethodservice.Keyboard.KEYCODE_CANCEL:
+            // 大小写
+            case -25:
 
+                shiftKeyboard();
                 break;
-            // 输入键盘值
+
+            // 数值
             default:
 
                 input(primaryCode);
@@ -580,15 +579,15 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
             return;
 
         StringBuilder builder = new StringBuilder();
-        if (null != getTag(R.id.keyboardText) && !TextUtils.isEmpty((String) getTag(R.id.keyboardText))) {
-            builder.append((String) getTag(R.id.keyboardText));
+        if (null != getTag(R.id.safe_keyboard_id_input_text) && !TextUtils.isEmpty((String) getTag(R.id.safe_keyboard_id_input_text))) {
+            builder.append((String) getTag(R.id.safe_keyboard_id_input_text));
             builder.append(ENCRYPTION_PW);
         }
         builder.append(value);
 
         String update = builder.toString();
         SafeKeyboardLogUtil.log("input => update = " + update);
-        setTag(R.id.keyboardText, update);
+        setTag(R.id.safe_keyboard_id_input_text, update);
 
         if (null != onSafeKeyboardChangeListener) {
             onSafeKeyboardChangeListener.onInput("*");
@@ -608,10 +607,10 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
      */
     private void delete() {
 
-        if (null == getTag(R.id.keyboardText) || TextUtils.isEmpty((String) getTag(R.id.keyboardText)))
+        if (null == getTag(R.id.safe_keyboard_id_input_text) || TextUtils.isEmpty((String) getTag(R.id.safe_keyboard_id_input_text)))
             return;
 
-        String[] split = ((String) getTag(R.id.keyboardText)).split(ENCRYPTION_PW);
+        String[] split = ((String) getTag(R.id.safe_keyboard_id_input_text)).split(ENCRYPTION_PW);
         SafeKeyboardLogUtil.log("delete => split = " + split);
 
         if (null == split || split.length == 0)
@@ -626,7 +625,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
 
         String update = builder.toString();
         SafeKeyboardLogUtil.log("delete => update = " + update);
-        setTag(R.id.keyboardText, update);
+        setTag(R.id.safe_keyboard_id_input_text, update);
 
         if (null != onSafeKeyboardChangeListener) {
             onSafeKeyboardChangeListener.onDelete("*");
@@ -660,15 +659,15 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
      */
     private final String getInput(boolean clear) {
 
-        if (null == getTag(R.id.keyboardText) || TextUtils.isEmpty((String) getTag(R.id.keyboardText)))
+        if (null == getTag(R.id.safe_keyboard_id_input_text) || TextUtils.isEmpty((String) getTag(R.id.safe_keyboard_id_input_text)))
             return null;
 
-        String[] split = ((String) getTag(R.id.keyboardText)).split(ENCRYPTION_PW);
+        String[] split = ((String) getTag(R.id.safe_keyboard_id_input_text)).split(ENCRYPTION_PW);
         SafeKeyboardLogUtil.log("parse => split = " + split);
 
         // 强制清空
         if (clear) {
-            setTag(R.id.keyboardText, null);
+            setTag(R.id.safe_keyboard_id_input_text, null);
         }
 
         if (null == split || split.length == 0)

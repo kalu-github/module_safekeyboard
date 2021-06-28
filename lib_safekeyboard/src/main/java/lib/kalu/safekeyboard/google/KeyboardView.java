@@ -1071,9 +1071,8 @@ public class KeyboardView extends View implements View.OnClickListener {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
                 mMiniKeyboardContainer = inflater.inflate(mPopupLayout, null);
-                mMiniKeyboard = mMiniKeyboardContainer.findViewById(
-                        R.id.keyboardView);
-                View closeButton = mMiniKeyboardContainer.findViewById(R.id.closeButton);
+                mMiniKeyboard = mMiniKeyboardContainer.findViewById(R.id.safe_keyboard_id_action_view);
+                View closeButton = mMiniKeyboardContainer.findViewById(R.id.safe_keyboard_id_action_close);
                 if (closeButton != null) closeButton.setOnClickListener(this);
                 mMiniKeyboard.setOnKeyboardActionListener(new OnKeyboardActionListener() {
                     public void onKey(int primaryCode, int[] keyCodes) {
@@ -1122,7 +1121,7 @@ public class KeyboardView extends View implements View.OnClickListener {
 
                 mMiniKeyboardCache.put(popupKey, mMiniKeyboardContainer);
             } else {
-                mMiniKeyboard = mMiniKeyboardContainer.findViewById(R.id.keyboardView);
+                mMiniKeyboard = mMiniKeyboardContainer.findViewById(R.id.safe_keyboard_id_action_view);
             }
             getLocationInWindow(mCoordinates);
             mPopupX = popupKey.x + getPaddingLeft();
