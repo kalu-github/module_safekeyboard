@@ -14,6 +14,7 @@ import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -105,15 +106,16 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
             return;
         SafeKeyboardLogUtil.log("drawKeyboard => size = " + keys.size());
 
+        Typeface typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD);
         for (Keyboard.Key key : keys) {
 
             if (null == key.codes || key.codes.length == 0)
                 continue;
 
-            // 键盘：删除
-            if (key.codes[0] == -5 || key.codes[0] == -35) {
+            SafeKeyboardLogUtil.log("drawKeyboard => code = " + key.codes[0]);
 
-                SafeKeyboardLogUtil.log("drawKeyboard => code = " + key.codes[0]);
+            // 功能键：删除
+            if (key.codes[0] == -5 || key.codes[0] == -35) {
 
                 // 背景
                 drawBackground(canvas, key, R.drawable.moudle_safe_keyboard_background_normal, R.drawable.moudle_safe_keyboard_background_press);
@@ -121,10 +123,8 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
                 // 图标
                 drawIcon(canvas, key, R.raw.moudle_safe_keyboard_delete_normal, R.raw.moudle_safe_keyboard_delete_press);
             }
-            // 键盘：大小写切换
+            // 功能键：切换大小写
             else if (key.codes[0] == -1) {
-
-                SafeKeyboardLogUtil.log("drawKeyboard => code = " + key.codes[0]);
 
                 // 背景
                 drawBackground(canvas, key, R.drawable.moudle_safe_keyboard_background_normal, R.drawable.moudle_safe_keyboard_background_press);
@@ -132,16 +132,32 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
                 // 图标
                 drawShift(canvas, key, R.raw.moudle_safe_keyboard_shift_normal_dafault, R.raw.moudle_safe_keyboard_shift_normal_select, R.raw.moudle_safe_keyboard_shift_press_dafault, R.raw.moudle_safe_keyboard_shift_press_select);
             }
-            // 键盘：切换按键
+            // 功能键：切换键盘类型
             else if (key.codes[0] == -2 || key.codes[0] == 3000) {
-
-                SafeKeyboardLogUtil.log("drawKeyboard => code = " + key.codes[0]);
 
                 // 背景
                 drawBackground(canvas, key, R.drawable.moudle_safe_keyboard_background_normal, R.drawable.moudle_safe_keyboard_background_press);
 
                 // 文字
-                drawLabel(canvas, key);
+                drawLabel(canvas, key, typeface, Color.BLACK, Color.WHITE);
+            }
+            // 功能键：空格
+            else if (key.codes[0] == 32) {
+
+                // 背景
+                drawBackground(canvas, key, R.drawable.moudle_safe_keyboard_background_normal, R.drawable.moudle_safe_keyboard_background_press);
+
+                // 文字
+                drawLabel(canvas, key, typeface, Color.BLACK, Color.WHITE);
+            }
+            // 普通键
+            else {
+
+                // 背景
+                drawBackground(canvas, key, R.drawable.moudle_safe_keyboard_background_normal, R.drawable.moudle_safe_keyboard_background_normal);
+
+                // 文字
+                drawLabel(canvas, key, typeface, Color.BLACK, Color.BLACK);
             }
         }
     }
@@ -334,7 +350,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
      * @param canvas
      * @param key
      */
-    private void drawLabel(@NonNull Canvas canvas, @NonNull Keyboard.Key key) {
+    private void drawLabel(@NonNull Canvas canvas, @NonNull Keyboard.Key key, @NonNull Typeface typeface, @ColorInt int colorPress, @ColorInt int colorNormal) {
 
         if (null == key.label || TextUtils.isEmpty(key.label.toString()))
             return;
@@ -344,7 +360,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         paint.setTextAlign(Paint.Align.CENTER);
 
         paint.setAntiAlias(true);
-        paint.setColor(key.pressed ? Color.BLACK : Color.WHITE);
+        paint.setColor(key.pressed ? colorPress : colorNormal);
 
         String label = key.label.toString();
         Field field;
@@ -374,7 +390,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
                 e.printStackTrace();
             }
             paint.setTextSize(keyTextSize);
-            paint.setTypeface(Typeface.DEFAULT);
+            paint.setTypeface(typeface);
         }
 
         paint.getTextBounds(label, 0, label.length(), bounds);
@@ -450,7 +466,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         // 震动
         try {
             Vibrator vib = (Vibrator) getContext().getSystemService(Service.VIBRATOR_SERVICE);
-            vib.vibrate(10);
+            vib.vibrate(12);
         } catch (Exception e) {
         }
 
@@ -678,11 +694,11 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         return result;
     }
 
-    protected void setRandomLetter(boolean randomLetter){
+    protected void setRandomLetter(boolean randomLetter) {
         this.randomLetter = randomLetter;
     }
 
-    protected void setRandomNumber(boolean randomNumber){
+    protected void setRandomNumber(boolean randomNumber) {
         this.randomNumber = randomNumber;
     }
 

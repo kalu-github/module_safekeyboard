@@ -70,6 +70,13 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         super.onStart();
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        // 禁止录屏和截屏
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        super.onActivityCreated(savedInstanceState);
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -79,7 +86,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
             @Override
             protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
-                setStyle(STYLE_NORMAL, R.style.safeKeyboardTheme);
+                setStyle(STYLE_NORMAL, R.style.ThemeMoudleSafeKeyboard);
             }
         };
 

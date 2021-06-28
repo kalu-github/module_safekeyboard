@@ -50,6 +50,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
 
     // 安全键盘
-    implementation(name: 'lib_safekeyboard_release_20210624', ext: 'aar')
-//    implementation project(':lib_safekeyboard')
+//    implementation(name: 'lib_safekeyboard_release_20210624', ext: 'aar')
+    implementation project(':lib_safekeyboard')
 }

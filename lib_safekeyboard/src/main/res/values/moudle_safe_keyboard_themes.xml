@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="safeKeyboardTheme" parent="android:style/Theme.Dialog" tools:ignore="ResourceName">
+    <style name="ThemeMoudleSafeKeyboard" parent="android:style/Theme.Dialog" tools:ignore="ResourceName">
         <!--背景颜色及和透明程度-->
         <item name="android:windowBackground">@android:color/transparent</item>
         <!--是否去除标题 -->
