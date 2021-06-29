@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:background="#e6e6e6"
+    android:background="@color/safe_keyboard_color_e6e6e6"
     tools:ignore="ResourceName">
 
     <lib.kalu.safekeyboard.SafeKeyboardView
@@ -21,7 +21,7 @@
         app:keyTextColor="#333333"
         app:keyTextSize="20sp"
         app:labelTextSize="15sp"
-        app:shadowColor="#333333"
+        app:shadowColor="@color/safe_keyboard_color_333333"
         app:shadowRadius="0.8" />
 
     <Button
