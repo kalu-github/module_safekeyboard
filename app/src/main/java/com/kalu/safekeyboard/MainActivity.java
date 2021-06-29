@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(SafeKeyboardDialog.BUNDLE_RANDOM_NUMBER, true);
                 bundle.putBoolean(SafeKeyboardDialog.BUNDLE_RANDOM_LETTER, true);
+                bundle.putBoolean(SafeKeyboardDialog.BUNDLE_OUTSIDE_CANCLE, false);
 
                 SafeKeyboardDialog dialog = new SafeKeyboardDialog();
                 dialog.setArguments(bundle);

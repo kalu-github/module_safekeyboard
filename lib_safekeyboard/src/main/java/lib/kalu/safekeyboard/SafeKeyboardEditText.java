@@ -15,33 +15,33 @@ import java.lang.reflect.Method;
  * 禁止Edittext弹出软键盘并且使光标正常显示
  */
 @SuppressLint("AppCompatCustomView")
-public class SafeKeyboardEditText extends EditText {
+public final class SafeKeyboardEditText extends EditText {
 
     public SafeKeyboardEditText(Context context) {
         super(context);
-//        setClickable(true);
-//        setLongClickable(false);
+        setClickable(true);
+        setLongClickable(false);
         disableShowSoftInput();
     }
 
     public SafeKeyboardEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
-//        setClickable(true);
-//        setLongClickable(false);
+        setClickable(true);
+        setLongClickable(false);
         disableShowSoftInput();
     }
 
     public SafeKeyboardEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-//        setClickable(true);
-//        setLongClickable(false);
+        setClickable(true);
+        setLongClickable(false);
         disableShowSoftInput();
     }
 
     public SafeKeyboardEditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-//        setClickable(true);
-//        setLongClickable(false);
+        setClickable(true);
+        setLongClickable(false);
         disableShowSoftInput();
     }
 
@@ -51,7 +51,6 @@ public class SafeKeyboardEditText extends EditText {
         SafeKeyboardLogUtil.log("onFocusChanged => focused = " + focused);
 
         if (focused) {
-
             // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
             // step1

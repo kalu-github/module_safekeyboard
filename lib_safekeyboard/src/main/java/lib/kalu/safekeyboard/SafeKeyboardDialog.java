@@ -62,6 +62,11 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
      */
     @Keep
     public static final String BUNDLE_RANDOM_NUMBER = "bundle_random_number";
+    /**
+     * 点击外部取消
+     */
+    @Keep
+    public static final String BUNDLE_OUTSIDE_CANCLE = "bundle_outside_cancle";
 
     @Override
     public void onStart() {
@@ -90,9 +95,15 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
             }
         };
 
+        boolean isCancle = false;
+        Bundle arguments = getArguments();
+        if (null != arguments) {
+            isCancle = arguments.getBoolean(BUNDLE_OUTSIDE_CANCLE, false);
+        }
+
         dialog.setContentView(R.layout.moudle_safe_keyboard_dialog);
-        dialog.setCancelable(true);
-        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(isCancle);
+        dialog.setCanceledOnTouchOutside(isCancle);
         dialog.setOnKeyListener(this);
         return dialog;
     }
@@ -115,8 +126,8 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         // window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
 
-        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+//        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+//        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
 
         // 确定
@@ -191,7 +202,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
 
     @Override
     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-        return !isCancelable() && keyCode == KeyEvent.KEYCODE_BACK;
+        return !isCancelable();
     }
 
     @Override
