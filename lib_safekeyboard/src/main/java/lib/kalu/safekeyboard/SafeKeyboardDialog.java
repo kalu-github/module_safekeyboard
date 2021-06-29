@@ -48,6 +48,8 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
     @Keep
     public static final String KEYBOARD_SURE = "keyboard_sure";
     @Keep
+    public static final String KEYBOARD_DISMISS = "keyboard_dismiss";
+    @Keep
     public static final String KEYBOARD_CANCEL = "keyboard_cancel";
 
     /**
@@ -63,10 +65,8 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
 
     @Override
     public void onStart() {
-        if (null != getActivity().getCurrentFocus() && null != getActivity().getCurrentFocus().getWindowToken()) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-        }
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
         super.onStart();
     }
 
@@ -114,6 +114,10 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         // window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
+
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
 
         // 确定
         getDialog().findViewById(R.id.moudle_id_ok).setOnClickListener(new View.OnClickListener() {
@@ -200,5 +204,27 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
             resources.updateConfiguration(newConfig, resources.getDisplayMetrics());
         }
         super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+
+        Intent intent = new Intent();
+        intent.putExtra(INTENT_CALLBACK_TYPE, KEYBOARD_DISMISS);
+
+        Activity activity = getActivity();
+        activity.onActivityReenter(INTENT_CALLBACK_CODE, intent);
+    }
+
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+
+        Intent intent = new Intent();
+        intent.putExtra(INTENT_CALLBACK_TYPE, KEYBOARD_CANCEL);
+
+        Activity activity = getActivity();
+        activity.onActivityReenter(INTENT_CALLBACK_CODE, intent);
     }
 }
