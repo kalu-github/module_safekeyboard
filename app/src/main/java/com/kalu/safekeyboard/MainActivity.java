@@ -3,11 +3,22 @@ package com.kalu.safekeyboard;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -19,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_main);
 
         findViewById(R.id.edit2).setOnClickListener(new View.OnClickListener() {
@@ -74,4 +86,27 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    protected void onPause() {
+//        String s = MainActivity.class.getName().toLowerCase();
+//        BlurUtil.blurScr(getApplicationContext(), getWindow(), s);
+        super.onPause();
+    }
+
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        Toast.makeText(getApplicationContext(), "onRestart", Toast.LENGTH_SHORT).show();
+//
+//        /*获取windows中最顶层的view*/
+//        View view = getWindow().getDecorView();
+//        if (!(view instanceof ViewGroup))
+//            return;
+//
+//        int childCount = ((ViewGroup) view).getChildCount();
+//        ((ViewGroup) view).removeViewAt(childCount - 1);
+//    }
+
+
 }

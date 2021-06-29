@@ -75,13 +75,6 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         super.onStart();
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        // 禁止录屏和截屏
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        super.onActivityCreated(savedInstanceState);
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -115,6 +108,9 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         // 窗口边框
         Window window = getDialog().getWindow();
         window.getDecorView().setPadding(0, 0, 0, 0);
+
+        // 禁止录屏和截屏
+        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE);
 
         // 窗口位置
         WindowManager.LayoutParams windowParams = window.getAttributes();
