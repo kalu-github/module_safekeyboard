@@ -1,9 +1,7 @@
 package lib.kalu.safekeyboard;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -20,16 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import java.lang.ref.WeakReference;
 
@@ -105,6 +99,9 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
     @Override
     public void show(@NonNull FragmentManager manager, @Nullable String tag) {
 
+        // 更新FragmnetManger
+        SafeKeyboardFragmentManager.setFragmentManager(manager);
+
         // 延迟显示安全键盘
         long delayTime = 80;
         Bundle arguments = getArguments();
@@ -164,7 +161,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         windowParams.gravity = Gravity.BOTTOM;
 
         // 避免Dialog抢Activity焦点
-        // window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
 
         window.setAttributes(windowParams);
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.text.InputType;
 import android.util.AttributeSet;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -14,7 +13,8 @@ import androidx.annotation.Keep;
 import java.lang.reflect.Method;
 
 /**
- * 禁止Edittext弹出软键盘并且使光标正常显示
+ * description: 禁止Edittext弹出软键盘并且使光标正常显示
+ * created by kalu on 2021-01-15
  */
 @SuppressLint("AppCompatCustomView")
 @Keep
@@ -60,8 +60,15 @@ public final class SafeKeyboardEditText extends EditText {
             InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getWindowToken(), 0);
 
+            // 强制清空内容
+            getEditableText().clear();
+
             // 回调点击事件
             callOnClick();
+        } else {
+
+            // 强制关闭安全键盘
+            SafeKeyboardFragmentManager.forceDismiss();
         }
     }
 

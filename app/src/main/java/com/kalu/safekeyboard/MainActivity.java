@@ -3,25 +3,12 @@ package com.kalu.safekeyboard;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
-
-import org.json.JSONArray;
 
 import lib.kalu.safekeyboard.SafeKeyboardDialog;
 
@@ -37,14 +24,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                EditText editText = findViewById(R.id.edit2);
-                editText.getText().clear();
-
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(SafeKeyboardDialog.BUNDLE_RANDOM_NUMBER, false);
                 bundle.putBoolean(SafeKeyboardDialog.BUNDLE_RANDOM_LETTER, false);
                 bundle.putBoolean(SafeKeyboardDialog.BUNDLE_OUTSIDE_CANCLE, true);
-                bundle.putLong(SafeKeyboardDialog.BUNDLE_DELAY_TIME, 60);
+                bundle.putLong(SafeKeyboardDialog.BUNDLE_DELAY_TIME, 50);
                 bundle.putString(SafeKeyboardDialog.BUNDLE_CALLBACK_EXTRA, "我是额外的Data");
 
                 SafeKeyboardDialog dialog = new SafeKeyboardDialog();
@@ -66,10 +50,6 @@ public class MainActivity extends AppCompatActivity {
                 String extra = data.getStringExtra(SafeKeyboardDialog.BUNDLE_CALLBACK_EXTRA);
                 Toast.makeText(getApplicationContext(), value + " - " + extra, Toast.LENGTH_SHORT).show();
             } else if (SafeKeyboardDialog.KEYBOARD_DISMISS.equalsIgnoreCase(type)) {
-                EditText editText = findViewById(R.id.edit1);
-                editText.requestFocus();
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
             } else if (SafeKeyboardDialog.KEYBOARD_DELETE.equalsIgnoreCase(type)) {
                 EditText editText = findViewById(R.id.edit2);
                 String str = editText.getText().toString();
