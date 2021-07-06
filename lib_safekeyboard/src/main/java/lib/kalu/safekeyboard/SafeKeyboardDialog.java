@@ -164,7 +164,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         windowParams.gravity = Gravity.BOTTOM;
 
         // 避免Dialog抢Activity焦点
-        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        // window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
 
         window.setAttributes(windowParams);
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
