@@ -41,10 +41,11 @@ public class MainActivity extends AppCompatActivity {
                 editText.getText().clear();
 
                 Bundle bundle = new Bundle();
-                bundle.putBoolean(SafeKeyboardDialog.BUNDLE_RANDOM_NUMBER, true);
-                bundle.putBoolean(SafeKeyboardDialog.BUNDLE_RANDOM_LETTER, true);
-                bundle.putBoolean(SafeKeyboardDialog.BUNDLE_OUTSIDE_CANCLE, false);
+                bundle.putBoolean(SafeKeyboardDialog.BUNDLE_RANDOM_NUMBER, false);
+                bundle.putBoolean(SafeKeyboardDialog.BUNDLE_RANDOM_LETTER, false);
+                bundle.putBoolean(SafeKeyboardDialog.BUNDLE_OUTSIDE_CANCLE, true);
                 bundle.putLong(SafeKeyboardDialog.BUNDLE_DELAY_TIME, 60);
+                bundle.putString(SafeKeyboardDialog.BUNDLE_CALLBACK_EXTRA, "我是额外的Data");
 
                 SafeKeyboardDialog dialog = new SafeKeyboardDialog();
                 dialog.setArguments(bundle);
@@ -56,13 +57,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityReenter(int resultCode, Intent data) {
         super.onActivityReenter(resultCode, data);
-        if (resultCode == SafeKeyboardDialog.INTENT_CALLBACK_CODE) {
-            String type = data.getStringExtra(SafeKeyboardDialog.INTENT_CALLBACK_TYPE);
-            String value = data.getStringExtra(SafeKeyboardDialog.INTENT_CALLBACK_VALUE);
+        if (resultCode == SafeKeyboardDialog.BUNDLE_CALLBACK_CODE) {
+            String type = data.getStringExtra(SafeKeyboardDialog.BUNDLE_CALLBACK_TYPE);
+            String value = data.getStringExtra(SafeKeyboardDialog.BUNDLE_CALLBACK_VALUE);
             Log.e("main", "onActivityReenter => type = " + type + ", value = " + value);
 
             if (SafeKeyboardDialog.KEYBOARD_SURE.equalsIgnoreCase(type)) {
-                Toast.makeText(getApplicationContext(), value, Toast.LENGTH_SHORT).show();
+                String extra = data.getStringExtra(SafeKeyboardDialog.BUNDLE_CALLBACK_EXTRA);
+                Toast.makeText(getApplicationContext(), value + " - " + extra, Toast.LENGTH_SHORT).show();
             } else if (SafeKeyboardDialog.KEYBOARD_DISMISS.equalsIgnoreCase(type)) {
                 EditText editText = findViewById(R.id.edit1);
                 editText.requestFocus();

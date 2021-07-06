@@ -40,13 +40,6 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
     public static final String TAG = "lib.kalu.safekeyboard.safekeyboarddialog";
 
     @Keep
-    public static final int INTENT_CALLBACK_CODE = 119110120;
-    @Keep
-    public static final String INTENT_CALLBACK_TYPE = "intent_callback_type";
-    @Keep
-    public static final String INTENT_CALLBACK_VALUE = "intent_callback_value";
-
-    @Keep
     public static final String KEYBOARD_DELETE = "keyboard_delete";
     @Keep
     public static final String KEYBOARD_INPUT = "keyboard_input";
@@ -77,6 +70,26 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
      */
     @Keep
     public static final String BUNDLE_DELAY_TIME = "bundle_delay_time";
+    /**
+     * 回调：code
+     */
+    @Keep
+    public static final int BUNDLE_CALLBACK_CODE = 119110120;
+    /**
+     * 回调：key
+     */
+    @Keep
+    public static final String BUNDLE_CALLBACK_TYPE = "bundle_callback_type";
+    /**
+     * 回调：value
+     */
+    @Keep
+    public static final String BUNDLE_CALLBACK_VALUE = "bundle_callback_value";
+    /**
+     * 回调：extra
+     */
+    @Keep
+    public static final String BUNDLE_CALLBACK_EXTRA = "bundle_callback_extra";
 
     private final Handler mHandler = new Handler(this);
 
@@ -150,6 +163,9 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         windowParams.dimAmount = 0f;
         windowParams.gravity = Gravity.BOTTOM;
 
+        // 避免Dialog抢Activity焦点
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+
         window.setAttributes(windowParams);
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -168,11 +184,17 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
                 String input = safe.getInput();
 
                 Intent intent = new Intent();
-                intent.putExtra(INTENT_CALLBACK_TYPE, KEYBOARD_SURE);
-                intent.putExtra(INTENT_CALLBACK_VALUE, input);
+                intent.putExtra(BUNDLE_CALLBACK_TYPE, KEYBOARD_SURE);
+                intent.putExtra(BUNDLE_CALLBACK_VALUE, input);
+
+                Bundle arguments = getArguments();
+                if (null != arguments) {
+                    String extra = arguments.getString(BUNDLE_CALLBACK_EXTRA);
+                    intent.putExtra(BUNDLE_CALLBACK_EXTRA, extra);
+                }
 
                 Activity activity = getActivity();
-                activity.onActivityReenter(INTENT_CALLBACK_CODE, intent);
+                activity.onActivityReenter(BUNDLE_CALLBACK_CODE, intent);
 
                 dismiss();
             }
@@ -195,11 +217,11 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
                 SafeKeyboardLogUtil.log("onInput => letter = " + letter);
 
                 Intent intent = new Intent();
-                intent.putExtra(INTENT_CALLBACK_TYPE, KEYBOARD_INPUT);
-                intent.putExtra(INTENT_CALLBACK_VALUE, letter);
+                intent.putExtra(BUNDLE_CALLBACK_TYPE, KEYBOARD_INPUT);
+                intent.putExtra(BUNDLE_CALLBACK_VALUE, letter);
 
                 Activity activity = getActivity();
-                activity.onActivityReenter(INTENT_CALLBACK_CODE, intent);
+                activity.onActivityReenter(BUNDLE_CALLBACK_CODE, intent);
             }
 
             @Override
@@ -212,11 +234,11 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
                 SafeKeyboardLogUtil.log("onDelete => letter = " + letter);
 
                 Intent intent = new Intent();
-                intent.putExtra(INTENT_CALLBACK_TYPE, KEYBOARD_DELETE);
-                intent.putExtra(INTENT_CALLBACK_VALUE, letter);
+                intent.putExtra(BUNDLE_CALLBACK_TYPE, KEYBOARD_DELETE);
+                intent.putExtra(BUNDLE_CALLBACK_VALUE, letter);
 
                 Activity activity = getActivity();
-                activity.onActivityReenter(INTENT_CALLBACK_CODE, intent);
+                activity.onActivityReenter(BUNDLE_CALLBACK_CODE, intent);
             }
 
             @Override
@@ -251,10 +273,10 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         super.dismiss();
 
         Intent intent = new Intent();
-        intent.putExtra(INTENT_CALLBACK_TYPE, KEYBOARD_DISMISS);
+        intent.putExtra(BUNDLE_CALLBACK_TYPE, KEYBOARD_DISMISS);
 
         Activity activity = getActivity();
-        activity.onActivityReenter(INTENT_CALLBACK_CODE, intent);
+        activity.onActivityReenter(BUNDLE_CALLBACK_CODE, intent);
     }
 
     @Override
@@ -262,9 +284,9 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         super.onCancel(dialog);
 
         Intent intent = new Intent();
-        intent.putExtra(INTENT_CALLBACK_TYPE, KEYBOARD_CANCEL);
+        intent.putExtra(BUNDLE_CALLBACK_TYPE, KEYBOARD_CANCEL);
 
         Activity activity = getActivity();
-        activity.onActivityReenter(INTENT_CALLBACK_CODE, intent);
+        activity.onActivityReenter(BUNDLE_CALLBACK_CODE, intent);
     }
 }
