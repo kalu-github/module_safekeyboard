@@ -1,5 +1,6 @@
 package lib.kalu.safekeyboard;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -10,6 +11,8 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,11 +28,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.lang.ref.WeakReference;
 
 @Keep
-public class SafeKeyboardDialog extends DialogFragment implements DialogInterface.OnKeyListener {
+public class SafeKeyboardDialog extends DialogFragment implements DialogInterface.OnKeyListener, Handler.Callback {
 
     @Keep
     public static final String TAG = "lib.kalu.safekeyboard.safekeyboarddialog";
@@ -67,12 +72,40 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
      */
     @Keep
     public static final String BUNDLE_OUTSIDE_CANCLE = "bundle_outside_cancle";
+    /**
+     * 延迟时间
+     */
+    @Keep
+    public static final String BUNDLE_DELAY_TIME = "bundle_delay_time";
+
+    private final Handler mHandler = new Handler(this);
 
     @Override
-    public void onStart() {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-        super.onStart();
+    public boolean handleMessage(@NonNull Message msg) {
+        if (null != msg && null != msg.obj && msg.what == 101) {
+            Object[] objs = (Object[]) msg.obj;
+            super.show((FragmentManager) objs[0], (String) objs[1]);
+        }
+        return false;
+    }
+
+    @Override
+    public void show(@NonNull FragmentManager manager, @Nullable String tag) {
+
+        // 延迟显示安全键盘
+        long delayTime = 80;
+        Bundle arguments = getArguments();
+        if (null != arguments) {
+            delayTime = arguments.getLong(BUNDLE_DELAY_TIME, 80);
+        }
+
+        Object[] objects = new Object[2];
+        objects[0] = manager;
+        objects[1] = tag;
+        Message message = Message.obtain();
+        message.what = 101;
+        message.obj = objects;
+        mHandler.sendMessageDelayed(message, delayTime);
     }
 
     @NonNull

@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putBoolean(SafeKeyboardDialog.BUNDLE_RANDOM_NUMBER, true);
                 bundle.putBoolean(SafeKeyboardDialog.BUNDLE_RANDOM_LETTER, true);
                 bundle.putBoolean(SafeKeyboardDialog.BUNDLE_OUTSIDE_CANCLE, false);
+                bundle.putLong(SafeKeyboardDialog.BUNDLE_DELAY_TIME, 60);
 
                 SafeKeyboardDialog dialog = new SafeKeyboardDialog();
                 dialog.setArguments(bundle);
@@ -107,6 +108,4 @@ public class MainActivity extends AppCompatActivity {
 //        int childCount = ((ViewGroup) view).getChildCount();
 //        ((ViewGroup) view).removeViewAt(childCount - 1);
 //    }
-
-
 }

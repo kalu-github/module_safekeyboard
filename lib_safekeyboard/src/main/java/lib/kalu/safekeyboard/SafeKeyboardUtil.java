@@ -9,7 +9,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class SafeKeyboardUtil {
+public final class SafeKeyboardUtil {
 
     //算法/模式/填充
     private static final String CIPHER_MODE = "AES/CFB/NoPadding";
