@@ -12,49 +12,39 @@ import java.lang.ref.WeakReference;
  */
 final class SafeKeyboardFragmentManager {
 
-    private static WeakReference<Object[]> weakReference = new WeakReference<>(new Object[1]);
+    private static WeakReference<Fragment[]> weakReference = new WeakReference<>(new Fragment[1]);
 
-    static void setFragmentManager(@NonNull FragmentManager manager) {
+    static void setFragmentManager(@NonNull SafeKeyboardDialog dialog) {
 
         try {
-            if (null == weakReference) {
-                weakReference = new WeakReference<>(new Object[1]);
-            }
+            Fragment[] fragments = weakReference.get();
+            if (null == fragments || fragments.length == 0)
+                return;
 
-            Object[] objects = weakReference.get();
-            if (null == objects) {
-                weakReference = new WeakReference<>(new Object[1]);
-                objects = weakReference.get();
-            }
-            objects[0] = manager;
+            fragments[0] = dialog;
         } catch (Exception e) {
         }
     }
 
-    private static FragmentManager getFragmentManager() {
+    private static SafeKeyboardDialog getFragmentManager() {
 
         if (null == weakReference)
             return null;
 
-        Object[] objects = weakReference.get();
-        if (null == objects || objects.length != 1 || null == objects[0])
+        Fragment[] fragments = weakReference.get();
+        if (null == fragments)
             return null;
 
-        return (FragmentManager) objects[0];
+        return (SafeKeyboardDialog) fragments[0];
     }
 
     static final void forceDismiss() {
 
         try {
-            FragmentManager fragmentManager = getFragmentManager();
-            if (null == fragmentManager)
+            SafeKeyboardDialog dialog = getFragmentManager();
+            if (null == dialog)
                 return;
 
-            Fragment fragment = fragmentManager.findFragmentByTag(SafeKeyboardDialog.TAG);
-            if (null == fragment || !(fragment instanceof SafeKeyboardDialog))
-                return;
-
-            SafeKeyboardDialog dialog = (SafeKeyboardDialog) fragment;
             dialog.dismiss();
         } catch (Exception e) {
         }

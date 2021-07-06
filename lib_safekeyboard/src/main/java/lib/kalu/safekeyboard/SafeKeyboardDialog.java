@@ -23,6 +23,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import java.lang.ref.WeakReference;
@@ -99,8 +100,12 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
     @Override
     public void show(@NonNull FragmentManager manager, @Nullable String tag) {
 
+        Fragment fragmentByTag = manager.findFragmentByTag(SafeKeyboardDialog.TAG);
+        if (null != fragmentByTag)
+            return;
+
         // 更新FragmnetManger
-        SafeKeyboardFragmentManager.setFragmentManager(manager);
+        SafeKeyboardFragmentManager.setFragmentManager(this);
 
         // 延迟显示安全键盘
         long delayTime = 80;
@@ -161,7 +166,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         windowParams.gravity = Gravity.BOTTOM;
 
         // 避免Dialog抢Activity焦点
-        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
 
         window.setAttributes(windowParams);
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
