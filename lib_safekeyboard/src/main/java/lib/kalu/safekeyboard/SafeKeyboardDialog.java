@@ -269,9 +269,9 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
             @Override
             public void handleOnBackPressed() {
 
-                SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
-                String input = safeKeyboardView.getInput();
-                callActivityReenter(ACTINO_KEYBOARD_DONE, input);
+//                SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
+//                String input = safeKeyboardView.getInput();
+//                callActivityReenter(ACTINO_KEYBOARD_DONE, input);
                 dismiss();
             }
         });
@@ -281,9 +281,9 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
             @Override
             public void onClick(View v) {
 
-                SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
-                String input = safeKeyboardView.getInput();
-                callActivityReenter(ACTINO_KEYBOARD_DONE, input);
+//                SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
+//                String input = safeKeyboardView.getInput();
+//                callActivityReenter(ACTINO_KEYBOARD_DONE, input);
                 dismiss();
             }
         });
@@ -332,9 +332,6 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
         SafeKeyboardLogUtil.log("onKey => keyCode = " + keyCode + ", action = " + event.getAction());
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
-            SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
-            String input = safeKeyboardView.getInput();
-            callActivityReenter(ACTINO_KEYBOARD_DONE, input);
             dismiss();
         }
         return false;
@@ -353,9 +350,21 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
     }
 
     @Override
+    public void onDestroyView() {
+        try {
+            SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
+            String input = safeKeyboardView.getInput();
+            callActivityReenter(ACTINO_KEYBOARD_DONE, input);
+            SafeKeyboardLogUtil.log("onDestroyView => input = "+input);
+            super.onDestroyView();
+        } catch (Exception e) {
+            SafeKeyboardLogUtil.log("onDestroyView => " + e.getMessage());
+        }
+    }
+
+    @Override
     public void dismiss() {
         try {
-            SafeKeyboardLogUtil.log("dismiss =>");
             super.dismiss();
         } catch (Exception e) {
             SafeKeyboardLogUtil.log("dismiss => " + e.getMessage());
@@ -365,10 +374,6 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
         try {
-            SafeKeyboardLogUtil.log("onCancel =>");
-            SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
-            String input = safeKeyboardView.getInput();
-            callActivityReenter(ACTINO_KEYBOARD_DONE, input);
             super.onCancel(dialog);
         } catch (Exception e) {
             SafeKeyboardLogUtil.log("onCancel => " + e.getMessage());
@@ -384,7 +389,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         if (ACTINO_KEYBOARD_DONE.equals(type) && null == value)
             return;
 
-        if (ACTINO_KEYBOARD_DONE.equals(type) && null != value || value.length() == 0)
+        if (ACTINO_KEYBOARD_DONE.equals(type) && null != value && value.length() == 0)
             return;
 
         try {
@@ -407,9 +412,5 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         } catch (Exception e) {
             SafeKeyboardLogUtil.log("callActivityReenter => " + e.getMessage());
         }
-    }
-
-    public static final void forceDismiss() {
-        SafeKeyboardFragmentManager.forceDismiss();
     }
 }
