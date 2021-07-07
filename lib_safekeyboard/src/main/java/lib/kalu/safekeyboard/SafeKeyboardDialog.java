@@ -265,25 +265,23 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
 //        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         // 监听activity物理返回键
-        getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+        OnBackPressedCallback[] callbacks = new OnBackPressedCallback[1];
+        callbacks[0] = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
 
-//                SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
-//                String input = safeKeyboardView.getInput();
-//                callActivityReenter(ACTINO_KEYBOARD_DONE, input);
+                callbacks[0].setEnabled(false);
+                callbacks[0].remove();
                 dismiss();
             }
-        });
+        };
+        getActivity().getOnBackPressedDispatcher().addCallback(callbacks[0]);
 
         // 确定
         getDialog().findViewById(R.id.moudle_safe_id_done).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-//                SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
-//                String input = safeKeyboardView.getInput();
-//                callActivityReenter(ACTINO_KEYBOARD_DONE, input);
                 dismiss();
             }
         });
