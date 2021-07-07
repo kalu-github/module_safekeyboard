@@ -24,6 +24,7 @@ public final class SafeKeyboardEditText extends EditText {
         super(context);
         setClickable(true);
         setLongClickable(false);
+        setCursorVisible(true);
         disableShowSoftInput();
     }
 
@@ -31,6 +32,7 @@ public final class SafeKeyboardEditText extends EditText {
         super(context, attrs);
         setClickable(true);
         setLongClickable(false);
+        setCursorVisible(true);
         disableShowSoftInput();
     }
 
@@ -38,6 +40,7 @@ public final class SafeKeyboardEditText extends EditText {
         super(context, attrs, defStyleAttr);
         setClickable(true);
         setLongClickable(false);
+        setCursorVisible(true);
         disableShowSoftInput();
     }
 

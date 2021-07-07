@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -122,7 +123,8 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
 
             boolean pass = true;
             SafeKeyboardDialog temp = SafeKeyboardFragmentManager.get();
-            if (null != temp) {
+            if (null != temp && null != temp.getDialog()) {
+                // SafeKeyboardLogUtil.log("show => isShowing = " + temp.getDialog().isShowing());
 
                 int tes = -1;
                 if (null != temp.getArguments()) {
@@ -134,12 +136,14 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
                 if (null != arguments) {
                     ids = arguments.getInt(BUNDLE_CALLBACK_ID, -1);
                 }
+                SafeKeyboardLogUtil.log("show => ids = " + ids + ", tes = " + tes);
 
                 if (ids != -1 && tes != -1 && ids == tes) {
                     pass = false;
                 }
             }
 
+            SafeKeyboardLogUtil.log("show => pass = " + pass);
             if (pass) {
 
                 mHandler.removeMessages(101);
@@ -250,6 +254,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
 
         // 避免Dialog抢Activity焦点
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+//        window.setFlags(WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE, WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE);
 
         window.setAttributes(windowParams);
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -259,11 +264,26 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
 //        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
 //        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
+        // 监听activity物理返回键
+        getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
+                String input = safeKeyboardView.getInput();
+                callActivityReenter(ACTINO_KEYBOARD_DONE, input);
+                dismiss();
+            }
+        });
 
         // 确定
         getDialog().findViewById(R.id.moudle_safe_id_done).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
+                String input = safeKeyboardView.getInput();
+                callActivityReenter(ACTINO_KEYBOARD_DONE, input);
                 dismiss();
             }
         });
@@ -310,7 +330,8 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
 
     @Override
     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
+        SafeKeyboardLogUtil.log("onKey => keyCode = " + keyCode + ", action = " + event.getAction());
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
             SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
             String input = safeKeyboardView.getInput();
             callActivityReenter(ACTINO_KEYBOARD_DONE, input);
@@ -335,9 +356,6 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
     public void dismiss() {
         try {
             SafeKeyboardLogUtil.log("dismiss =>");
-            SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
-            String input = safeKeyboardView.getInput();
-            callActivityReenter(ACTINO_KEYBOARD_DONE, input);
             super.dismiss();
         } catch (Exception e) {
             SafeKeyboardLogUtil.log("dismiss => " + e.getMessage());
@@ -363,6 +381,12 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         if (null == activity)
             return;
 
+        if (ACTINO_KEYBOARD_DONE.equals(type) && null == value)
+            return;
+
+        if (ACTINO_KEYBOARD_DONE.equals(type) && null != value || value.length() == 0)
+            return;
+
         try {
             Intent intent = new Intent();
             intent.putExtra(BUNDLE_CALLBACK_TYPE, type);
@@ -383,5 +407,9 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         } catch (Exception e) {
             SafeKeyboardLogUtil.log("callActivityReenter => " + e.getMessage());
         }
+    }
+
+    public static final void forceDismiss() {
+        SafeKeyboardFragmentManager.forceDismiss();
     }
 }

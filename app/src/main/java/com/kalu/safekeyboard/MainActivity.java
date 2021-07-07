@@ -2,6 +2,7 @@ package com.kalu.safekeyboard;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -58,6 +59,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+//    @Override
+//    public void onBackPressed() {
+//        Fragment fragmentByTag = getSupportFragmentManager().findFragmentByTag(SafeKeyboardDialog.TAG);
+//        if (null != fragmentByTag) {
+//            SafeKeyboardDialog.forceDismiss();
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
+
     @Override
     public void onActivityReenter(int resultCode, Intent data) {
         super.onActivityReenter(resultCode, data);
@@ -80,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         if (SafeKeyboardDialog.ACTINO_KEYBOARD_DONE.equalsIgnoreCase(type)) {
             String extra = data.getStringExtra(SafeKeyboardDialog.BUNDLE_CALLBACK_EXTRA);
             Toast.makeText(getApplicationContext(), ids + " - " + value + " - " + extra, Toast.LENGTH_SHORT).show();
-        }else if (SafeKeyboardDialog.ACTINO_KEYBOARD_DELETE.equalsIgnoreCase(type)) {
+        } else if (SafeKeyboardDialog.ACTINO_KEYBOARD_DELETE.equalsIgnoreCase(type)) {
             String str = editText.getText().toString();
             if (null != str && str.length() > 0) {
                 String news = "";

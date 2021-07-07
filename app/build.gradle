@@ -51,5 +51,5 @@ dependencies {
 
     // 安全键盘
     implementation(name: 'lib_safekeyboard_release_20210707', ext: 'aar')
-    // implementation project(':lib_safekeyboard')
+//     implementation project(':lib_safekeyboard')
 }
