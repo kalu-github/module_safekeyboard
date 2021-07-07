@@ -1,10 +1,9 @@
 package lib.kalu.safekeyboard;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import java.lang.ref.WeakReference;
+import java.util.WeakHashMap;
 
 /**
  * description: FragmentManager
@@ -12,41 +11,37 @@ import java.lang.ref.WeakReference;
  */
 final class SafeKeyboardFragmentManager {
 
-    private static WeakReference<Fragment[]> weakReference = new WeakReference<>(new Fragment[1]);
+    private static WeakReference<SafeKeyboardDialog> weakReference = null;
 
     static void setFragmentManager(@NonNull SafeKeyboardDialog dialog) {
 
         try {
-            Fragment[] fragments = weakReference.get();
-            if (null == fragments || fragments.length == 0)
-                return;
-
-            fragments[0] = dialog;
+            forceDismiss();
+            weakReference = new WeakReference<>(dialog);
         } catch (Exception e) {
         }
     }
 
-    private static SafeKeyboardDialog getFragmentManager() {
-
-        if (null == weakReference)
-            return null;
-
-        Fragment[] fragments = weakReference.get();
-        if (null == fragments)
-            return null;
-
-        return (SafeKeyboardDialog) fragments[0];
+    static final void forceDismiss() {
+        if (null != weakReference) {
+            SafeKeyboardDialog dialog = weakReference.get();
+            if (null != dialog) {
+                dialog.dismiss();
+                dialog = null;
+            }
+        }
     }
 
-    static final void forceDismiss() {
-
-        try {
-            SafeKeyboardDialog dialog = getFragmentManager();
-            if (null == dialog)
-                return;
-
-            dialog.dismiss();
-        } catch (Exception e) {
+    static final SafeKeyboardDialog get() {
+        if (null != weakReference) {
+            SafeKeyboardDialog dialog = weakReference.get();
+            if (null != dialog) {
+                return dialog;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
         }
     }
 }

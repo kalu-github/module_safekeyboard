@@ -43,7 +43,7 @@ public final class SafeKeyboardEditText extends EditText {
 
     public SafeKeyboardEditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        setClickable(true);
+        setClickable(false);
         setLongClickable(false);
         disableShowSoftInput();
     }
@@ -51,10 +51,16 @@ public final class SafeKeyboardEditText extends EditText {
     @Override
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
-        SafeKeyboardLogUtil.log("onFocusChanged => focused = " + focused);
+        SafeKeyboardLogUtil.log("onFocusChanged => focused = " + focused + ", ids = " + getId());
 
         if (focused) {
             // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
+            // 强制关闭安全键盘
+            SafeKeyboardDialog dialog = SafeKeyboardFragmentManager.get();
+            if (null != dialog && null != dialog.getArguments() && getId() != dialog.getArguments().getInt(SafeKeyboardDialog.BUNDLE_CALLBACK_ID, -1)) {
+                SafeKeyboardFragmentManager.forceDismiss();
+            }
 
             // 强制关闭系统键盘
             InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);

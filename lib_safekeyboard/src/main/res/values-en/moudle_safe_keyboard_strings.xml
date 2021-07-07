@@ -7,6 +7,8 @@
     <string name="keyboard_key4" tools:ignore="ResourceName">"&#60;"</string>
     <string name="keyboard_key5" tools:ignore="ResourceName">"&#62;"</string>
     <string name="keyboard_key_space" tools:ignore="ResourceName">space</string>
+    <string name="keyboard_key_sure" tools:ignore="ResourceName">完成</string>
+    <string name="keyboard_key_message" tools:ignore="ResourceName">安全键盘</string>
     <!-- 安全键盘 -->
 
 </resources>

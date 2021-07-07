@@ -2,6 +2,7 @@ package lib.kalu.safekeyboard;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -18,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -25,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.lang.ref.WeakReference;
 
@@ -39,12 +43,18 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
     @Keep
     public static final String KEYBOARD_INPUT = "keyboard_input";
     @Keep
-    public static final String KEYBOARD_SURE = "keyboard_sure";
-    @Keep
-    public static final String KEYBOARD_DISMISS = "keyboard_dismiss";
-    @Keep
-    public static final String KEYBOARD_CANCEL = "keyboard_cancel";
+    public static final String KEYBOARD_DONE = "keyboard_done";
 
+    /**
+     * logo
+     */
+    @Keep
+    public static final String BUNDLE_KEYBOARD_LOGO = "bundle_random_letter";
+    /**
+     * title
+     */
+    @Keep
+    public static final String BUNDLE_KEYBOARD_TITLE = "bundle_keyboard_title";
     /**
      * 字母键盘随机
      */
@@ -85,6 +95,11 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
      */
     @Keep
     public static final String BUNDLE_CALLBACK_EXTRA = "bundle_callback_extra";
+    /**
+     * 回调：edittext-id
+     */
+    @Keep
+    public static final String BUNDLE_CALLBACK_ID = "bundle_callback_id";
 
     private final Handler mHandler = new Handler(this);
 
@@ -100,34 +115,35 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
     @Override
     public void show(@NonNull FragmentManager manager, @Nullable String tag) {
 
-        if (null == mHandler)
-            return;
+        try {
 
-        boolean hasMessages = mHandler.hasMessages(101);
-        if (hasMessages)
-            return;
+            mHandler.removeMessages(101);
+            mHandler.removeCallbacksAndMessages(null);
 
-        Fragment fragmentByTag = manager.findFragmentByTag(SafeKeyboardDialog.TAG);
-        if (null != fragmentByTag)
-            return;
+            // add
+            SafeKeyboardFragmentManager.setFragmentManager(this);
 
-        // 更新FragmnetManger
-        SafeKeyboardFragmentManager.setFragmentManager(this);
+            // 延迟显示安全键盘
+            int delayTime = 60;
+            Bundle arguments = getArguments();
+            if (null != arguments) {
+                delayTime = arguments.getInt(BUNDLE_DELAY_TIME, 60);
+            }
+            if (delayTime < 60) {
+                delayTime = 60;
+            }
 
-        // 延迟显示安全键盘
-        long delayTime = 80;
-        Bundle arguments = getArguments();
-        if (null != arguments) {
-            delayTime = arguments.getLong(BUNDLE_DELAY_TIME, 80);
+            Object[] objects = new Object[2];
+            objects[0] = manager;
+            objects[1] = tag;
+            Message message = Message.obtain();
+            message.what = 101;
+            message.obj = objects;
+            mHandler.sendMessageDelayed(message, delayTime);
+
+        } catch (Exception e) {
+            SafeKeyboardLogUtil.log("show => " + e.getMessage());
         }
-
-        Object[] objects = new Object[2];
-        objects[0] = manager;
-        objects[1] = tag;
-        Message message = Message.obtain();
-        message.what = 101;
-        message.obj = objects;
-        mHandler.sendMessageDelayed(message, delayTime);
     }
 
     @NonNull
@@ -149,7 +165,41 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
             isCancle = arguments.getBoolean(BUNDLE_OUTSIDE_CANCLE, false);
         }
 
-        dialog.setContentView(R.layout.moudle_safe_keyboard_dialog);
+        Context context = getContext().getApplicationContext();
+        View inflate = LayoutInflater.from(context).inflate(R.layout.moudle_safe_keyboard_dialog, null);
+
+        if (null != arguments) {
+
+            try {
+
+                // logo
+                ImageView logo = inflate.findViewById(R.id.moudle_safe_id_logo);
+                if (null != logo) {
+                    int anInt = arguments.getInt(BUNDLE_KEYBOARD_LOGO, -1);
+                    if (anInt != -1) {
+                        logo.setImageResource(anInt);
+                    }
+                }
+
+                // title
+                TextView title = inflate.findViewById(R.id.moudle_safe_id_title);
+                if (null != title) {
+                    String text = arguments.getString(BUNDLE_KEYBOARD_TITLE);
+                    if (null != text && text.length() > 0) {
+                        title.setText(text);
+                    } else {
+                        int anInt = arguments.getInt(BUNDLE_KEYBOARD_TITLE, -1);
+                        if (anInt != -1) {
+                            title.setText(anInt);
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+            }
+        }
+
+        dialog.setContentView(inflate);
         dialog.setCancelable(isCancle);
         dialog.setCanceledOnTouchOutside(isCancle);
         dialog.setOnKeyListener(this);
@@ -185,26 +235,9 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
 
 
         // 确定
-        getDialog().findViewById(R.id.moudle_id_ok).setOnClickListener(new View.OnClickListener() {
+        getDialog().findViewById(R.id.moudle_safe_id_done).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                SafeKeyboardView safe = getDialog().findViewById(R.id.moudle_id_safe);
-                String input = safe.getInput();
-
-                Intent intent = new Intent();
-                intent.putExtra(BUNDLE_CALLBACK_TYPE, KEYBOARD_SURE);
-                intent.putExtra(BUNDLE_CALLBACK_VALUE, input);
-
-                Bundle arguments = getArguments();
-                if (null != arguments) {
-                    String extra = arguments.getString(BUNDLE_CALLBACK_EXTRA);
-                    intent.putExtra(BUNDLE_CALLBACK_EXTRA, extra);
-                }
-
-                Activity activity = getActivity();
-                activity.onActivityReenter(BUNDLE_CALLBACK_CODE, intent);
-
                 dismiss();
             }
         });
@@ -217,20 +250,15 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         }
 
         // 安全键盘
-        SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_id_safe);
+        SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
         safeKeyboardView.setRandomLetter(randomLetter);
         safeKeyboardView.setRandomNumber(randomNumber);
         safeKeyboardView.setOnSafeKeyboardChangeListener(new SafeKeyboardView.OnSafeKeyboardChangeListener() {
             @Override
             public void onInput(@NonNull CharSequence letter) {
+
                 SafeKeyboardLogUtil.log("onInput => letter = " + letter);
-
-                Intent intent = new Intent();
-                intent.putExtra(BUNDLE_CALLBACK_TYPE, KEYBOARD_INPUT);
-                intent.putExtra(BUNDLE_CALLBACK_VALUE, letter);
-
-                Activity activity = getActivity();
-                activity.onActivityReenter(BUNDLE_CALLBACK_CODE, intent);
+                callActivityReenter(KEYBOARD_INPUT, letter);
             }
 
             @Override
@@ -240,14 +268,9 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
 
             @Override
             public void onDelete(@NonNull CharSequence letter) {
+
                 SafeKeyboardLogUtil.log("onDelete => letter = " + letter);
-
-                Intent intent = new Intent();
-                intent.putExtra(BUNDLE_CALLBACK_TYPE, KEYBOARD_DELETE);
-                intent.putExtra(BUNDLE_CALLBACK_VALUE, letter);
-
-                Activity activity = getActivity();
-                activity.onActivityReenter(BUNDLE_CALLBACK_CODE, intent);
+                callActivityReenter(KEYBOARD_DELETE, letter);
             }
 
             @Override
@@ -259,10 +282,15 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-
     @Override
     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-        return !isCancelable();
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
+            String input = safeKeyboardView.getInput();
+            callActivityReenter(KEYBOARD_DONE, input);
+            dismiss();
+        }
+        return false;
     }
 
     @Override
@@ -279,23 +307,55 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
 
     @Override
     public void dismiss() {
-        super.dismiss();
-
-        Intent intent = new Intent();
-        intent.putExtra(BUNDLE_CALLBACK_TYPE, KEYBOARD_DISMISS);
-
-        Activity activity = getActivity();
-        activity.onActivityReenter(BUNDLE_CALLBACK_CODE, intent);
+        try {
+            SafeKeyboardLogUtil.log("dismiss =>");
+            SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
+            String input = safeKeyboardView.getInput();
+            callActivityReenter(KEYBOARD_DONE, input);
+            super.dismiss();
+        } catch (Exception e) {
+            SafeKeyboardLogUtil.log("dismiss => " + e.getMessage());
+        }
     }
 
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
-        super.onCancel(dialog);
+        try {
+            SafeKeyboardLogUtil.log("onCancel =>");
+            SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
+            String input = safeKeyboardView.getInput();
+            callActivityReenter(KEYBOARD_DONE, input);
+            super.onCancel(dialog);
+        } catch (Exception e) {
+            SafeKeyboardLogUtil.log("onCancel => " + e.getMessage());
+        }
+    }
 
-        Intent intent = new Intent();
-        intent.putExtra(BUNDLE_CALLBACK_TYPE, KEYBOARD_CANCEL);
+    private final void callActivityReenter(@NonNull String type, @Nullable CharSequence value) {
 
         Activity activity = getActivity();
-        activity.onActivityReenter(BUNDLE_CALLBACK_CODE, intent);
+        if (null == activity)
+            return;
+
+        try {
+            Intent intent = new Intent();
+            intent.putExtra(BUNDLE_CALLBACK_TYPE, type);
+
+            Bundle arguments = getArguments();
+            if (null != arguments) {
+                String extra = arguments.getString(BUNDLE_CALLBACK_EXTRA);
+                intent.putExtra(BUNDLE_CALLBACK_EXTRA, extra);
+                int id = arguments.getInt(BUNDLE_CALLBACK_ID);
+                intent.putExtra(BUNDLE_CALLBACK_ID, id);
+            }
+
+            if (null != value && value.length() > 0) {
+                intent.putExtra(BUNDLE_CALLBACK_VALUE, value);
+            }
+
+            activity.onActivityReenter(BUNDLE_CALLBACK_CODE, intent);
+        } catch (Exception e) {
+            SafeKeyboardLogUtil.log("callActivityReenter => " + e.getMessage());
+        }
     }
 }

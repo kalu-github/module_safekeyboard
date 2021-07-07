@@ -9,10 +9,10 @@
     tools:ignore="ResourceName">
 
     <lib.kalu.safekeyboard.SafeKeyboardView
-        android:id="@+id/moudle_id_safe"
+        android:id="@+id/moudle_safe_id_keyboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="55dp"
         android:layout_marginBottom="10dp"
         android:background="@android:color/transparent"
         android:focusable="true"
@@ -25,10 +25,37 @@
         app:shadowRadius="0.8" />
 
     <Button
-        android:id="@+id/moudle_id_ok"
+        android:id="@+id/moudle_safe_id_done"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:layout_alignParentRight="true"
-        android:text="ok" />
+        android:background="@android:color/transparent"
+        android:text="@string/keyboard_key_sure"
+        android:textColor="@color/safe_keyboard_color_333333"
+        android:textSize="15sp" />
+
+    <ImageView
+        android:id="@+id/moudle_safe_id_logo"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/moudle_safe_keyboard_logo" />
+
+    <TextView
+        android:id="@+id/moudle_safe_id_title"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:layout_marginLeft="50dp"
+        android:gravity="center_vertical"
+        android:text="@string/keyboard_key_message"
+        android:textColor="@color/safe_keyboard_color_333333"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="53dp"
+        android:background="@android:color/darker_gray" />
 
 </RelativeLayout>
