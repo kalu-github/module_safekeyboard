@@ -77,10 +77,10 @@ public class MainActivity extends AppCompatActivity {
         String value = data.getStringExtra(SafeKeyboardDialog.BUNDLE_CALLBACK_VALUE);
         Log.e("main", "onActivityReenter => type = " + type + ", value = " + value);
 
-        if (SafeKeyboardDialog.KEYBOARD_DONE.equalsIgnoreCase(type)) {
+        if (SafeKeyboardDialog.ACTINO_KEYBOARD_DONE.equalsIgnoreCase(type)) {
             String extra = data.getStringExtra(SafeKeyboardDialog.BUNDLE_CALLBACK_EXTRA);
             Toast.makeText(getApplicationContext(), ids + " - " + value + " - " + extra, Toast.LENGTH_SHORT).show();
-        }else if (SafeKeyboardDialog.KEYBOARD_DELETE.equalsIgnoreCase(type)) {
+        }else if (SafeKeyboardDialog.ACTINO_KEYBOARD_DELETE.equalsIgnoreCase(type)) {
             String str = editText.getText().toString();
             if (null != str && str.length() > 0) {
                 String news = "";
@@ -90,10 +90,13 @@ public class MainActivity extends AppCompatActivity {
                 editText.setText(news);
                 editText.setSelection(news.length());
             }
-        } else if (SafeKeyboardDialog.KEYBOARD_INPUT.equalsIgnoreCase(type)) {
+        } else if (SafeKeyboardDialog.ACTINO_KEYBOARD_INPUT.equalsIgnoreCase(type)) {
             String str = editText.getText().toString() + value;
             editText.setText(str);
             editText.setSelection(str.length());
+        } else if (SafeKeyboardDialog.ACTINO_KEYBOARD_INIT.equalsIgnoreCase(type)) {
+            editText.getEditableText().clear();
+            editText.setTag(editText.getId(), null);
         }
     }
 

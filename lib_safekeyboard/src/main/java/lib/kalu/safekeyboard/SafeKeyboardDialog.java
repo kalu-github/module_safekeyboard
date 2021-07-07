@@ -39,11 +39,13 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
     public static final String TAG = "lib.kalu.safekeyboard.safekeyboarddialog";
 
     @Keep
-    public static final String KEYBOARD_DELETE = "keyboard_delete";
+    public static final String ACTINO_KEYBOARD_DELETE = "actino_keyboard_delete";
     @Keep
-    public static final String KEYBOARD_INPUT = "keyboard_input";
+    public static final String ACTINO_KEYBOARD_INPUT = "actino_keyboard_input";
     @Keep
-    public static final String KEYBOARD_DONE = "keyboard_done";
+    public static final String ACTINO_KEYBOARD_DONE = "actino_keyboard_done";
+    @Keep
+    public static final String ACTINO_KEYBOARD_INIT = "actino_keyboard_init";
 
     /**
      * logo
@@ -108,6 +110,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         if (null != msg && null != msg.obj && msg.what == 101) {
             Object[] objs = (Object[]) msg.obj;
             super.show((FragmentManager) objs[0], (String) objs[1]);
+            callActivityReenter(ACTINO_KEYBOARD_INIT, null);
         }
         return false;
     }
@@ -117,29 +120,52 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
 
         try {
 
-            mHandler.removeMessages(101);
-            mHandler.removeCallbacksAndMessages(null);
+            boolean pass = true;
+            SafeKeyboardDialog temp = SafeKeyboardFragmentManager.get();
+            if (null != temp) {
 
-            // add
-            SafeKeyboardFragmentManager.setFragmentManager(this);
+                int tes = -1;
+                if (null != temp.getArguments()) {
+                    tes = temp.getArguments().getInt(BUNDLE_CALLBACK_ID, -1);
+                }
 
-            // 延迟显示安全键盘
-            int delayTime = 60;
-            Bundle arguments = getArguments();
-            if (null != arguments) {
-                delayTime = arguments.getInt(BUNDLE_DELAY_TIME, 60);
+                int ids = -1;
+                Bundle arguments = getArguments();
+                if (null != arguments) {
+                    ids = arguments.getInt(BUNDLE_CALLBACK_ID, -1);
+                }
+
+                if (ids != -1 && tes != -1 && ids == tes) {
+                    pass = false;
+                }
             }
-            if (delayTime < 60) {
-                delayTime = 60;
-            }
 
-            Object[] objects = new Object[2];
-            objects[0] = manager;
-            objects[1] = tag;
-            Message message = Message.obtain();
-            message.what = 101;
-            message.obj = objects;
-            mHandler.sendMessageDelayed(message, delayTime);
+            if (pass) {
+
+                mHandler.removeMessages(101);
+                mHandler.removeCallbacksAndMessages(null);
+
+                // add
+                SafeKeyboardFragmentManager.setFragmentManager(this);
+
+                // 延迟显示安全键盘
+                int delayTime = 60;
+                Bundle arguments = getArguments();
+                if (null != arguments) {
+                    delayTime = arguments.getInt(BUNDLE_DELAY_TIME, 60);
+                }
+                if (delayTime < 60) {
+                    delayTime = 60;
+                }
+
+                Object[] objects = new Object[2];
+                objects[0] = manager;
+                objects[1] = tag;
+                Message message = Message.obtain();
+                message.what = 101;
+                message.obj = objects;
+                mHandler.sendMessageDelayed(message, delayTime);
+            }
 
         } catch (Exception e) {
             SafeKeyboardLogUtil.log("show => " + e.getMessage());
@@ -258,7 +284,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
             public void onInput(@NonNull CharSequence letter) {
 
                 SafeKeyboardLogUtil.log("onInput => letter = " + letter);
-                callActivityReenter(KEYBOARD_INPUT, letter);
+                callActivityReenter(ACTINO_KEYBOARD_INPUT, letter);
             }
 
             @Override
@@ -270,7 +296,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
             public void onDelete(@NonNull CharSequence letter) {
 
                 SafeKeyboardLogUtil.log("onDelete => letter = " + letter);
-                callActivityReenter(KEYBOARD_DELETE, letter);
+                callActivityReenter(ACTINO_KEYBOARD_DELETE, letter);
             }
 
             @Override
@@ -287,7 +313,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
             String input = safeKeyboardView.getInput();
-            callActivityReenter(KEYBOARD_DONE, input);
+            callActivityReenter(ACTINO_KEYBOARD_DONE, input);
             dismiss();
         }
         return false;
@@ -311,7 +337,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
             SafeKeyboardLogUtil.log("dismiss =>");
             SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
             String input = safeKeyboardView.getInput();
-            callActivityReenter(KEYBOARD_DONE, input);
+            callActivityReenter(ACTINO_KEYBOARD_DONE, input);
             super.dismiss();
         } catch (Exception e) {
             SafeKeyboardLogUtil.log("dismiss => " + e.getMessage());
@@ -324,7 +350,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
             SafeKeyboardLogUtil.log("onCancel =>");
             SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
             String input = safeKeyboardView.getInput();
-            callActivityReenter(KEYBOARD_DONE, input);
+            callActivityReenter(ACTINO_KEYBOARD_DONE, input);
             super.onCancel(dialog);
         } catch (Exception e) {
             SafeKeyboardLogUtil.log("onCancel => " + e.getMessage());
