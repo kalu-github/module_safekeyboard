@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putBoolean(SafeKeyboardDialog.BUNDLE_RANDOM_NUMBER, false);
                 bundle.putBoolean(SafeKeyboardDialog.BUNDLE_RANDOM_LETTER, false);
                 bundle.putBoolean(SafeKeyboardDialog.BUNDLE_OUTSIDE_CANCLE, true);
-                bundle.putLong(SafeKeyboardDialog.BUNDLE_DELAY_TIME, 50);
+                bundle.putLong(SafeKeyboardDialog.BUNDLE_DELAY_TIME, 60);
                 bundle.putString(SafeKeyboardDialog.BUNDLE_CALLBACK_EXTRA, "我是额外的Data");
 
                 SafeKeyboardDialog dialog = new SafeKeyboardDialog();

@@ -100,6 +100,13 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
     @Override
     public void show(@NonNull FragmentManager manager, @Nullable String tag) {
 
+        if (null == mHandler)
+            return;
+
+        boolean hasMessages = mHandler.hasMessages(101);
+        if (hasMessages)
+            return;
+
         Fragment fragmentByTag = manager.findFragmentByTag(SafeKeyboardDialog.TAG);
         if (null != fragmentByTag)
             return;
