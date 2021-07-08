@@ -26,7 +26,7 @@
 
     <Button
         android:id="@+id/moudle_safe_id_done"
-        android:layout_width="wrap_content"
+        android:layout_width="66dp"
         android:layout_height="55dp"
         android:layout_alignParentRight="true"
         android:background="@android:color/transparent"
@@ -36,8 +36,8 @@
 
     <ImageView
         android:id="@+id/moudle_safe_id_logo"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:src="@drawable/moudle_safe_keyboard_logo" />

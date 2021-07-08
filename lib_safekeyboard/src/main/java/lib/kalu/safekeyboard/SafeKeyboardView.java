@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Random;
 
 import lib.kalu.safekeyboard.google.Keyboard;
 import lib.kalu.safekeyboard.google.KeyboardView;
@@ -40,11 +41,9 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
     public static final int TYPE_SYMBOL = 3;
 
     // 加密key
-    private final String ENCRYPTION_KEY = "0123456789abcdef";
+    static final String ENCRYPTION_KEY = "0123456789abcdef";
     // 加密向量
-    private final String ENCRYPTION_IV = "9876543210fedcba";
-    // 加密密码
-    private final String ENCRYPTION_PW = "☸";
+    static final String ENCRYPTION_IV = "9876543210fedcba";
 
     // 字母键盘随机
     private boolean randomLetter = false;
@@ -56,7 +55,6 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         super(context, attrs);
 
         setTag(R.id.safe_keyboard_id_input_type, TYPE_LETTER);
-        setTag(R.id.safe_keyboard_id_input_text, null);
 
 
         setEnabled(true);
@@ -69,7 +67,6 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         super(context, attrs, defStyleAttr);
 
         setTag(R.id.safe_keyboard_id_input_type, TYPE_LETTER);
-        setTag(R.id.safe_keyboard_id_input_text, null);
 
         setEnabled(true);
         setPreviewEnabled(false);
@@ -101,10 +98,10 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
             return;
 
         List<Keyboard.Key> keys = getKeyboard().getKeys();
-        SafeKeyboardLogUtil.log("drawKeyboard => keys = " + keys);
+      //  SafeKeyboardLogUtil.log("drawKeyboard => keys = " + keys);
         if (null == keys || keys.size() == 0)
             return;
-        SafeKeyboardLogUtil.log("drawKeyboard => size = " + keys.size());
+      //  SafeKeyboardLogUtil.log("drawKeyboard => size = " + keys.size());
 
         Typeface typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD);
         for (Keyboard.Key key : keys) {
@@ -112,7 +109,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
             if (null == key.codes || key.codes.length == 0)
                 continue;
 
-            SafeKeyboardLogUtil.log("drawKeyboard => code = " + key.codes[0]);
+       //     SafeKeyboardLogUtil.log("drawKeyboard => code = " + key.codes[0]);
 
             // 功能键：删除
             if (key.codes[0] == -24) {
@@ -169,12 +166,12 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         int right = left + key.width;
         int bottom = top + key.height;
 
-        SafeKeyboardLogUtil.log("drawBackground => ********************************************");
-
-        SafeKeyboardLogUtil.log("drawBackground => left = " + left);
-        SafeKeyboardLogUtil.log("drawBackground => top = " + top);
-        SafeKeyboardLogUtil.log("drawBackground => right = " + right);
-        SafeKeyboardLogUtil.log("drawBackground => bottom = " + bottom);
+//        SafeKeyboardLogUtil.log("drawBackground => ********************************************");
+//
+//        SafeKeyboardLogUtil.log("drawBackground => left = " + left);
+//        SafeKeyboardLogUtil.log("drawBackground => top = " + top);
+//        SafeKeyboardLogUtil.log("drawBackground => right = " + right);
+//        SafeKeyboardLogUtil.log("drawBackground => bottom = " + bottom);
 
         Context context = getContext();
         Drawable drawable = ContextCompat.getDrawable(context, key.pressed ? resIdNormal : resIdPressed);
@@ -197,51 +194,51 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         float left = key.x + key.width * 0.5f - dstWidth * 0.5f;
         float top = key.y + key.height * 0.5f - dstHeight * 0.5f;
 
-        SafeKeyboardLogUtil.log("drawIcon => ********************************************");
-
-        SafeKeyboardLogUtil.log("drawIcon => code = " + key.codes[0]);
-        SafeKeyboardLogUtil.log("drawIcon => pressed = " + key.pressed);
-        SafeKeyboardLogUtil.log("drawIcon => rawNormal = " + rawNormal);
-        SafeKeyboardLogUtil.log("drawIcon => rawPress = " + rawPress);
-
-        SafeKeyboardLogUtil.log("drawIcon => dstWidth = " + dstWidth);
-        SafeKeyboardLogUtil.log("drawIcon => dstHeight = " + dstHeight);
-
-        SafeKeyboardLogUtil.log("drawIcon => left = " + left);
-        SafeKeyboardLogUtil.log("drawIcon => top = " + top);
-
-        SafeKeyboardLogUtil.log("drawIcon => x = " + key.x);
-        SafeKeyboardLogUtil.log("drawIcon => y = " + key.y);
-
-        SafeKeyboardLogUtil.log("drawIcon => x1 = " + (key.x + key.width));
-        SafeKeyboardLogUtil.log("drawIcon => y1 = " + (key.y + key.height));
+//        SafeKeyboardLogUtil.log("drawIcon => ********************************************");
+//
+//        SafeKeyboardLogUtil.log("drawIcon => code = " + key.codes[0]);
+//        SafeKeyboardLogUtil.log("drawIcon => pressed = " + key.pressed);
+//        SafeKeyboardLogUtil.log("drawIcon => rawNormal = " + rawNormal);
+//        SafeKeyboardLogUtil.log("drawIcon => rawPress = " + rawPress);
+//
+//        SafeKeyboardLogUtil.log("drawIcon => dstWidth = " + dstWidth);
+//        SafeKeyboardLogUtil.log("drawIcon => dstHeight = " + dstHeight);
+//
+//        SafeKeyboardLogUtil.log("drawIcon => left = " + left);
+//        SafeKeyboardLogUtil.log("drawIcon => top = " + top);
+//
+//        SafeKeyboardLogUtil.log("drawIcon => x = " + key.x);
+//        SafeKeyboardLogUtil.log("drawIcon => y = " + key.y);
+//
+//        SafeKeyboardLogUtil.log("drawIcon => x1 = " + (key.x + key.width));
+//        SafeKeyboardLogUtil.log("drawIcon => y1 = " + (key.y + key.height));
 
         // drawBitmap
         Bitmap icon = Bitmap.createScaledBitmap(bitmap, (int) dstWidth, (int) dstHeight, true);
         canvas.drawBitmap(icon, left, top, null);
 
-        SafeKeyboardLogUtil.log("drawIcon => inputStream = " + inputStream);
+      //  SafeKeyboardLogUtil.log("drawIcon => inputStream = " + inputStream);
         if (null != inputStream) {
             try {
                 inputStream.close();
                 inputStream = null;
-                SafeKeyboardLogUtil.log("drawIcon => inputStream = " + inputStream);
+            //    SafeKeyboardLogUtil.log("drawIcon => inputStream = " + inputStream);
             } catch (Exception e) {
             }
         }
 
-        SafeKeyboardLogUtil.log("drawIcon => bitmap = " + bitmap);
+      //  SafeKeyboardLogUtil.log("drawIcon => bitmap = " + bitmap);
         if (null != bitmap && !bitmap.isRecycled()) {
             bitmap.recycle();
             bitmap = null;
-            SafeKeyboardLogUtil.log("drawIcon => bitmap = " + bitmap);
+        //    SafeKeyboardLogUtil.log("drawIcon => bitmap = " + bitmap);
         }
 
-        SafeKeyboardLogUtil.log("drawIcon => icon = " + icon);
+      //  SafeKeyboardLogUtil.log("drawIcon => icon = " + icon);
         if (null != icon && !icon.isRecycled()) {
             icon.recycle();
             icon = null;
-            SafeKeyboardLogUtil.log("drawIcon => icon = " + icon);
+        //    SafeKeyboardLogUtil.log("drawIcon => icon = " + icon);
         }
 
         // drawCircle
@@ -258,22 +255,22 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
 
         // 选中-按下
         if (getKeyboard().isShifted() && key.pressed) {
-            SafeKeyboardLogUtil.log("drawShift => 选中-按下");
+         //   SafeKeyboardLogUtil.log("drawShift => 选中-按下");
             inputStream = getResources().openRawResource(rawPressSelect);
         }
         // 选中-未按下
         else if (getKeyboard().isShifted() && !key.pressed) {
-            SafeKeyboardLogUtil.log("drawShift => 选中-未按下");
+         //   SafeKeyboardLogUtil.log("drawShift => 选中-未按下");
             inputStream = getResources().openRawResource(rawNormalSelect);
         }
         // 未选中-按下
         else if (!getKeyboard().isShifted() && key.pressed) {
-            SafeKeyboardLogUtil.log("drawShift => 未选中-按下");
+         //   SafeKeyboardLogUtil.log("drawShift => 未选中-按下");
             inputStream = getResources().openRawResource(rawPressDefault);
         }
         // 未选中-未按下
         else {
-            SafeKeyboardLogUtil.log("drawShift => 未选中-未按下");
+         //   SafeKeyboardLogUtil.log("drawShift => 未选中-未按下");
             inputStream = getResources().openRawResource(rawNormalDefault);
         }
 
@@ -288,51 +285,51 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         float left = key.x + key.width * 0.5f - dstWidth * 0.5f;
         float top = key.y + key.height * 0.5f - dstHeight * 0.5f;
 
-        SafeKeyboardLogUtil.log("drawShift => code = " + key.codes[0]);
-        SafeKeyboardLogUtil.log("drawShift => pressed = " + key.pressed);
-        SafeKeyboardLogUtil.log("drawShift => rawNormalDefault = " + rawNormalDefault);
-        SafeKeyboardLogUtil.log("drawShift => rawNormalSelect = " + rawNormalSelect);
-        SafeKeyboardLogUtil.log("drawShift => rawPressDefault = " + rawPressDefault);
-        SafeKeyboardLogUtil.log("drawShift => rawPressSelect = " + rawPressSelect);
-
-        SafeKeyboardLogUtil.log("drawShift => dstWidth = " + dstWidth);
-        SafeKeyboardLogUtil.log("drawShift => dstHeight = " + dstHeight);
-
-        SafeKeyboardLogUtil.log("drawShift => left = " + left);
-        SafeKeyboardLogUtil.log("drawShift => top = " + top);
-
-        SafeKeyboardLogUtil.log("drawShift => x = " + key.x);
-        SafeKeyboardLogUtil.log("drawShift => y = " + key.y);
-
-        SafeKeyboardLogUtil.log("drawShift => x1 = " + (key.x + key.width));
-        SafeKeyboardLogUtil.log("drawShift => y1 = " + (key.y + key.height));
+//        SafeKeyboardLogUtil.log("drawShift => code = " + key.codes[0]);
+//        SafeKeyboardLogUtil.log("drawShift => pressed = " + key.pressed);
+//        SafeKeyboardLogUtil.log("drawShift => rawNormalDefault = " + rawNormalDefault);
+//        SafeKeyboardLogUtil.log("drawShift => rawNormalSelect = " + rawNormalSelect);
+//        SafeKeyboardLogUtil.log("drawShift => rawPressDefault = " + rawPressDefault);
+//        SafeKeyboardLogUtil.log("drawShift => rawPressSelect = " + rawPressSelect);
+//
+//        SafeKeyboardLogUtil.log("drawShift => dstWidth = " + dstWidth);
+//        SafeKeyboardLogUtil.log("drawShift => dstHeight = " + dstHeight);
+//
+//        SafeKeyboardLogUtil.log("drawShift => left = " + left);
+//        SafeKeyboardLogUtil.log("drawShift => top = " + top);
+//
+//        SafeKeyboardLogUtil.log("drawShift => x = " + key.x);
+//        SafeKeyboardLogUtil.log("drawShift => y = " + key.y);
+//
+//        SafeKeyboardLogUtil.log("drawShift => x1 = " + (key.x + key.width));
+//        SafeKeyboardLogUtil.log("drawShift => y1 = " + (key.y + key.height));
 
         // drawBitmap
         Bitmap icon = Bitmap.createScaledBitmap(bitmap, (int) dstWidth, (int) dstHeight, true);
         canvas.drawBitmap(icon, left, top, null);
 
-        SafeKeyboardLogUtil.log("drawShift => inputStream = " + inputStream);
+      //  SafeKeyboardLogUtil.log("drawShift => inputStream = " + inputStream);
         if (null != inputStream) {
             try {
                 inputStream.close();
                 inputStream = null;
-                SafeKeyboardLogUtil.log("drawShift => inputStream = " + inputStream);
+           //     SafeKeyboardLogUtil.log("drawShift => inputStream = " + inputStream);
             } catch (Exception e) {
             }
         }
 
-        SafeKeyboardLogUtil.log("drawShift => bitmap = " + bitmap);
+     //   SafeKeyboardLogUtil.log("drawShift => bitmap = " + bitmap);
         if (null != bitmap && !bitmap.isRecycled()) {
             bitmap.recycle();
             bitmap = null;
-            SafeKeyboardLogUtil.log("drawShift => bitmap = " + bitmap);
+        //    SafeKeyboardLogUtil.log("drawShift => bitmap = " + bitmap);
         }
 
-        SafeKeyboardLogUtil.log("drawShift => icon = " + icon);
+     //   SafeKeyboardLogUtil.log("drawShift => icon = " + icon);
         if (null != icon && !icon.isRecycled()) {
             icon.recycle();
             icon = null;
-            SafeKeyboardLogUtil.log("drawShift => icon = " + icon);
+         //   SafeKeyboardLogUtil.log("drawShift => icon = " + icon);
         }
 
         // drawCircle
@@ -398,13 +395,13 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
         int x = key.x + (key.width / 2);
         int y = (key.y + key.height / 2) + bounds.height() / 2 + getPaddingTop();
 
-        SafeKeyboardLogUtil.log("drawShift => ********************************************");
-
-        SafeKeyboardLogUtil.log("drawShift => code = " + key.codes[0]);
-        SafeKeyboardLogUtil.log("drawShift => pressed = " + key.pressed);
-
-        SafeKeyboardLogUtil.log("drawShift => x = " + x);
-        SafeKeyboardLogUtil.log("drawShift => y = " + y);
+//        SafeKeyboardLogUtil.log("drawShift => ********************************************");
+//
+//        SafeKeyboardLogUtil.log("drawShift => code = " + key.codes[0]);
+//        SafeKeyboardLogUtil.log("drawShift => pressed = " + key.pressed);
+//
+//        SafeKeyboardLogUtil.log("drawShift => x = " + x);
+//        SafeKeyboardLogUtil.log("drawShift => y = " + y);
 
         canvas.drawText(label, x, y, paint);
     }
@@ -413,7 +410,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
-        SafeKeyboardLogUtil.log("onKey => primaryCode = " + primaryCode);
+      //  SafeKeyboardLogUtil.log("onKey => primaryCode = " + primaryCode);
 
         switch (primaryCode) {
 
@@ -485,7 +482,7 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
 
     @Override
     public void onText(CharSequence text) {
-        SafeKeyboardLogUtil.log("onText => text = " + text);
+     //   SafeKeyboardLogUtil.log("onText => text = " + text);
     }
 
     @Override
@@ -571,32 +568,9 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
      */
     private void input(int code) {
         SafeKeyboardLogUtil.log("input => code = " + code);
-
-        String value = SafeKeyboardUtil.encryptCode(code, ENCRYPTION_KEY, ENCRYPTION_IV);
-        SafeKeyboardLogUtil.log("input => value = " + value);
-
-        if (TextUtils.isEmpty(value))
-            return;
-
-        StringBuilder builder = new StringBuilder();
-        if (null != getTag(R.id.safe_keyboard_id_input_text) && !TextUtils.isEmpty((String) getTag(R.id.safe_keyboard_id_input_text))) {
-            builder.append((String) getTag(R.id.safe_keyboard_id_input_text));
-            builder.append(ENCRYPTION_PW);
-        }
-        builder.append(value);
-
-        String update = builder.toString();
-        SafeKeyboardLogUtil.log("input => update = " + update);
-        setTag(R.id.safe_keyboard_id_input_text, update);
-
         if (null != onSafeKeyboardChangeListener) {
-            onSafeKeyboardChangeListener.onInput("*");
-            try {
-                String letter = String.valueOf((char) code);
-                String all = getInput(false);
-                onSafeKeyboardChangeListener.onInputReal(BuildConfig.DEBUG ? letter : "null", BuildConfig.DEBUG ? all : "null");
-            } catch (Exception e) {
-            }
+            int nextInt = new Random().nextInt(9);
+            onSafeKeyboardChangeListener.onInput(nextInt, code);
         }
     }
 
@@ -604,89 +578,10 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
      * 删除字符
      */
     private void delete() {
-
-        if (null == getTag(R.id.safe_keyboard_id_input_text) || TextUtils.isEmpty((String) getTag(R.id.safe_keyboard_id_input_text)))
-            return;
-
-        String[] split = ((String) getTag(R.id.safe_keyboard_id_input_text)).split(ENCRYPTION_PW);
-        SafeKeyboardLogUtil.log("delete => split = " + split);
-
-        if (null == split || split.length == 0)
-            return;
-        SafeKeyboardLogUtil.log("delete => splitLength = " + split.length);
-
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < split.length - 1; i++) {
-            builder.append(split[i]);
-            builder.append(ENCRYPTION_PW);
-        }
-
-        String update = builder.toString();
-        SafeKeyboardLogUtil.log("delete => update = " + update);
-        setTag(R.id.safe_keyboard_id_input_text, update);
-
+        SafeKeyboardLogUtil.log("delete =>");
         if (null != onSafeKeyboardChangeListener) {
-            onSafeKeyboardChangeListener.onDelete("*");
-            try {
-                String decryptLetter = SafeKeyboardUtil.decrypt(split[split.length - 1], ENCRYPTION_KEY, ENCRYPTION_IV);
-                String letter = String.valueOf((char) Integer.parseInt(decryptLetter));
-                StringBuilder builderAll = new StringBuilder();
-                for (int i = 0; i < split.length - 1; i++) {
-                    String decrypt = SafeKeyboardUtil.decrypt(split[i], ENCRYPTION_KEY, ENCRYPTION_IV);
-                    String valueOf = String.valueOf((char) Integer.parseInt(decrypt));
-                    builderAll.append(valueOf);
-                }
-                String all = builderAll.toString();
-                onSafeKeyboardChangeListener.onDeleteReal(BuildConfig.DEBUG ? letter : "null", BuildConfig.DEBUG ? all : "null");
-            } catch (Exception e) {
-            }
+            onSafeKeyboardChangeListener.onDelete();
         }
-    }
-
-    public String getInput() {
-        String parse = getInput(true);
-        return parse;
-    }
-
-    /**
-     * 解密
-     *
-     * @return
-     */
-    private final String getInput(boolean clear) {
-
-        if (null == getTag(R.id.safe_keyboard_id_input_text) || TextUtils.isEmpty((String) getTag(R.id.safe_keyboard_id_input_text)))
-            return null;
-
-        String[] split = ((String) getTag(R.id.safe_keyboard_id_input_text)).split(ENCRYPTION_PW);
-        SafeKeyboardLogUtil.log("parse => split = " + split);
-
-        // 强制清空
-        if (clear) {
-            setTag(R.id.safe_keyboard_id_input_text, null);
-        }
-
-        if (null == split || split.length == 0)
-            return null;
-        SafeKeyboardLogUtil.log("parse => splitLength = " + split.length);
-
-        StringBuilder builder = new StringBuilder();
-
-        for (int i = 0; i < split.length; i++) {
-
-            String decrypt = SafeKeyboardUtil.decrypt(split[i], ENCRYPTION_KEY, ENCRYPTION_IV);
-            SafeKeyboardLogUtil.log("parse => decrypt = " + decrypt);
-            if (TextUtils.isEmpty(decrypt))
-                continue;
-
-            String value = String.valueOf((char) Integer.parseInt(decrypt));
-            SafeKeyboardLogUtil.log("parse => value = " + value);
-
-            builder.append(value);
-        }
-
-        String result = builder.toString();
-        return result;
     }
 
     protected void setRandomLetter(boolean randomLetter) {
@@ -707,14 +602,8 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
 
     public interface OnSafeKeyboardChangeListener {
 
-        void onInput(@NonNull CharSequence letter);
+        void onInput(@NonNull int text, @NonNull int real);
 
-        default void onInputReal(@NonNull CharSequence letter, @NonNull CharSequence news) {
-        }
-
-        void onDelete(@NonNull CharSequence letter);
-
-        default void onDeleteReal(@NonNull CharSequence letter, @NonNull CharSequence news) {
-        }
+        void onDelete();
     }
 }

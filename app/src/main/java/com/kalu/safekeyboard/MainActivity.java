@@ -82,58 +82,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        Fragment fragmentByTag = getSupportFragmentManager().findFragmentByTag(SafeKeyboardDialog.TAG);
-//        if (null != fragmentByTag) {
-//            SafeKeyboardDialog.forceDismiss();
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
-
-//    @Override
-//    public void onActivityReenter(int resultCode, Intent data) {
-//        super.onActivityReenter(resultCode, data);
-//
-//        if (resultCode != SafeKeyboardDialog.BUNDLE_CALLBACK_CODE)
-//            return;
-//
-//        int ids = data.getIntExtra(SafeKeyboardDialog.BUNDLE_CALLBACK_ID, -1);
-//        if (-1 == ids)
-//            return;
-//
-//        EditText editText = findViewById(ids);
-//        if (null == editText)
-//            return;
-//
-//        String type = data.getStringExtra(SafeKeyboardDialog.BUNDLE_CALLBACK_TYPE);
-//        String value = data.getStringExtra(SafeKeyboardDialog.BUNDLE_CALLBACK_VALUE);
-//        Log.e("main", "onActivityReenter => type = " + type + ", value = " + value);
-//
-//        if (SafeKeyboardDialog.ACTINO_KEYBOARD_DONE.equalsIgnoreCase(type)) {
-//            String extra = data.getStringExtra(SafeKeyboardDialog.BUNDLE_CALLBACK_EXTRA);
-//            Toast.makeText(getApplicationContext(), ids + " - " + value + " - " + extra, Toast.LENGTH_SHORT).show();
-//        } else if (SafeKeyboardDialog.ACTINO_KEYBOARD_DELETE.equalsIgnoreCase(type)) {
-//            String str = editText.getText().toString();
-//            if (null != str && str.length() > 0) {
-//                String news = "";
-//                if (str.length() > 1) {
-//                    news = str.substring(0, str.length() - 1);
-//                }
-//                editText.setText(news);
-//                editText.setSelection(news.length());
-//            }
-//        } else if (SafeKeyboardDialog.ACTINO_KEYBOARD_INPUT.equalsIgnoreCase(type)) {
-//            String str = editText.getText().toString() + value;
-//            editText.setText(str);
-//            editText.setSelection(str.length());
-//        } else if (SafeKeyboardDialog.ACTINO_KEYBOARD_INIT.equalsIgnoreCase(type)) {
-//            editText.getEditableText().clear();
-//            editText.setTag(editText.getId(), null);
-//        }
-//    }
-
     @Override
     protected void onPause() {
 //        String s = MainActivity.class.getName().toLowerCase();
