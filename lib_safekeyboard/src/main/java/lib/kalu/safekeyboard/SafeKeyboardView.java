@@ -591,13 +591,11 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
 
         if (null != onSafeKeyboardChangeListener) {
             onSafeKeyboardChangeListener.onInput("*");
-            if (BuildConfig.DEBUG) {
-                try {
-                    String letter = String.valueOf((char) code);
-                    String all = getInput(false);
-                    onSafeKeyboardChangeListener.onInputReal(BuildConfig.DEBUG ? letter : "null", BuildConfig.DEBUG ? all : "null");
-                } catch (Exception e) {
-                }
+            try {
+                String letter = String.valueOf((char) code);
+                String all = getInput(false);
+                onSafeKeyboardChangeListener.onInputReal(BuildConfig.DEBUG ? letter : "null", BuildConfig.DEBUG ? all : "null");
+            } catch (Exception e) {
             }
         }
     }
@@ -629,20 +627,18 @@ public class SafeKeyboardView extends KeyboardView implements KeyboardView.OnKey
 
         if (null != onSafeKeyboardChangeListener) {
             onSafeKeyboardChangeListener.onDelete("*");
-            if (BuildConfig.DEBUG) {
-                try {
-                    String decryptLetter = SafeKeyboardUtil.decrypt(split[split.length - 1], ENCRYPTION_KEY, ENCRYPTION_IV);
-                    String letter = String.valueOf((char) Integer.parseInt(decryptLetter));
-                    StringBuilder builderAll = new StringBuilder();
-                    for (int i = 0; i < split.length - 1; i++) {
-                        String decrypt = SafeKeyboardUtil.decrypt(split[i], ENCRYPTION_KEY, ENCRYPTION_IV);
-                        String valueOf = String.valueOf((char) Integer.parseInt(decrypt));
-                        builderAll.append(valueOf);
-                    }
-                    String all = builderAll.toString();
-                    onSafeKeyboardChangeListener.onDeleteReal(BuildConfig.DEBUG ? letter : "null", BuildConfig.DEBUG ? all : "null");
-                } catch (Exception e) {
+            try {
+                String decryptLetter = SafeKeyboardUtil.decrypt(split[split.length - 1], ENCRYPTION_KEY, ENCRYPTION_IV);
+                String letter = String.valueOf((char) Integer.parseInt(decryptLetter));
+                StringBuilder builderAll = new StringBuilder();
+                for (int i = 0; i < split.length - 1; i++) {
+                    String decrypt = SafeKeyboardUtil.decrypt(split[i], ENCRYPTION_KEY, ENCRYPTION_IV);
+                    String valueOf = String.valueOf((char) Integer.parseInt(decrypt));
+                    builderAll.append(valueOf);
                 }
+                String all = builderAll.toString();
+                onSafeKeyboardChangeListener.onDeleteReal(BuildConfig.DEBUG ? letter : "null", BuildConfig.DEBUG ? all : "null");
+            } catch (Exception e) {
             }
         }
     }

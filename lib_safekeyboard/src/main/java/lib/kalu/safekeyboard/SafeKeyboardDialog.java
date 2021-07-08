@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -78,31 +81,31 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
      */
     @Keep
     public static final String BUNDLE_DELAY_TIME = "bundle_delay_time";
-    /**
-     * 回调：code
-     */
-    @Keep
-    public static final int BUNDLE_CALLBACK_CODE = 119110120;
-    /**
-     * 回调：key
-     */
-    @Keep
-    public static final String BUNDLE_CALLBACK_TYPE = "bundle_callback_type";
-    /**
-     * 回调：value
-     */
-    @Keep
-    public static final String BUNDLE_CALLBACK_VALUE = "bundle_callback_value";
-    /**
-     * 回调：extra
-     */
-    @Keep
-    public static final String BUNDLE_CALLBACK_EXTRA = "bundle_callback_extra";
+//    /**
+//     * 回调：code
+//     */
+//    @Keep
+//    public static final int BUNDLE_CALLBACK_CODE = 119110120;
+//    /**
+//     * 回调：key
+//     */
+//    @Keep
+//    public static final String BUNDLE_CALLBACK_TYPE = "bundle_callback_type";
+//    /**
+//     * 回调：value
+//     */
+//    @Keep
+//    public static final String BUNDLE_CALLBACK_VALUE = "bundle_callback_value";
+//    /**
+//     * 回调：extra
+//     */
+//    @Keep
+//    public static final String BUNDLE_CALLBACK_EXTRA = "bundle_callback_extra";
     /**
      * 回调：edittext-id
      */
     @Keep
-    public static final String BUNDLE_CALLBACK_ID = "bundle_callback_id";
+    public static final String BUNDLE_EDITTEXT_ID = "bundle_edittext_id";
 
     private final Handler mHandler = new Handler(this);
 
@@ -111,7 +114,7 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         if (null != msg && null != msg.obj && msg.what == 101) {
             Object[] objs = (Object[]) msg.obj;
             super.show((FragmentManager) objs[0], (String) objs[1]);
-            callActivityReenter(ACTINO_KEYBOARD_INIT, null);
+            // callActivityReenter(ACTINO_KEYBOARD_INIT, null);
         }
         return false;
     }
@@ -128,13 +131,13 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
 
                 int tes = -1;
                 if (null != temp.getArguments()) {
-                    tes = temp.getArguments().getInt(BUNDLE_CALLBACK_ID, -1);
+                    tes = temp.getArguments().getInt(BUNDLE_EDITTEXT_ID, -1);
                 }
 
                 int ids = -1;
                 Bundle arguments = getArguments();
                 if (null != arguments) {
-                    ids = arguments.getInt(BUNDLE_CALLBACK_ID, -1);
+                    ids = arguments.getInt(BUNDLE_EDITTEXT_ID, -1);
                 }
                 SafeKeyboardLogUtil.log("show => ids = " + ids + ", tes = " + tes);
 
@@ -302,19 +305,104 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
             public void onInput(@NonNull CharSequence letter) {
 
                 SafeKeyboardLogUtil.log("onInput => letter = " + letter);
-                callActivityReenter(ACTINO_KEYBOARD_INPUT, letter);
+//                callActivityReenter(ACTINO_KEYBOARD_INPUT, letter);
+
+                Bundle arguments = getArguments();
+                if (null != arguments) {
+                    int ids = arguments.getInt(BUNDLE_EDITTEXT_ID, -1);
+                    if (-1 != ids) {
+                        Activity activity = getActivity();
+                        if (null != activity) {
+                            View viewById = activity.findViewById(ids);
+                            if (null != viewById && (viewById instanceof EditText)) {
+                                String statStr = null;
+                                EditText editText = (EditText) viewById;
+                                Editable editable = editText.getEditableText();
+                                if (null != editable) {
+                                    statStr = editable.toString();
+                                }
+                                // 显示
+                                editText.getEditableText().clear();
+                                editText.setText(statStr + letter);
+                                try {
+                                    editText.setSelection(statStr.length() + letter.length());
+                                } catch (Exception e) {
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             @Override
             public void onInputReal(@NonNull CharSequence letter, @NonNull CharSequence news) {
                 SafeKeyboardLogUtil.log("onInputReal => letter = " + letter + ", news = " + news);
+
+                Bundle arguments = getArguments();
+                if (null != arguments) {
+                    int ids = arguments.getInt(BUNDLE_EDITTEXT_ID, -1);
+                    if (-1 != ids) {
+                        Activity activity = getActivity();
+                        if (null != activity) {
+                            View viewById = activity.findViewById(ids);
+                            if (null != viewById && (viewById instanceof EditText)) {
+
+                                String realStr = "";
+                                EditText editText = (EditText) viewById;
+                                Object textTag = editText.getTag(R.id.safe_keyboard_id_input_text);
+                                if (null != textTag) {
+                                    realStr = textTag.toString();
+                                }
+
+                                // 真实
+                                editText.setTag(R.id.safe_keyboard_id_input_text, "");
+                                editText.setTag(R.id.safe_keyboard_id_input_text, realStr + letter);
+                            }
+                        }
+                    }
+                }
             }
 
             @Override
             public void onDelete(@NonNull CharSequence letter) {
-
                 SafeKeyboardLogUtil.log("onDelete => letter = " + letter);
-                callActivityReenter(ACTINO_KEYBOARD_DELETE, letter);
+
+                Bundle arguments = getArguments();
+                if (null != arguments) {
+                    int ids = arguments.getInt(BUNDLE_EDITTEXT_ID, -1);
+                    if (-1 != ids) {
+                        Activity activity = getActivity();
+                        if (null != activity) {
+                            View viewById = activity.findViewById(ids);
+                            if (null != viewById && (viewById instanceof EditText)) {
+                                EditText editText = (EditText) viewById;
+                                Editable editable = editText.getEditableText();
+                                if (null != editable && editable.length() > 0) {
+
+                                    // 显示
+                                    String starStr = editable.toString();
+                                    String subStarStr = starStr.substring(0, starStr.length() - 1);
+                                    editText.getEditableText().clear();
+                                    editText.setText(subStarStr);
+                                    try {
+                                        editText.setSelection(starStr.length() + letter.length());
+                                    } catch (Exception e) {
+                                    }
+
+                                    // 真实
+                                    Object textTag = editText.getTag(R.id.safe_keyboard_id_input_text);
+                                    if (null != textTag) {
+                                        String realStr = textTag.toString();
+                                        if (null != realStr && realStr.length() > 0) {
+                                            String subRealStr = realStr.substring(0, realStr.length() - 1);
+                                            editText.setTag(R.id.safe_keyboard_id_input_text, subRealStr);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             @Override
@@ -347,18 +435,18 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         super.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public void onDestroyView() {
-        try {
-            SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
-            String input = safeKeyboardView.getInput();
-            callActivityReenter(ACTINO_KEYBOARD_DONE, input);
-            SafeKeyboardLogUtil.log("onDestroyView => input = "+input);
-            super.onDestroyView();
-        } catch (Exception e) {
-            SafeKeyboardLogUtil.log("onDestroyView => " + e.getMessage());
-        }
-    }
+//    @Override
+//    public void onDestroyView() {
+//        try {
+//            SafeKeyboardView safeKeyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
+//            String input = safeKeyboardView.getInput();
+//            callActivityReenter(ACTINO_KEYBOARD_DONE, input);
+//            SafeKeyboardLogUtil.log("onDestroyView => input = "+input);
+//            super.onDestroyView();
+//        } catch (Exception e) {
+//            SafeKeyboardLogUtil.log("onDestroyView => " + e.getMessage());
+//        }
+//    }
 
     @Override
     public void dismiss() {
@@ -378,37 +466,37 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
         }
     }
 
-    private final void callActivityReenter(@NonNull String type, @Nullable CharSequence value) {
-
-        Activity activity = getActivity();
-        if (null == activity)
-            return;
-
-        if (ACTINO_KEYBOARD_DONE.equals(type) && null == value)
-            return;
-
-        if (ACTINO_KEYBOARD_DONE.equals(type) && null != value && value.length() == 0)
-            return;
-
-        try {
-            Intent intent = new Intent();
-            intent.putExtra(BUNDLE_CALLBACK_TYPE, type);
-
-            Bundle arguments = getArguments();
-            if (null != arguments) {
-                String extra = arguments.getString(BUNDLE_CALLBACK_EXTRA);
-                intent.putExtra(BUNDLE_CALLBACK_EXTRA, extra);
-                int id = arguments.getInt(BUNDLE_CALLBACK_ID);
-                intent.putExtra(BUNDLE_CALLBACK_ID, id);
-            }
-
-            if (null != value && value.length() > 0) {
-                intent.putExtra(BUNDLE_CALLBACK_VALUE, value);
-            }
-
-            activity.onActivityReenter(BUNDLE_CALLBACK_CODE, intent);
-        } catch (Exception e) {
-            SafeKeyboardLogUtil.log("callActivityReenter => " + e.getMessage());
-        }
-    }
+//    private final void callActivityReenter(@NonNull String type, @Nullable CharSequence value) {
+//
+//        Activity activity = getActivity();
+//        if (null == activity)
+//            return;
+//
+//        if (ACTINO_KEYBOARD_DONE.equals(type) && null == value)
+//            return;
+//
+//        if (ACTINO_KEYBOARD_DONE.equals(type) && null != value && value.length() == 0)
+//            return;
+//
+//        try {
+//            Intent intent = new Intent();
+//            intent.putExtra(BUNDLE_CALLBACK_TYPE, type);
+//
+//            Bundle arguments = getArguments();
+//            if (null != arguments) {
+//                String extra = arguments.getString(BUNDLE_CALLBACK_EXTRA);
+//                intent.putExtra(BUNDLE_CALLBACK_EXTRA, extra);
+//                int id = arguments.getInt(BUNDLE_CALLBACK_ID);
+//                intent.putExtra(BUNDLE_CALLBACK_ID, id);
+//            }
+//
+//            if (null != value && value.length() > 0) {
+//                intent.putExtra(BUNDLE_CALLBACK_VALUE, value);
+//            }
+//
+//            activity.onActivityReenter(BUNDLE_CALLBACK_CODE, intent);
+//        } catch (Exception e) {
+//            SafeKeyboardLogUtil.log("callActivityReenter => " + e.getMessage());
+//        }
+//    }
 }
