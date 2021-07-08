@@ -133,7 +133,7 @@ public final class SafeKeyboardEditText extends EditText {
 
     void delete() {
 
-        SafeKeyboardLogUtil.log("delete =>");
+      //  SafeKeyboardLogUtil.log("delete =>");
         if (null == getEditableText() || getEditableText().length() <= 0)
             return;
 
@@ -148,7 +148,7 @@ public final class SafeKeyboardEditText extends EditText {
         } else {
             isLast = false;
         }
-        SafeKeyboardLogUtil.log("delete => start = " + start + ", end = " + end);
+      //  SafeKeyboardLogUtil.log("delete => start = " + start + ", end = " + end);
 
         // 显示
         String textTemp = null;
@@ -195,14 +195,13 @@ public final class SafeKeyboardEditText extends EditText {
             String s = del.toString();
             setTag(R.id.safe_keyboard_id_input_text, s);
 
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             SafeKeyboardLogUtil.log("delete => " + e.getMessage());
         }
     }
 
     void input(@NonNull int text, @NonNull int real) {
-        SafeKeyboardLogUtil.log("input => text = " + text + ", real = " + real);
+       // SafeKeyboardLogUtil.log("input => text = " + text + ", real = " + real);
 
         // 显示
         String textTemp = null;
@@ -230,7 +229,7 @@ public final class SafeKeyboardEditText extends EditText {
             JSONArray array = new JSONArray();
             realTemp = array.toString();
         }
-        SafeKeyboardLogUtil.log("input => realTemp = " + realTemp);
+     //   SafeKeyboardLogUtil.log("input => realTemp = " + realTemp);
         try {
             JSONArray jsonArray = new JSONArray(realTemp);
             String value = SafeKeyboardUtil.encryptCode(real, SafeKeyboardView.ENCRYPTION_KEY, SafeKeyboardView.ENCRYPTION_IV);
@@ -253,12 +252,12 @@ public final class SafeKeyboardEditText extends EditText {
             JSONArray jsonArray = new JSONArray(real);
             for (int i = 0; i < jsonArray.length(); i++) {
                 String temp = jsonArray.optString(i, null);
-                SafeKeyboardLogUtil.log("getReal => i = " + i + ", text " + temp);
+           //     SafeKeyboardLogUtil.log("getReal => i = " + i + ", text " + temp);
                 if (null == temp || temp.length() <= 0)
                     continue;
 
                 String decrypt = SafeKeyboardUtil.decrypt(temp, SafeKeyboardView.ENCRYPTION_KEY, SafeKeyboardView.ENCRYPTION_IV);
-                SafeKeyboardLogUtil.log("getReal => i = " + i + ", decrypt " + decrypt);
+            //    SafeKeyboardLogUtil.log("getReal => i = " + i + ", decrypt " + decrypt);
                 if (null == decrypt || decrypt.length() <= 0)
                     continue;
 
