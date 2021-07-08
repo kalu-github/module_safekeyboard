@@ -57,8 +57,7 @@ public final class SafeKeyboardEditText extends EditText {
             setTextSelectHandle(colorDrawable);
             setTextSelectHandleLeft(colorDrawable);
             setTextSelectHandleRight(colorDrawable);
-        }
-        else{
+        } else {
             try {
                 Field fEditor = SafeKeyboardEditText.class.getDeclaredField("mEditor");
                 fEditor.setAccessible(true);
@@ -125,7 +124,7 @@ public final class SafeKeyboardEditText extends EditText {
         }
     }
 
-    public String getInput() {
+    public String getReal() {
         Object tag = getTag(R.id.safe_keyboard_id_input_text);
         if (null == tag)
             return null;

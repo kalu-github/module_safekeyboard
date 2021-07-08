@@ -65,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
                 SafeKeyboardEditText editText = findViewById(R.id.edit2);
                 String text = editText.getText().toString();
-                String input = editText.getInput();
-                Toast.makeText(getApplicationContext(), text+" - "+input, Toast.LENGTH_SHORT).show();
+                String real = editText.getReal();
+                Toast.makeText(getApplicationContext(), text + " - " + real, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
 
                 SafeKeyboardEditText editText = findViewById(R.id.edit3);
                 String text = editText.getText().toString();
-                String input = editText.getInput();
-                Toast.makeText(getApplicationContext(), text+" - "+input, Toast.LENGTH_SHORT).show();
+                String real = editText.getReal();
+                Toast.makeText(getApplicationContext(), text + " - " + real, Toast.LENGTH_SHORT).show();
             }
         });
     }
