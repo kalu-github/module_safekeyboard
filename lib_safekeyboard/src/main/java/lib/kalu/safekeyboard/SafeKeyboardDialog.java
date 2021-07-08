@@ -389,38 +389,4 @@ public class SafeKeyboardDialog extends DialogFragment implements DialogInterfac
             SafeKeyboardLogUtil.log("onCancel => " + e.getMessage());
         }
     }
-
-//    private final void callActivityReenter(@NonNull String type, @Nullable CharSequence value) {
-//
-//        Activity activity = getActivity();
-//        if (null == activity)
-//            return;
-//
-//        if (ACTINO_KEYBOARD_DONE.equals(type) && null == value)
-//            return;
-//
-//        if (ACTINO_KEYBOARD_DONE.equals(type) && null != value && value.length() == 0)
-//            return;
-//
-//        try {
-//            Intent intent = new Intent();
-//            intent.putExtra(BUNDLE_CALLBACK_TYPE, type);
-//
-//            Bundle arguments = getArguments();
-//            if (null != arguments) {
-//                String extra = arguments.getString(BUNDLE_CALLBACK_EXTRA);
-//                intent.putExtra(BUNDLE_CALLBACK_EXTRA, extra);
-//                int id = arguments.getInt(BUNDLE_CALLBACK_ID);
-//                intent.putExtra(BUNDLE_CALLBACK_ID, id);
-//            }
-//
-//            if (null != value && value.length() > 0) {
-//                intent.putExtra(BUNDLE_CALLBACK_VALUE, value);
-//            }
-//
-//            activity.onActivityReenter(BUNDLE_CALLBACK_CODE, intent);
-//        } catch (Exception e) {
-//            SafeKeyboardLogUtil.log("callActivityReenter => " + e.getMessage());
-//        }
-//    }
 }
