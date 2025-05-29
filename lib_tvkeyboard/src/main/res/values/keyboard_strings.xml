@@ -1,0 +1,62 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 安全键盘 -->
+    <string name="keyboard_key1" tools:ignore="ResourceName">"&#64;"</string>
+    <string name="keyboard_key2" tools:ignore="ResourceName">"&#38;"</string>
+    <string name="keyboard_key3" tools:ignore="ResourceName">\"</string>
+    <string name="keyboard_key4" tools:ignore="ResourceName">"&#60;"</string>
+    <string name="keyboard_key5" tools:ignore="ResourceName">"&#62;"</string>
+    <string name="keyboard_key_space" tools:ignore="ResourceName">\u7a7a\u683c</string>
+    <string name="keyboard_key_sure" tools:ignore="ResourceName">完成</string>
+    <string name="keyboard_key_message" tools:ignore="ResourceName">安全键盘</string>
+    <!-- 安全键盘 -->
+
+
+    <string name="keyboard_key_101" tools:ignore="ResourceName">1</string>
+    <string name="keyboard_key_102" tools:ignore="ResourceName">2</string>
+    <string name="keyboard_key_103" tools:ignore="ResourceName">3</string>
+    <string name="keyboard_key_104" tools:ignore="ResourceName">4</string>
+    <string name="keyboard_key_105" tools:ignore="ResourceName">5</string>
+    <string name="keyboard_key_106" tools:ignore="ResourceName">6</string>
+    <string name="keyboard_key_107" tools:ignore="ResourceName">7</string>
+    <string name="keyboard_key_108" tools:ignore="ResourceName">8</string>
+    <string name="keyboard_key_109" tools:ignore="ResourceName">9</string>
+    <string name="keyboard_key_110" tools:ignore="ResourceName">0</string>
+    <string name="keyboard_key_111" tools:ignore="ResourceName">del</string>
+
+    <string name="keyboard_key_201" tools:ignore="ResourceName">q</string>
+    <string name="keyboard_key_202" tools:ignore="ResourceName">w</string>
+    <string name="keyboard_key_203" tools:ignore="ResourceName">e</string>
+    <string name="keyboard_key_204" tools:ignore="ResourceName">r</string>
+    <string name="keyboard_key_205" tools:ignore="ResourceName">t</string>
+    <string name="keyboard_key_206" tools:ignore="ResourceName">y</string>
+    <string name="keyboard_key_207" tools:ignore="ResourceName">u</string>
+    <string name="keyboard_key_208" tools:ignore="ResourceName">i</string>
+    <string name="keyboard_key_209" tools:ignore="ResourceName">o</string>
+    <string name="keyboard_key_210" tools:ignore="ResourceName">p</string>
+    <string name="keyboard_key_211" tools:ignore="ResourceName">up</string>
+
+    <string name="keyboard_key_301" tools:ignore="ResourceName">a</string>
+    <string name="keyboard_key_302" tools:ignore="ResourceName">s</string>
+    <string name="keyboard_key_303" tools:ignore="ResourceName">d</string>
+    <string name="keyboard_key_304" tools:ignore="ResourceName">f</string>
+    <string name="keyboard_key_305" tools:ignore="ResourceName">g</string>
+    <string name="keyboard_key_306" tools:ignore="ResourceName">h</string>
+    <string name="keyboard_key_307" tools:ignore="ResourceName">j</string>
+    <string name="keyboard_key_308" tools:ignore="ResourceName">k</string>
+    <string name="keyboard_key_309" tools:ignore="ResourceName">l</string>
+    <string name="keyboard_key_310" tools:ignore="ResourceName">space</string>
+    <string name="keyboard_key_311" tools:ignore="ResourceName">.com</string>
+
+    <string name="keyboard_key_401" tools:ignore="ResourceName">z</string>
+    <string name="keyboard_key_402" tools:ignore="ResourceName">x</string>
+    <string name="keyboard_key_403" tools:ignore="ResourceName">c</string>
+    <string name="keyboard_key_404" tools:ignore="ResourceName">v</string>
+    <string name="keyboard_key_405" tools:ignore="ResourceName">b</string>
+    <string name="keyboard_key_406" tools:ignore="ResourceName">n</string>
+    <string name="keyboard_key_407" tools:ignore="ResourceName">m</string>
+    <string name="keyboard_key_408" tools:ignore="ResourceName">Enter</string>
+    <string name="keyboard_key_409" tools:ignore="ResourceName">&amp;123</string>
+    <string name="keyboard_key_410" tools:ignore="ResourceName">earth</string>
+
+</resources>

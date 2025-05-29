@@ -3,13 +3,17 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+
+    namespace "com.kalu.safekeyboard"
+    compileSdkVersion 34
+    buildToolsVersion "34.0.0"
 
     defaultConfig {
         applicationId "com.kalu.safekeyboard"
-        minSdkVersion 23
-        targetSdkVersion 30
+        minSdkVersion 19 // android4.4
+        targetSdkVersion 34
+        multiDexEnabled true
+
         versionCode 1
         versionName "1.0"
 
@@ -38,18 +42,11 @@ android {
     }
 }
 
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
-
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
 
     // 安全键盘
-    implementation(name: 'lib_safekeyboard_release_20210708', ext: 'aar')
-//     implementation project(':lib_safekeyboard')
+//    implementation(name: 'lib_safekeyboard_release_20210708', ext: 'aar')
+     implementation project(':lib_tvkeyboard')
 }

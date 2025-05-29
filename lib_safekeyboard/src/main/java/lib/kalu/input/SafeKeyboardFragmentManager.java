@@ -1,9 +1,8 @@
-package lib.kalu.safekeyboard;
+package lib.kalu.input;
 
 import androidx.annotation.NonNull;
 
 import java.lang.ref.WeakReference;
-import java.util.WeakHashMap;
 
 /**
  * description: FragmentManager

@@ -30,7 +30,7 @@
  * the License.
  */
 
-package lib.kalu.safekeyboard.google;
+package lib.kalu.input.google;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -62,7 +62,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lib.kalu.safekeyboard.R;
+import lib.kalu.input.R;
 
 /**
  * A view that renders a virtual {@link Keyboard}. It handles rendering of keys and

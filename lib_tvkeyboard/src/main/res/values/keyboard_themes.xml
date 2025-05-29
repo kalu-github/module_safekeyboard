@@ -1,0 +1,49 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="ThemeMoudleSafeKeyboard" parent="android:style/Theme.Dialog" tools:ignore="ResourceName">
+        <!--背景颜色及和透明程度-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--是否去除标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!--是否去除边框-->
+        <item name="android:windowFrame">@null</item>
+        <!--是否浮现在activity之上-->
+        <item name="android:windowIsFloating">true</item>
+        <!--是否模糊-->
+        <item name="android:backgroundDimEnabled">false</item>
+        // 标题栏背景颜色
+        <item name="colorPrimary">@android:color/transparent</item>
+        // 状态栏透明层颜色
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        // 一般如floatingActionBar按钮的颜色，RadioButton／输入框聚焦／进度条等色值
+        <item name="colorAccent">@android:color/transparent</item>
+        // fitsSystemWindows只作用在Android4.4及以上的系统，因为4.4以下的系统StatusBar没有透明状态。
+        <item name="android:fitsSystemWindows">false</item>
+        // 为 Theme 设置透明属性, 是否半透明
+        <item name="android:windowIsTranslucent">false</item>
+        // 透明状态栏（Android 4.4系统效果为透明状态，5.0及其以后系统效果为半透明状态）在styles.xml(v19)中设置
+        <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">false</item>
+        // 透明导航栏（android4.4以上支持），在styles.xml(v19)中设置
+        <item name="android:windowTranslucentNavigation">false</item>
+        // 使导航栏和状态栏可绘制（android5.0以上支持）,即状态栏是否覆盖在ContentView上，在styles.xml(v21)中设置
+        <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">true</item>
+        // 状态栏颜色
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent
+        </item>
+        // 状态栏白底黑字
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        // 内容显示延伸至刘海屏
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="p">shortEdges</item>
+        // 动画进入
+        <item name="android:windowEnterAnimation">@anim/moudle_safe_anim_keyboard_in</item>
+        // 动画退出
+        <item name="android:windowExitAnimation">@anim/moudle_safe_anim_keyboard_out</item>
+    </style>
+
+<!--    <style name="ThemeMoudleSafeKeyboardEditText" parent="ThemeMoudleSafeKeyboard" tools:ignore="ResourceName">-->
+<!--        <item name="android:textSelectHandle">@android:color/transparent</item>-->
+<!--        <item name="android:textSelectHandleLeft">@android:color/transparent</item>-->
+<!--        <item name="android:textSelectHandleRight">@android:color/transparent</item>-->
+<!--    </style>-->
+
+</resources>

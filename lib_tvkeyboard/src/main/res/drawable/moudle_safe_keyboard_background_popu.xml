@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="ResourceName">
+
+    <item android:state_focused="true">
+        <shape android:shape="rectangle" tools:ignore="ResourceName">
+            <gradient android:endColor="#ff6200" android:startColor="#ff3c3c" />
+            <corners android:radius="8dp" />
+        </shape>
+
+    </item>
+
+    <item>
+        <shape android:shape="rectangle" tools:ignore="ResourceName">
+            <solid android:color="#494e5e" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+
+</selector>

@@ -30,7 +30,7 @@
  * the License.
  */
 
-package lib.kalu.safekeyboard.google;
+package lib.kalu.input.google;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -53,8 +53,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import lib.kalu.safekeyboard.R;
-import lib.kalu.safekeyboard.SafeKeyboardLogUtil;
+import lib.kalu.input.R;
+import lib.kalu.input.SafeKeyboardLogUtil;
 
 
 /**

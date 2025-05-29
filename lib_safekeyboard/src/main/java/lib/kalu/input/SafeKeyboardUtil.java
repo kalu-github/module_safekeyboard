@@ -1,4 +1,4 @@
-package lib.kalu.safekeyboard;
+package lib.kalu.input;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

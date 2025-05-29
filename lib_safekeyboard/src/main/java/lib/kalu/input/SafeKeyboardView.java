@@ -1,4 +1,4 @@
-package lib.kalu.safekeyboard;
+package lib.kalu.input;
 
 import android.app.Service;
 import android.content.Context;
@@ -26,8 +26,8 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Random;
 
-import lib.kalu.safekeyboard.google.Keyboard;
-import lib.kalu.safekeyboard.google.KeyboardView;
+import lib.kalu.input.google.Keyboard;
+import lib.kalu.input.google.KeyboardView;
 
 /**
  * description: 自定义安全键盘

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:focusable="false"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:ignore="ResourceName">
+
+    <TextView
+        android:id="@+id/popu_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/moudle_safe_keyboard_background_popu"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="top"
+        android:textColor="@android:color/white"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/popu_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/moudle_safe_keyboard_background_popu"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="left"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/popu_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/moudle_safe_keyboard_background_popu"
+            android:focusable="true"
+            android:focusedByDefault="true"
+            android:gravity="center"
+            android:text="center"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/popu_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/moudle_safe_keyboard_background_popu"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="left"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/popu_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/moudle_safe_keyboard_background_popu"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="bottom"
+        android:textColor="@android:color/white"
+        android:textSize="15sp" />
+
+</LinearLayout>

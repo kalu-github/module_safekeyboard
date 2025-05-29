@@ -1,76 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="40dp">
+    android:background="@android:color/white"
+    android:gravity="top"
+    android:orientation="vertical">
 
     <EditText
-        android:id="@+id/edit1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="10dp"
         android:background="#cccccc"
         android:focusable="true"
-        android:focusableInTouchMode="true"
         android:gravity="center_vertical|left"
         android:hint="系统键盘"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:textSize="14sp" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_below="@id/edit1"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:background="#cccccc"
-        android:gravity="center_vertical|left"
-        android:hint="显示1"
-        android:textSize="14sp" />
-
-    <lib.kalu.safekeyboard.SafeKeyboardEditText
-        android:id="@+id/edit2"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/edit1"
         android:layout_margin="10dp"
-        android:layout_toLeftOf="@id/button2"
-        android:background="#cccccc"
-        android:gravity="center_vertical|left"
-        android:hint="安全键盘1"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:textSize="14sp" />
+        android:focusable="false"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_below="@id/edit2"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:background="#cccccc"
-        android:gravity="center_vertical|left"
-        android:hint="显示2"
-        android:textSize="14sp" />
+        <lib.kalu.input.CusEditText
+            android:id="@+id/edit01"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#cccccc"
+            android:focusable="true"
+            android:gravity="center_vertical|left"
+            android:hint="安全键盘, 密文显示"
+            android:inputType="textPassword"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="14sp" />
 
-    <lib.kalu.safekeyboard.SafeKeyboardEditText
-        android:id="@+id/edit3"
+        <Button
+            android:id="@+id/button01"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:background="#cccccc"
+            android:focusable="false"
+            android:gravity="center_vertical|left"
+            android:hint="显示1"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/edit2"
         android:layout_margin="10dp"
-        android:layout_toLeftOf="@id/button3"
-        android:background="#cccccc"
-        android:gravity="center_vertical|left"
-        android:hint="安全键盘2"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:textSize="14sp" />
+        android:focusable="false"
+        android:orientation="horizontal">
 
-</RelativeLayout>
+        <lib.kalu.input.CusEditText
+            android:id="@+id/edit02"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#cccccc"
+            android:focusable="true"
+            android:gravity="center_vertical|left"
+            android:hint="安全键盘, 明文显示"
+            android:inputType="text"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/button02"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:background="#cccccc"
+            android:focusable="false"
+            android:gravity="center_vertical|left"
+            android:hint="显示2"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

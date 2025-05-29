@@ -4,7 +4,7 @@ plugins {
 
 android {
 
-    namespace "lib.kalu.safekeyboard"
+    namespace "lib.kalu.input"
     compileSdkVersion 34
     buildToolsVersion "34.0.0"
 
@@ -50,7 +50,5 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
 }

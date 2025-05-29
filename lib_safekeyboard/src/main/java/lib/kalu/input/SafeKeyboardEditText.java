@@ -1,8 +1,7 @@
-package lib.kalu.safekeyboard;
+package lib.kalu.input;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
@@ -12,13 +11,11 @@ import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
