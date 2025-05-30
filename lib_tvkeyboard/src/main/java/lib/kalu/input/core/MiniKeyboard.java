@@ -245,6 +245,7 @@ public final class MiniKeyboard {
         /**
          * Label to display
          */
+        public int testSize;
         public CharSequence text;
         public CharSequence[] textExtra;
 
@@ -406,6 +407,7 @@ public final class MiniKeyboard {
             //
             code = a.getInt(R.styleable.Keyboard_Key_code, -1);
             text = a.getText(R.styleable.Keyboard_Key_text);
+            testSize = a.getDimensionPixelSize(R.styleable.Keyboard_Key_textSize, -1);
 
             //
             try {

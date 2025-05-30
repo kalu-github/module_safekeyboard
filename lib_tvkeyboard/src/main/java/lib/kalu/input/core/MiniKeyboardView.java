@@ -44,7 +44,6 @@ public class MiniKeyboardView extends View {
     private static final int NOT_A_KEY = -1;
     private MiniKeyboard mMiniKeyboard;
     private int mCurrentKeyIndex = NOT_A_KEY;
-    private int mLabelTextSize;
     private int mKeyTextSize;
     private int mKeyTextColor;
     private float mShadowRadius;
@@ -138,8 +137,6 @@ public class MiniKeyboardView extends View {
                     mKeyTextSize = a.getDimensionPixelSize(attr, 18);
                 } else if (attr == R.styleable.KeyboardView_keyTextColor) {
                     mKeyTextColor = a.getColor(attr, 0xFF000000);
-                } else if (attr == R.styleable.KeyboardView_labelTextSize) {
-                    mLabelTextSize = a.getDimensionPixelSize(attr, 14);
                 } else if (attr == R.styleable.KeyboardView_shadowColor) {
                     mShadowColor = a.getColor(attr, 0);
                 } else if (attr == R.styleable.KeyboardView_shadowRadius) {
@@ -315,7 +312,7 @@ public class MiniKeyboardView extends View {
             keyBackground.setState(drawableState);
 
             // Switch the character to uppercase if shift is pressed
-            String label = key.text == null ? null : adjustCase(key.text).toString();
+            String text = key.text == null ? null : adjustCase(key.text).toString();
 
             final Rect bounds = keyBackground.getBounds();
             if (key.width != bounds.right ||
@@ -325,27 +322,7 @@ public class MiniKeyboardView extends View {
             canvas.translate(key.x + kbdPaddingLeft, key.y + kbdPaddingTop);
             keyBackground.draw(canvas);
 
-            if (label != null) {
-//                // For characters, use large font. For labels like "Done", use small font.
-//                if (label.length() > 1 && key.codes.length < 2) {
-//                    paint.setTextSize(mLabelTextSize);
-//                    paint.setTypeface(Typeface.DEFAULT_BOLD);
-//                } else {
-                paint.setTextSize(mKeyTextSize);
-                paint.setTypeface(Typeface.DEFAULT);
-//                }
-                // Draw a drop shadow for the text
-                paint.setShadowLayer(mShadowRadius, 0, 0, mShadowColor);
-                // Draw the text
-                canvas.drawText(label,
-                        (key.width - padding.left - padding.right) / 2
-                                + padding.left,
-                        (key.height - padding.top - padding.bottom) / 2
-                                + (paint.getTextSize() - paint.descent()) / 2 + padding.top,
-                        paint);
-                // Turn off drop shadow
-                paint.setShadowLayer(0, 0, 0, 0);
-            } else if (key.icon != null) {
+            if (key.icon != null) {
 
                 Rect iconBounds = key.icon.getBounds();
                 int widthBounds = iconBounds.width();
@@ -369,6 +346,32 @@ public class MiniKeyboardView extends View {
                 key.icon.setBounds(left, top, right, bottom);
                 key.icon.draw(canvas);
                 canvas.translate(-drawableX, -drawableY);
+            } else if (text != null) {
+//                // For characters, use large font. For labels like "Done", use small font.
+//                if (label.length() > 1 && key.codes.length < 2) {
+//                    paint.setTextSize(mLabelTextSize);
+//                    paint.setTypeface(Typeface.DEFAULT_BOLD);
+//                } else {
+
+                if (key.testSize != -1) {
+                    paint.setTextSize(key.testSize);
+                } else {
+                    paint.setTextSize(mKeyTextSize);
+                }
+
+                paint.setTypeface(Typeface.DEFAULT);
+//                }
+                // Draw a drop shadow for the text
+                paint.setShadowLayer(mShadowRadius, 0, 0, mShadowColor);
+                // Draw the text
+                canvas.drawText(text,
+                        (key.width - padding.left - padding.right) / 2
+                                + padding.left,
+                        (key.height - padding.top - padding.bottom) / 2
+                                + (paint.getTextSize() - paint.descent()) / 2 + padding.top,
+                        paint);
+                // Turn off drop shadow
+                paint.setShadowLayer(0, 0, 0, 0);
             }
             canvas.translate(-key.x - kbdPaddingLeft, -key.y - kbdPaddingTop);
         }

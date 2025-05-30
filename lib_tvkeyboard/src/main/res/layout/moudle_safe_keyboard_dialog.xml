@@ -49,7 +49,6 @@
             app:keyBackground="@drawable/moudle_safe_keyboard_background_selector"
             app:keyTextColor="#ffffff"
             app:keyTextSize="20sp"
-            app:labelTextSize="15sp"
             app:shadowColor="@color/safe_keyboard_color_333333"
             app:shadowRadius="0.8" />
 

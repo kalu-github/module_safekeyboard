@@ -34,7 +34,6 @@
     <string name="keyboard_key_208" tools:ignore="ResourceName">i</string>
     <string name="keyboard_key_209" tools:ignore="ResourceName">o</string>
     <string name="keyboard_key_210" tools:ignore="ResourceName">p</string>
-    <string name="keyboard_key_211" tools:ignore="ResourceName">up</string>
 
     <string name="keyboard_key_301" tools:ignore="ResourceName">a</string>
     <string name="keyboard_key_302" tools:ignore="ResourceName">s</string>
@@ -45,7 +44,7 @@
     <string name="keyboard_key_307" tools:ignore="ResourceName">j</string>
     <string name="keyboard_key_308" tools:ignore="ResourceName">k</string>
     <string name="keyboard_key_309" tools:ignore="ResourceName">l</string>
-    <string name="keyboard_key_310" tools:ignore="ResourceName">space</string>
+    <string name="keyboard_key_310" tools:ignore="ResourceName"> </string>
     <string name="keyboard_key_311" tools:ignore="ResourceName">.com</string>
 
     <string name="keyboard_key_401" tools:ignore="ResourceName">z</string>
@@ -57,6 +56,5 @@
     <string name="keyboard_key_407" tools:ignore="ResourceName">m</string>
     <string name="keyboard_key_408" tools:ignore="ResourceName">Enter</string>
     <string name="keyboard_key_409" tools:ignore="ResourceName">&amp;123</string>
-    <string name="keyboard_key_410" tools:ignore="ResourceName">earth</string>
 
 </resources>

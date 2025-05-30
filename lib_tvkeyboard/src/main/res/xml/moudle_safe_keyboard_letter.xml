@@ -43,7 +43,7 @@
             app:text="@string/keyboard_key_110" />
         <Key
             app:code="111"
-            app:icon="@drawable/ic_key_del"
+            app:icon="@drawable/ic_keyboard_del"
             app:iconHeight="20dp"
             app:iconWidth="24dp" />
     </Row>
@@ -81,7 +81,9 @@
             app:text="@string/keyboard_key_210" />
         <Key
             app:code="211"
-            app:text="@string/keyboard_key_211" />
+            app:icon="@drawable/ic_keyboard_shift"
+            app:iconHeight="24dp"
+            app:iconWidth="24dp" />
     </Row>
 
     <Row>
@@ -114,10 +116,14 @@
             app:text="@string/keyboard_key_309" />
         <Key
             app:code="310"
-            app:text="@string/keyboard_key_310" />
+            app:text="@string/keyboard_key_310"
+            app:icon="@drawable/ic_keyboard_space"
+            app:iconHeight="24dp"
+            app:iconWidth="24dp" />
         <Key
             app:code="311"
-            app:text="@string/keyboard_key_311" />
+            app:text="@string/keyboard_key_311"
+            app:textSize="14sp" />
     </Row>
 
     <Row>
@@ -144,14 +150,18 @@
             app:text="@string/keyboard_key_407" />
         <Key
             app:code="408"
-            app:text="@string/keyboard_key_408" />
+            app:text="@string/keyboard_key_408"
+            app:textSize="14sp" />
         <Key
             app:code="409"
             app:keyWidth="17%p"
-            app:text="@string/keyboard_key_409" />
+            app:text="@string/keyboard_key_409"
+            app:textSize="14sp" />
         <Key
             app:code="410"
-            app:text="@string/keyboard_key_410" />
+            app:icon="@drawable/ic_keyboard_language"
+            app:iconHeight="24dp"
+            app:iconWidth="24dp" />
     </Row>
 
 </Keyboard>
