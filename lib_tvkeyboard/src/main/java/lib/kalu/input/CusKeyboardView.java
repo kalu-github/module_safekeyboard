@@ -107,55 +107,6 @@ final class CusKeyboardView extends MiniKeyboardView implements MiniKeyboardView
 
     /*******************************************************************************************/
 
-//    /**
-//     * 切换大小写
-//     */
-//    private void shiftKeyboard() {
-//
-//        // 字母键盘
-//        if (null == getKeyboard())
-//            return;
-//
-//        List<MiniKeyboard.Key> keys = getKeyboard().getKeys();
-//        if (null == keys || keys.size() == 0)
-//            return;
-//
-//        // 大写状态
-//        boolean shifted = getKeyboard().isShifted();
-//
-//        if (shifted) {
-//            // 大写切换小写
-//            getKeyboard().setShifted(false);
-//            String temp = "abcdefghijklmnopqrstuvwxyz";
-//            for (MiniKeyboard.Key key : keys) {
-//                if (null != key.label) {
-//                    String s = key.label.toString().toLowerCase();
-//                    boolean contains = temp.contains(s);
-//                    if (contains) {
-//                        key.label = key.label.toString().toLowerCase();
-//                        key.codes[0] = key.codes[0] + 32;
-//                    }
-//                }
-//            }
-//        } else {
-//            // 小写切换成大写
-//            getKeyboard().setShifted(true);
-//            String temp = "abcdefghijklmnopqrstuvwxyz";
-//            for (MiniKeyboard.Key key : keys) {
-//                if (null != key.label) {
-//                    String s = key.label.toString().toLowerCase();
-//                    boolean contains = temp.contains(s);
-//                    if (contains) {
-//                        key.label = key.label.toString().toUpperCase();
-//                        key.codes[0] = key.codes[0] - 32;
-//                    }
-//                }
-//            }
-//        }
-//
-//        // 刷新ui
-//        setKeyboard(getKeyboard());
-//    }
     private void show() {
         setKeyboard(new MiniKeyboard(getContext(), R.xml.moudle_safe_keyboard_letter, false, false));
     }
