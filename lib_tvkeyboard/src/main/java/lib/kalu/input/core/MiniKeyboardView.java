@@ -12,15 +12,21 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import java.util.Arrays;
 import java.util.List;
 
+import lib.kalu.input.CusUtil;
 import lib.kalu.input.R;
 
 public class MiniKeyboardView extends View {
@@ -31,9 +37,8 @@ public class MiniKeyboardView extends View {
 
         void onRelease(int primaryCode);
 
-        void onKey(int primaryCode, int[] keyCodes);
-
-        void onText(CharSequence text);
+        void onKey(int primaryCode, MiniKeyboard.Key key);
+//        void onText();
     }
 
     private static final int NOT_A_KEY = -1;
@@ -116,6 +121,7 @@ public class MiniKeyboardView extends View {
     }
 
     private void init(Context context, AttributeSet attrs) {
+
         try {
 
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.KeyboardView);
@@ -232,7 +238,7 @@ public class MiniKeyboardView extends View {
         int dimensionSum = 0;
         for (int i = 0; i < length; i++) {
             MiniKeyboard.Key key = keys[i];
-            dimensionSum += Math.min(key.width, key.height) + key.gap;
+            dimensionSum += Math.min(key.width, key.height) + key.hzGap;
         }
         if (dimensionSum < 0 || length == 0) return;
         mProximityThreshold = (int) (dimensionSum * 1.4f / length);
@@ -309,7 +315,7 @@ public class MiniKeyboardView extends View {
             keyBackground.setState(drawableState);
 
             // Switch the character to uppercase if shift is pressed
-            String label = key.label == null ? null : adjustCase(key.label).toString();
+            String label = key.text == null ? null : adjustCase(key.text).toString();
 
             final Rect bounds = keyBackground.getBounds();
             if (key.width != bounds.right ||
@@ -320,14 +326,14 @@ public class MiniKeyboardView extends View {
             keyBackground.draw(canvas);
 
             if (label != null) {
-                // For characters, use large font. For labels like "Done", use small font.
-                if (label.length() > 1 && key.codes.length < 2) {
-                    paint.setTextSize(mLabelTextSize);
-                    paint.setTypeface(Typeface.DEFAULT_BOLD);
-                } else {
-                    paint.setTextSize(mKeyTextSize);
-                    paint.setTypeface(Typeface.DEFAULT);
-                }
+//                // For characters, use large font. For labels like "Done", use small font.
+//                if (label.length() > 1 && key.codes.length < 2) {
+//                    paint.setTextSize(mLabelTextSize);
+//                    paint.setTypeface(Typeface.DEFAULT_BOLD);
+//                } else {
+                paint.setTextSize(mKeyTextSize);
+                paint.setTypeface(Typeface.DEFAULT);
+//                }
                 // Draw a drop shadow for the text
                 paint.setShadowLayer(mShadowRadius, 0, 0, mShadowColor);
                 // Draw the text
@@ -340,13 +346,27 @@ public class MiniKeyboardView extends View {
                 // Turn off drop shadow
                 paint.setShadowLayer(0, 0, 0, 0);
             } else if (key.icon != null) {
+
+                Rect iconBounds = key.icon.getBounds();
+                int widthBounds = iconBounds.width();
+                int heightBounds = iconBounds.height();
+                CusUtil.log("MiniKeyboardView -> onBufferDraw -> widthBounds = " + widthBounds + ", heightBounds = " + heightBounds);
+                int width = key.width;
+                int height = key.height;
+                CusUtil.log("MiniKeyboardView -> onBufferDraw -> key.width = " + width + ", key.height = " + height);
+
                 final int drawableX = (key.width - padding.left - padding.right
                         - key.icon.getIntrinsicWidth()) / 2 + padding.left;
                 final int drawableY = (key.height - padding.top - padding.bottom
                         - key.icon.getIntrinsicHeight()) / 2 + padding.top;
                 canvas.translate(drawableX, drawableY);
-                key.icon.setBounds(0, 0,
-                        key.icon.getIntrinsicWidth(), key.icon.getIntrinsicHeight());
+
+                int left = width / 2 - widthBounds / 2;
+                int top = height / 2 - heightBounds / 2;
+                int right = left + widthBounds;
+                int bottom = top + heightBounds;
+                CusUtil.log("MiniKeyboardView -> onBufferDraw -> left = " + left + ", top = " + top + ", right = " + right + ", bottom = " + bottom);
+                key.icon.setBounds(left, top, right, bottom);
                 key.icon.draw(canvas);
                 canvas.translate(-drawableX, -drawableY);
             }
@@ -408,7 +428,7 @@ public class MiniKeyboardView extends View {
                 mDownTime = me.getEventTime();
                 mLastMoveTime = mDownTime;
                 mKeyboardActionListener.onPress(keyIndex != NOT_A_KEY ?
-                        mKeys[keyIndex].codes[0] : 0);
+                        mKeys[keyIndex].code : 0);
                 if (mCurrentKey >= 0 && mKeys[mCurrentKey].repeatable) {
                     mRepeatKeyIndex = mCurrentKey;
                     // Delivering the key could have caused an abort
@@ -514,6 +534,8 @@ public class MiniKeyboardView extends View {
      * @param keyIndex
      */
     private void showPreview(int keyIndex) {
+        CusUtil.log("MiniKeyboardView -> showPreview -> mCurrentKeyIndex = " + mCurrentKeyIndex + ", keyIndex = " + keyIndex);
+
         int oldKeyIndex = mCurrentKeyIndex;
 
         mCurrentKeyIndex = keyIndex;
@@ -544,36 +566,96 @@ public class MiniKeyboardView extends View {
     private void detectAndSendKey(int index, int x, int y, long eventTime) {
         if (index != NOT_A_KEY && index < mKeys.length) {
             final MiniKeyboard.Key key = mKeys[index];
-            if (key.text != null) {
-                mKeyboardActionListener.onText(key.text);
-                mKeyboardActionListener.onRelease(NOT_A_KEY);
-            } else {
-                int code = key.codes[0];
-                //TextEntryState.keyPressedAt(key, x, y);
-                int[] codes = new int[MAX_NEARBY_KEYS];
-                Arrays.fill(codes, NOT_A_KEY);
-                getKeyIndices(x, y, codes);
-                mKeyboardActionListener.onKey(code, codes);
-                mKeyboardActionListener.onRelease(code);
-            }
+//            if (key.text != null) {
+//                // TODO: 2025/5/30
+////                mKeyboardActionListener.onText(key.text);
+//                mKeyboardActionListener.onRelease(NOT_A_KEY);
+//            } else {
+            int code = key.code;
+
+            //TextEntryState.keyPressedAt(key, x, y);
+            int[] codes = new int[MAX_NEARBY_KEYS];
+            Arrays.fill(codes, NOT_A_KEY);
+            getKeyIndices(x, y, codes);
+            mKeyboardActionListener.onKey(code, key);
+            mKeyboardActionListener.onRelease(code);
+//            }
         }
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent me) {
-        final int action = me.getAction();
-        boolean result;
-        final long now = me.getEventTime();
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        try {
+            final int action = event.getAction();
+            boolean result;
+            final long now = event.getEventTime();
 
-        MotionEvent down = MotionEvent.obtain(now, now, MotionEvent.ACTION_DOWN,
-                me.getX(), me.getY(), me.getMetaState());
-        result = onModifiedTouchEvent(down, false);
-        down.recycle();
-        // If it's an up action, then deliver the up as well.
-        if (action == MotionEvent.ACTION_UP) {
-            result = onModifiedTouchEvent(me, true);
+            MotionEvent down = MotionEvent.obtain(now, now, MotionEvent.ACTION_DOWN,
+                    event.getX(), event.getY(), event.getMetaState());
+            result = onModifiedTouchEvent(down, false);
+            down.recycle();
+            // If it's an up action, then deliver the up as well.
+            if (action == MotionEvent.ACTION_UP) {
+                result = onModifiedTouchEvent(event, true);
+            }
+
+            return result;
+        } catch (Exception e) {
+            return super.dispatchTouchEvent(event);
+        }
+    }
+
+    @Override
+    protected void onFocusChanged(boolean gainFocus, int direction, @Nullable Rect previouslyFocusedRect) {
+        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+        CusUtil.log("MiniKeyboardView -> onFocusChanged -> gainFocus = " + gainFocus);
+    }
+
+    private int focusedIndex = -1;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        CusUtil.log("MiniKeyboardView -> onKeyDown -> keyCode = " + keyCode + ", mCurrentKey = " + mCurrentKey + ", mCurrentKeyIndex = " + mCurrentKeyIndex);
+
+        // action_down -> keycode_dpad_down
+        if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+            int nextIndex = focusedIndex + 10;
+            if (nextIndex < mKeys.length) {
+                focusedIndex = nextIndex;
+                showPreview(focusedIndex);
+            }
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+            if (focusedIndex > 10) {
+                int nextIndex = focusedIndex - 10;
+                focusedIndex = nextIndex;
+                showPreview(focusedIndex);
+            }
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            int nextIndex = focusedIndex + 1;
+            if (nextIndex < mKeys.length) {
+                focusedIndex = nextIndex;
+                showPreview(focusedIndex);
+            }
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+            if (focusedIndex > 0) {
+                int nextIndex = focusedIndex - 1;
+                focusedIndex = nextIndex;
+                showPreview(focusedIndex);
+            }
+        } else if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            MiniKeyboard.Key mKey = mKeys[focusedIndex];
+            detectAndSendKey(focusedIndex, mKey.x, mKey.y, 0);
         }
 
-        return result;
+        return super.onKeyDown(keyCode, event);
     }
+
+//    @Override
+//    public boolean dispatchKeyEvent(KeyEvent event) {
+//
+////        return super.dispatchKeyEvent(event);
+//
+//
+//        return true;
+//    }
 }

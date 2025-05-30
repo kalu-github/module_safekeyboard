@@ -31,7 +31,8 @@
             android:id="@+id/moudle_safe_id_baseline"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/holo_red_dark" />
+            android:background="@android:color/holo_red_dark"
+            android:focusable="false" />
 
         <lib.kalu.input.CusKeyboardView
             android:id="@+id/moudle_safe_id_keyboard"
@@ -41,7 +42,6 @@
             android:clipChildren="false"
             android:clipToPadding="false"
             android:focusable="true"
-            android:focusableInTouchMode="true"
             android:paddingStart="0dp"
             android:paddingTop="0dp"
             android:paddingEnd="0dp"

@@ -23,7 +23,7 @@ public class CusKeyboardDialog extends DialogFragment implements DialogInterface
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
+        CusUtil.log("CusKeyboardDialog -> onCreateDialog ->");
         WeakReference<Activity> weakReference = new WeakReference<>(getActivity());
         Dialog dialog = new Dialog(weakReference.get()) {
             @Override
@@ -63,7 +63,7 @@ public class CusKeyboardDialog extends DialogFragment implements DialogInterface
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        CusUtil.log("CusKeyboardDialog -> onCreateView ->");
         try {
             // 窗口边框
             Window window = getDialog().getWindow();
@@ -77,9 +77,12 @@ public class CusKeyboardDialog extends DialogFragment implements DialogInterface
             windowParams.dimAmount = 0f;
             windowParams.gravity = Gravity.BOTTOM;
 
-            // 设置局部焦点模式
+            /**
+             * FLAG_NOT_FOCUSABLE：窗口完全不接收焦点，点击窗口内的元素也不会触发焦点变化。
+             * FLAG_ALT_FOCUSABLE_IM：控制输入法（软键盘）的焦点行为，与输入法窗口交互时使用。
+             * FLAG_LOCAL_FOCUS_MODE：窗口内部的焦点独立管理，不影响其他窗口。
+             */
             window.setFlags(WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE, WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE);
-//        window.setFlags(WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE, WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE);
 
             window.setAttributes(windowParams);
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -92,15 +95,21 @@ public class CusKeyboardDialog extends DialogFragment implements DialogInterface
         } catch (Exception e) {
         }
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        try {
+            View keyboardView = view.findViewById(R.id.moudle_safe_id_keyboard);
+            CusUtil.log("CusKeyboardDialog -> onCreateView -> keyboardView = " + keyboardView);
+            keyboardView.requestFocus();
+        } catch (Exception e) {
+        }
+
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         CusUtil.log("CusKeyboardDialog -> onViewCreated ->");
-
-
     }
 
     @Override
@@ -112,13 +121,12 @@ public class CusKeyboardDialog extends DialogFragment implements DialogInterface
             dismiss();
         }
 
-        try {
-            View keyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
-            keyboardView.dispatchKeyEvent(event);
-        } catch (Exception e) {
-        }
-
-        return true;
+//        try {
+//            View keyboardView = getDialog().findViewById(R.id.moudle_safe_id_keyboard);
+//            keyboardView.dispatchKeyEvent(event);
+//        } catch (Exception e) {
+//        }
+        return false;
     }
 
     @Override

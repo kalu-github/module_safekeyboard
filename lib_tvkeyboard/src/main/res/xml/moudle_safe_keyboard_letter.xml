@@ -10,144 +10,148 @@
 
     <Row>
         <Key
-            app:codes="101"
-            app:keyLabel="@string/keyboard_key_101" />
+            app:code="101"
+            app:codeExtra="101,1011,1012,1013,1014"
+            app:text="@string/keyboard_key_101"
+            app:textExtra="a,a1,a2,a3,a4" />
         <Key
-            app:codes="102"
-            app:keyLabel="@string/keyboard_key_102" />
+            app:code="102"
+            app:text="@string/keyboard_key_102" />
         <Key
-            app:codes="103"
-            app:keyLabel="@string/keyboard_key_103" />
+            app:code="103"
+            app:text="@string/keyboard_key_103" />
         <Key
-            app:codes="104"
-            app:keyLabel="@string/keyboard_key_104" />
+            app:code="104"
+            app:text="@string/keyboard_key_104" />
         <Key
-            app:codes="105"
-            app:keyLabel="@string/keyboard_key_105" />
+            app:code="105"
+            app:text="@string/keyboard_key_105" />
         <Key
-            app:codes="106"
-            app:keyLabel="@string/keyboard_key_106" />
+            app:code="106"
+            app:text="@string/keyboard_key_106" />
         <Key
-            app:codes="107"
-            app:keyLabel="@string/keyboard_key_107" />
+            app:code="107"
+            app:text="@string/keyboard_key_107" />
         <Key
-            app:codes="108"
-            app:keyLabel="@string/keyboard_key_108" />
+            app:code="108"
+            app:text="@string/keyboard_key_108" />
         <Key
-            app:codes="109"
-            app:keyLabel="@string/keyboard_key_109" />
+            app:code="109"
+            app:text="@string/keyboard_key_109" />
         <Key
-            app:codes="110"
-            app:keyLabel="@string/keyboard_key_110" />
+            app:code="110"
+            app:text="@string/keyboard_key_110" />
         <Key
-            app:codes="111"
-            app:keyIcon="@drawable/ic_key_del" />
+            app:code="111"
+            app:icon="@drawable/ic_key_del"
+            app:iconHeight="20dp"
+            app:iconWidth="24dp" />
     </Row>
 
     <Row>
         <Key
-            app:codes="201"
-            app:keyLabel="@string/keyboard_key_201" />
+            app:code="201"
+            app:text="@string/keyboard_key_201" />
         <Key
-            app:codes="202"
-            app:keyLabel="@string/keyboard_key_202" />
+            app:code="202"
+            app:text="@string/keyboard_key_202" />
         <Key
-            app:codes="203"
-            app:keyLabel="@string/keyboard_key_203" />
+            app:code="203"
+            app:text="@string/keyboard_key_203" />
         <Key
-            app:codes="204"
-            app:keyLabel="@string/keyboard_key_204" />
+            app:code="204"
+            app:text="@string/keyboard_key_204" />
         <Key
-            app:codes="205"
-            app:keyLabel="@string/keyboard_key_205" />
+            app:code="205"
+            app:text="@string/keyboard_key_205" />
         <Key
-            app:codes="206"
-            app:keyLabel="@string/keyboard_key_206" />
+            app:code="206"
+            app:text="@string/keyboard_key_206" />
         <Key
-            app:codes="207"
-            app:keyLabel="@string/keyboard_key_207" />
+            app:code="207"
+            app:text="@string/keyboard_key_207" />
         <Key
-            app:codes="208"
-            app:keyLabel="@string/keyboard_key_208" />
+            app:code="208"
+            app:text="@string/keyboard_key_208" />
         <Key
-            app:codes="209"
-            app:keyLabel="@string/keyboard_key_209" />
+            app:code="209"
+            app:text="@string/keyboard_key_209" />
         <Key
-            app:codes="210"
-            app:keyLabel="@string/keyboard_key_210" />
+            app:code="210"
+            app:text="@string/keyboard_key_210" />
         <Key
-            app:codes="211"
-            app:keyLabel="@string/keyboard_key_211" />
+            app:code="211"
+            app:text="@string/keyboard_key_211" />
     </Row>
 
     <Row>
         <Key
-            app:codes="301"
-            app:keyLabel="@string/keyboard_key_301" />
+            app:code="301"
+            app:text="@string/keyboard_key_301" />
         <Key
-            app:codes="302"
-            app:keyLabel="@string/keyboard_key_302" />
+            app:code="302"
+            app:text="@string/keyboard_key_302" />
         <Key
-            app:codes="303"
-            app:keyLabel="@string/keyboard_key_303" />
+            app:code="303"
+            app:text="@string/keyboard_key_303" />
         <Key
-            app:codes="304"
-            app:keyLabel="@string/keyboard_key_304" />
+            app:code="304"
+            app:text="@string/keyboard_key_304" />
         <Key
-            app:codes="305"
-            app:keyLabel="@string/keyboard_key_305" />
+            app:code="305"
+            app:text="@string/keyboard_key_305" />
         <Key
-            app:codes="306"
-            app:keyLabel="@string/keyboard_key_306" />
+            app:code="306"
+            app:text="@string/keyboard_key_306" />
         <Key
-            app:codes="307"
-            app:keyLabel="@string/keyboard_key_307" />
+            app:code="307"
+            app:text="@string/keyboard_key_307" />
         <Key
-            app:codes="308"
-            app:keyLabel="@string/keyboard_key_308" />
+            app:code="308"
+            app:text="@string/keyboard_key_308" />
         <Key
-            app:codes="309"
-            app:keyLabel="@string/keyboard_key_309" />
+            app:code="309"
+            app:text="@string/keyboard_key_309" />
         <Key
-            app:codes="310"
-            app:keyLabel="@string/keyboard_key_310" />
+            app:code="310"
+            app:text="@string/keyboard_key_310" />
         <Key
-            app:codes="311"
-            app:keyLabel="@string/keyboard_key_311" />
+            app:code="311"
+            app:text="@string/keyboard_key_311" />
     </Row>
 
     <Row>
         <Key
-            app:codes="401"
-            app:keyLabel="@string/keyboard_key_401" />
+            app:code="401"
+            app:text="@string/keyboard_key_401" />
         <Key
-            app:codes="402"
-            app:keyLabel="@string/keyboard_key_402" />
+            app:code="402"
+            app:text="@string/keyboard_key_402" />
         <Key
-            app:codes="403"
-            app:keyLabel="@string/keyboard_key_403" />
+            app:code="403"
+            app:text="@string/keyboard_key_403" />
         <Key
-            app:codes="404"
-            app:keyLabel="@string/keyboard_key_404" />
+            app:code="404"
+            app:text="@string/keyboard_key_404" />
         <Key
-            app:codes="405"
-            app:keyLabel="@string/keyboard_key_405" />
+            app:code="405"
+            app:text="@string/keyboard_key_405" />
         <Key
-            app:codes="406"
-            app:keyLabel="@string/keyboard_key_406" />
+            app:code="406"
+            app:text="@string/keyboard_key_406" />
         <Key
-            app:codes="407"
-            app:keyLabel="@string/keyboard_key_407" />
+            app:code="407"
+            app:text="@string/keyboard_key_407" />
         <Key
-            app:codes="408"
-            app:keyLabel="@string/keyboard_key_408" />
+            app:code="408"
+            app:text="@string/keyboard_key_408" />
         <Key
-            app:codes="409"
-            app:keyLabel="@string/keyboard_key_409"
-            app:keyWidth="17%p" />
+            app:code="409"
+            app:keyWidth="17%p"
+            app:text="@string/keyboard_key_409" />
         <Key
-            app:codes="410"
-            app:keyLabel="@string/keyboard_key_410" />
+            app:code="410"
+            app:text="@string/keyboard_key_410" />
     </Row>
 
 </Keyboard>

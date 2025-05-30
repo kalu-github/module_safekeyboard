@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -106,11 +109,6 @@ public final class MiniKeyboard {
      * List of keys in this keyboard
      */
     private List<Key> mKeys;
-
-    /**
-     * List of modifier keys such as Shift & Alt, if any
-     */
-    private List<Key> mModifierKeys;
 
     /**
      * Width of the screen available to fit the keyboard
@@ -236,25 +234,27 @@ public final class MiniKeyboard {
      * @attr ref android.R.styleable#Keyboard_Key_keyEdgeFlags
      */
     public static class Key {
+
         /**
          * All the key codes (unicode or custom code) that this key could generate, zero'th
          * being the most important.
          */
-        public int[] codes;
+        public int code;
+        public int[] codeExtra;
 
         /**
          * Label to display
          */
-        public CharSequence label;
+        public CharSequence text;
+        public CharSequence[] textExtra;
 
         /**
          * Icon to display instead of a label. Icon takes precedence over a label
          */
         public Drawable icon;
-        /**
-         * Preview version of the icon, for the preview popup
-         */
-        public Drawable iconPreview;
+        private int iconWidth;
+        private int iconHeight;
+
         /**
          * Width of the key, not including the gap
          */
@@ -266,7 +266,8 @@ public final class MiniKeyboard {
         /**
          * The horizontal gap before this key
          */
-        public int gap;
+        public int vtGap;
+        public int hzGap;
         /**
          * Whether this key is sticky, i.e., a toggle key
          */
@@ -288,11 +289,6 @@ public final class MiniKeyboard {
          */
         public boolean on;
         /**
-         * Text to output when pressed. This can be multiple characters, like ".com"
-         */
-        public CharSequence text;
-
-        /**
          * Flags that specify the anchoring to edges of the keyboard for detecting touch events
          * that are just out of the boundary of the key. This is a bit mask of
          * {@link MiniKeyboard#EDGE_LEFT}, {@link MiniKeyboard#EDGE_RIGHT}, {@link MiniKeyboard#EDGE_TOP} and
@@ -311,6 +307,8 @@ public final class MiniKeyboard {
          * Whether this key repeats itself when held down
          */
         public boolean repeatable;
+
+        public boolean mulit = (null != codeExtra && null != textExtra && codeExtra.length == textExtra.length);
 
 
         private final static int[] KEY_STATE_NORMAL_ON = {
@@ -347,7 +345,8 @@ public final class MiniKeyboard {
             miniKeyboard = parent.parent;
             height = parent.defaultHeight;
             width = parent.defaultWidth;
-            gap = parent.defaultHorizontalGap;
+            vtGap = parent.defaultHorizontalGap;
+            hzGap = parent.parent.mDefaultVerticalGap;
             edgeFlags = parent.rowEdgeFlags;
         }
 
@@ -374,41 +373,86 @@ public final class MiniKeyboard {
                     miniKeyboard.mDisplayWidth, parent.defaultWidth);
             height = getDimensionOrFraction(a, R.styleable.Keyboard_keyHeight,
                     miniKeyboard.mDisplayHeight, parent.defaultHeight);
-            gap = getDimensionOrFraction(a, R.styleable.Keyboard_horizontalGap,
+            hzGap = getDimensionOrFraction(a, R.styleable.Keyboard_horizontalGap,
                     miniKeyboard.mDisplayWidth, parent.defaultHorizontalGap);
             a.recycle();
             a = res.obtainAttributes(Xml.asAttributeSet(parser), R.styleable.Keyboard_Key);
-            this.x += gap;
-            TypedValue codesValue = new TypedValue();
-            a.getValue(R.styleable.Keyboard_Key_codes, codesValue);
-            if (codesValue.type == TypedValue.TYPE_INT_DEC
-                    || codesValue.type == TypedValue.TYPE_INT_HEX) {
-                codes = new int[]{codesValue.data};
-            } else if (codesValue.type == TypedValue.TYPE_STRING) {
-                codes = parseCSV(codesValue.string.toString());
-            }
+            this.x += hzGap;
+//            TypedValue codesValue = new TypedValue();
+//            a.getValue(R.styleable.Keyboard_Key_code, codesValue);
+//            if (codesValue.type == TypedValue.TYPE_INT_DEC
+//                    || codesValue.type == TypedValue.TYPE_INT_HEX) {
+//                codes = new int[]{codesValue.data};
+//            } else if (codesValue.type == TypedValue.TYPE_STRING) {
+//                codes = parseCSV(codesValue.string.toString());
+//            }
 
-            iconPreview = a.getDrawable(R.styleable.Keyboard_Key_iconPreview);
-            if (iconPreview != null) {
-                iconPreview.setBounds(0, 0, iconPreview.getIntrinsicWidth(),
-                        iconPreview.getIntrinsicHeight());
-            }
             repeatable = a.getBoolean(R.styleable.Keyboard_Key_isRepeatable, false);
             modifier = a.getBoolean(R.styleable.Keyboard_Key_isModifier, false);
             sticky = a.getBoolean(R.styleable.Keyboard_Key_isSticky, false);
             edgeFlags = a.getInt(R.styleable.Keyboard_Key_keyEdgeFlags, 0);
             edgeFlags |= parent.rowEdgeFlags;
 
-            icon = a.getDrawable(R.styleable.Keyboard_Key_keyIcon);
+            iconWidth = a.getDimensionPixelOffset(R.styleable.Keyboard_Key_iconWidth, 0);
+            iconHeight = a.getDimensionPixelOffset(R.styleable.Keyboard_Key_iconHeight, 0);
+            icon = a.getDrawable(R.styleable.Keyboard_Key_icon);
             if (icon != null) {
-                icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
+                if (iconWidth > 0 && iconHeight > 0) {
+                    icon.setBounds(0, 0, iconWidth, iconHeight);
+                } else {
+                    icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
+                }
             }
-            label = a.getText(R.styleable.Keyboard_Key_keyLabel);
-            text = a.getText(R.styleable.Keyboard_Key_keyOutputText);
 
-            if (codes == null && !TextUtils.isEmpty(label)) {
-                codes = new int[]{label.charAt(0)};
+//            return values;
+
+            //
+            code = a.getInt(R.styleable.Keyboard_Key_code, -1);
+            text = a.getText(R.styleable.Keyboard_Key_text);
+
+            //
+            try {
+                String value = a.getString(R.styleable.Keyboard_Key_codeExtra);
+                int count = 0;
+                int lastIndex = 0;
+                if (value.length() > 0) {
+                    count++;
+                    while ((lastIndex = value.indexOf(",", lastIndex + 1)) > 0) {
+                        count++;
+                    }
+                }
+                int[] values = new int[count];
+                count = 0;
+                StringTokenizer st = new StringTokenizer(value, ",");
+                while (st.hasMoreTokens()) {
+                    try {
+                        values[count++] = Integer.parseInt(st.nextToken());
+                    } catch (NumberFormatException nfe) {
+                        CusUtil.log("Error parsing keycodes " + value);
+                    }
+                }
+                codeExtra = values;
+            } catch (Exception e) {
             }
+
+
+            try {
+                String value = a.getString(R.styleable.Keyboard_Key_textExtra);
+                textExtra = value.split(",");
+            } catch (Exception e) {
+            }
+
+
+//            String string = a.getString(R.styleable.Keyboard_Key_texts);
+//            if (string.contains(",")) {
+//                texts = string.split(",");
+//            } else {
+//                texts = new String[]{string};
+//            }
+//
+//            if (codes == null) {
+//                codes = new int[]{-1};
+//            }
             a.recycle();
         }
 
@@ -444,28 +488,6 @@ public final class MiniKeyboard {
             if (sticky && inside) {
                 on = !on;
             }
-        }
-
-        int[] parseCSV(String value) {
-            int count = 0;
-            int lastIndex = 0;
-            if (value.length() > 0) {
-                count++;
-                while ((lastIndex = value.indexOf(",", lastIndex + 1)) > 0) {
-                    count++;
-                }
-            }
-            int[] values = new int[count];
-            count = 0;
-            StringTokenizer st = new StringTokenizer(value, ",");
-            while (st.hasMoreTokens()) {
-                try {
-                    values[count++] = Integer.parseInt(st.nextToken());
-                } catch (NumberFormatException nfe) {
-                    CusUtil.log("Error parsing keycodes " + value);
-                }
-            }
-            return values;
         }
 
         /**
@@ -571,7 +593,6 @@ public final class MiniKeyboard {
         mDefaultVerticalGap = 0;
         mDefaultHeight = mDefaultWidth;
         mKeys = new ArrayList<>();
-        mModifierKeys = new ArrayList<>();
         mKeyboardMode = modeId;
         loadKeyboard(context, context.getResources().getXml(xmlLayoutResId), randomNumber, randomLetter, xmlLayoutResId);
     }
@@ -595,7 +616,6 @@ public final class MiniKeyboard {
         mDefaultVerticalGap = 0;
         mDefaultHeight = mDefaultWidth;
         mKeys = new ArrayList<>();
-        mModifierKeys = new ArrayList<>();
         mKeyboardMode = modeId;
         loadKeyboard(context, context.getResources().getXml(xmlLayoutResId), randomNumber, randomLetter, xmlLayoutResId);
     }
@@ -647,10 +667,13 @@ public final class MiniKeyboard {
             final Key key = new Key(row);
             key.x = x;
             key.y = y;
-            key.label = String.valueOf(c);
-            key.codes = new int[]{c};
+
+            CusUtil.log("MiniKeyboard -> i = " + i + ", c = " + c);
+            // TODO: 2025/5/30
+//            key.label = String.valueOf(c);
+//            key.codes = new int[]{c};
             column++;
-            x += key.width + key.gap;
+            x += key.width + key.hzGap;
             mKeys.add(key);
             row.mKeys.add(key);
             if (x > mTotalWidth) {
@@ -671,7 +694,7 @@ public final class MiniKeyboard {
             for (int keyIndex = 0; keyIndex < numKeys; ++keyIndex) {
                 Key key = row.mKeys.get(keyIndex);
                 if (keyIndex > 0) {
-                    totalGap += key.gap;
+                    totalGap += key.hzGap;
                 }
                 totalWidth += key.width;
             }
@@ -682,7 +705,7 @@ public final class MiniKeyboard {
                     Key key = row.mKeys.get(keyIndex);
                     key.width *= scaleFactor;
                     key.x = x;
-                    x += key.width + key.gap;
+                    x += key.width + key.hzGap;
                 }
             }
         }
@@ -694,10 +717,6 @@ public final class MiniKeyboard {
 
     public List<Key> getKeys() {
         return mKeys;
-    }
-
-    public List<Key> getModifierKeys() {
-        return mModifierKeys;
     }
 
     protected int getHorizontalGap() {
@@ -860,19 +879,6 @@ public final class MiniKeyboard {
                         inKey = true;
                         key = createKeyFromXml(res, currentRow, x, y, parser);
                         mKeys.add(key);
-                        if (key.codes[0] == KEYCODE_SHIFT) {
-                            // Find available shift key slot and put this shift key in it
-                            for (int i = 0; i < mShiftKeys.length; i++) {
-                                if (mShiftKeys[i] == null) {
-                                    mShiftKeys[i] = key;
-                                    mShiftKeyIndices[i] = mKeys.size() - 1;
-                                    break;
-                                }
-                            }
-                            mModifierKeys.add(key);
-                        } else if (key.codes[0] == KEYCODE_ALT) {
-                            mModifierKeys.add(key);
-                        }
                         currentRow.mKeys.add(key);
                     } else if (TAG_KEYBOARD.equals(tag)) {
                         parseKeyboardAttributes(res, parser);
@@ -880,7 +886,7 @@ public final class MiniKeyboard {
                 } else if (event == XmlResourceParser.END_TAG) {
                     if (inKey) {
                         inKey = false;
-                        x += key.gap + key.width;
+                        x += key.hzGap + key.width;
                         if (x > mTotalWidth) {
                             mTotalWidth = x;
                         }

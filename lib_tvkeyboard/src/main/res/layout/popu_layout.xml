@@ -15,7 +15,6 @@
         android:background="@drawable/moudle_safe_keyboard_background_popu"
         android:focusable="true"
         android:gravity="center"
-        android:text="top"
         android:textColor="@android:color/white"
         android:textSize="15sp" />
 
@@ -32,7 +31,6 @@
             android:background="@drawable/moudle_safe_keyboard_background_popu"
             android:focusable="true"
             android:gravity="center"
-            android:text="left"
             android:textColor="@android:color/white"
             android:textSize="15sp" />
 
@@ -44,7 +42,6 @@
             android:focusable="true"
             android:focusedByDefault="true"
             android:gravity="center"
-            android:text="center"
             android:textColor="@android:color/white"
             android:textSize="15sp" />
 
@@ -55,7 +52,6 @@
             android:background="@drawable/moudle_safe_keyboard_background_popu"
             android:focusable="true"
             android:gravity="center"
-            android:text="left"
             android:textColor="@android:color/white"
             android:textSize="15sp" />
 
@@ -69,7 +65,6 @@
         android:background="@drawable/moudle_safe_keyboard_background_popu"
         android:focusable="true"
         android:gravity="center"
-        android:text="bottom"
         android:textColor="@android:color/white"
         android:textSize="15sp" />
 
