@@ -308,9 +308,6 @@ public final class MiniKeyboard {
          */
         public boolean repeatable;
 
-        public boolean mulit = (null != codeExtra && null != textExtra && codeExtra.length == textExtra.length);
-
-
         private final static int[] KEY_STATE_NORMAL_ON = {
                 android.R.attr.state_checkable,
                 android.R.attr.state_checked
