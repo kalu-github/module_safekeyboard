@@ -78,7 +78,7 @@ final class CusKeyboardView extends MiniKeyboardView implements MiniKeyboardView
 
     @Override
     public void onKey(int primaryCode, MiniKeyboard.Key key) {
-        CusUtil.log("CusKeyboardView -> onKey -> primaryCode = " + primaryCode + ", codes = " + Arrays.toString(key.codeExtra) + ", primaryText = " + key.text + ", texts = " + Arrays.toString(key.textExtra));
+        CusUtil.log("CusKeyboardView -> onKey -> primaryCode = " + primaryCode + ", codes = " + Arrays.toString(key.codeExtra) + ", key.text = " + key.text + ", key.textExtra = " + Arrays.toString(key.textExtra) + ", key.label = " + key.label);
 
         // Mulit Key
         if (null != key.codeExtra && null != key.textExtra && key.codeExtra.length == key.textExtra.length) {

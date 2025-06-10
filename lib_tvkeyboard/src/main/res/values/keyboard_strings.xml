@@ -44,7 +44,7 @@
     <string name="keyboard_key_207_label" tools:ignore="ResourceName">+</string>
     <string name="keyboard_key_208_label" tools:ignore="ResourceName">(</string>
     <string name="keyboard_key_209_label" tools:ignore="ResourceName">)</string>
-    <string name="keyboard_key_210_label" tools:ignore="ResourceName">\</string>
+    <string name="keyboard_key_210_label" tools:ignore="ResourceName">\\</string>
 
     <string name="keyboard_key_301_letter" tools:ignore="ResourceName">a</string>
     <string name="keyboard_key_302_letter" tools:ignore="ResourceName">s</string>
@@ -85,7 +85,7 @@
     <string name="keyboard_key_404_label" tools:ignore="ResourceName">^</string>
     <string name="keyboard_key_405_label" tools:ignore="ResourceName">...</string>
     <string name="keyboard_key_406_label" tools:ignore="ResourceName">~</string>
-    <string name="keyboard_key_407_label" tools:ignore="ResourceName">"</string>
+    <string name="keyboard_key_407_label" tools:ignore="ResourceName">\"</string>
     <string name="keyboard_key_409_label" tools:ignore="ResourceName">ABC</string>
 
 </resources>
