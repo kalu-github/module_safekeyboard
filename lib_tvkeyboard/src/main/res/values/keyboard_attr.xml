@@ -49,34 +49,14 @@
     <declare-styleable name="Keyboard_Key">
         <attr name="code" format="reference|integer" />
         <attr name="codeExtra" format="reference|string" />
-        <!-- The label to display on the key -->
-        <attr name="label" format="reference|string" />
-        <!-- The label to display on the key -->
         <attr name="text" format="reference|string" />
         <attr name="textSize" format="reference|dimension" />
         <attr name="textExtra" format="reference|string" />
-        <!-- The icon to display on the key instead of the label -->
         <attr name="icon" format="reference" />
         <attr name="iconWidth" format="reference|dimension" />
         <attr name="iconHeight" format="reference|dimension" />
-
-        <!-- Key edge flags -->
-        <attr name="keyEdgeFlags">
-            <!-- Key is anchored to the left of the miniKeyboard -->
-            <flag name="left" value="1" />
-            <!-- Key is anchored to the right of the miniKeyboard -->
-            <flag name="right" value="2" />
-        </attr>
+        <attr name="symbel" format="reference|string" />
         <attr name="isSymbel" format="boolean" />
         <attr name="isUpper" format="boolean" />
-        <!-- Whether this is a modifier key such as Alt or Shift -->
-        <attr name="isModifier" format="boolean" />
-        <!-- Whether this is a toggle key -->
-        <attr name="isSticky" format="boolean" />
-        <!-- Whether long-pressing on this key will make it repeat -->
-        <attr name="isRepeatable" format="boolean" />
-        <!-- Mode of the miniKeyboard. If the mode doesn't match the
-             requested miniKeyboard mode, the key will be skipped -->
-        <attr name="keyboardMode" />
     </declare-styleable>
 </resources>

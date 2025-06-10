@@ -238,7 +238,7 @@ public final class MiniKeyboard {
     public static class Key {
 
 
-        public CharSequence label;
+        public CharSequence symbel;
         // 符号
         public boolean isSymbel;
         // 大写
@@ -279,10 +279,6 @@ public final class MiniKeyboard {
         public int vtGap;
         public int hzGap;
         /**
-         * Whether this key is sticky, i.e., a toggle key
-         */
-        public boolean sticky;
-        /**
          * X coordinate of the key in the keyboard layout
          */
         public int x;
@@ -306,17 +302,9 @@ public final class MiniKeyboard {
          */
         public int edgeFlags;
         /**
-         * Whether this is a modifier key, such as Shift or Alt
-         */
-        public boolean modifier;
-        /**
          * The keyboard that this key belongs to
          */
         private MiniKeyboard miniKeyboard;
-        /**
-         * Whether this key repeats itself when held down
-         */
-        public boolean repeatable;
 
         private final static int[] KEY_STATE_NORMAL_ON = {
                 android.R.attr.state_checkable,
@@ -394,10 +382,6 @@ public final class MiniKeyboard {
 //                codes = parseCSV(codesValue.string.toString());
 //            }
 
-            repeatable = a.getBoolean(R.styleable.Keyboard_Key_isRepeatable, false);
-            modifier = a.getBoolean(R.styleable.Keyboard_Key_isModifier, false);
-            sticky = a.getBoolean(R.styleable.Keyboard_Key_isSticky, false);
-            edgeFlags = a.getInt(R.styleable.Keyboard_Key_keyEdgeFlags, 0);
             edgeFlags |= parent.rowEdgeFlags;
 
             iconWidth = a.getDimensionPixelOffset(R.styleable.Keyboard_Key_iconWidth, 0);
@@ -414,7 +398,7 @@ public final class MiniKeyboard {
 //            return values;
 
             //
-            label = a.getText(R.styleable.Keyboard_Key_label);
+            symbel = a.getText(R.styleable.Keyboard_Key_symbel);
             isSymbel = a.getBoolean(R.styleable.Keyboard_Key_isSymbel, false);
             isUpper = a.getBoolean(R.styleable.Keyboard_Key_isUpper, false);
             code = a.getInt(R.styleable.Keyboard_Key_code, -1);
@@ -484,7 +468,7 @@ public final class MiniKeyboard {
          * fulfilled:</p>
          *
          * <ul>
-         *     <li>This is a sticky key, that is, {@link #sticky} is {@code true}.
+         *     <li>This is a sticky key, that is {@code true}.
          *     <li>The parameter {@code inside} is {@code true}.
          *     <li>{@link android.os.Build.VERSION#SDK_INT} is greater than
          *         {@link android.os.Build.VERSION_CODES#LOLLIPOP_MR1}.
@@ -496,7 +480,7 @@ public final class MiniKeyboard {
          */
         public void onReleased(boolean inside) {
             pressed = !pressed;
-            if (sticky && inside) {
+            if (inside) {
                 on = !on;
             }
         }
@@ -554,16 +538,8 @@ public final class MiniKeyboard {
                     states = KEY_STATE_NORMAL_ON;
                 }
             } else {
-                if (sticky) {
-                    if (pressed) {
-                        states = KEY_STATE_PRESSED_OFF;
-                    } else {
-                        states = KEY_STATE_NORMAL_OFF;
-                    }
-                } else {
-                    if (pressed) {
-                        states = KEY_STATE_PRESSED;
-                    }
+                if (pressed) {
+                    states = KEY_STATE_PRESSED;
                 }
             }
             return states;

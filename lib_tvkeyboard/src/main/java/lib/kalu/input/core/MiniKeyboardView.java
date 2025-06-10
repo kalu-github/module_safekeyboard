@@ -390,7 +390,7 @@ public class MiniKeyboardView extends View {
                 // drawText
                 boolean symbol = isSymbol();
                 if (symbol && key.isSymbel) {
-                    String text = key.label.toString();
+                    String text = key.symbel.toString();
                     canvas.drawText(text, x, y, paint);
                 } else {
                     boolean shifted = isShifted();
@@ -466,14 +466,14 @@ public class MiniKeyboardView extends View {
                 mLastMoveTime = mDownTime;
                 mKeyboardActionListener.onPress(keyIndex != NOT_A_KEY ?
                         mKeys[keyIndex].code : 0);
-                if (mCurrentKey >= 0 && mKeys[mCurrentKey].repeatable) {
-                    mRepeatKeyIndex = mCurrentKey;
-                    // Delivering the key could have caused an abort
-                    if (mAbortKey) {
-                        mRepeatKeyIndex = NOT_A_KEY;
-                        break;
-                    }
-                }
+//                if (mCurrentKey >= 0 && mKeys[mCurrentKey].repeatable) {
+//                    mRepeatKeyIndex = mCurrentKey;
+//                    // Delivering the key could have caused an abort
+//                    if (mAbortKey) {
+//                        mRepeatKeyIndex = NOT_A_KEY;
+//                        break;
+//                    }
+//                }
                 if (mCurrentKey != NOT_A_KEY) {
                 }
                 showPreview(keyIndex);
