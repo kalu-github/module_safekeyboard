@@ -51,34 +51,46 @@
     <Row>
         <Key
             app:code="201"
-            app:text="@string/keyboard_key_201" />
+            app:isSymbel="true"
+            app:isUpper="true"
+            app:label="@string/keyboard_key_201_label"
+            app:text="@string/keyboard_key_201_letter" />
         <Key
             app:code="202"
-            app:text="@string/keyboard_key_202" />
+            app:isUpper="true"
+            app:text="@string/keyboard_key_202_letter" />
         <Key
             app:code="203"
-            app:text="@string/keyboard_key_203" />
+            app:isUpper="true"
+            app:text="@string/keyboard_key_203_letter" />
         <Key
             app:code="204"
-            app:text="@string/keyboard_key_204" />
+            app:isUpper="true"
+            app:text="@string/keyboard_key_204_letter" />
         <Key
             app:code="205"
-            app:text="@string/keyboard_key_205" />
+            app:isUpper="true"
+            app:text="@string/keyboard_key_205_letter" />
         <Key
             app:code="206"
-            app:text="@string/keyboard_key_206" />
+            app:isUpper="true"
+            app:text="@string/keyboard_key_206_letter" />
         <Key
             app:code="207"
-            app:text="@string/keyboard_key_207" />
+            app:isUpper="true"
+            app:text="@string/keyboard_key_207_letter" />
         <Key
             app:code="208"
-            app:text="@string/keyboard_key_208" />
+            app:isUpper="true"
+            app:text="@string/keyboard_key_208_letter" />
         <Key
             app:code="209"
-            app:text="@string/keyboard_key_209" />
+            app:isUpper="true"
+            app:text="@string/keyboard_key_209_letter" />
         <Key
             app:code="210"
-            app:text="@string/keyboard_key_210" />
+            app:isUpper="true"
+            app:text="@string/keyboard_key_210_letter" />
         <Key
             app:code="211"
             app:icon="@drawable/ic_keyboard_shift"
@@ -89,37 +101,46 @@
     <Row>
         <Key
             app:code="301"
+            app:isUpper="true"
             app:text="@string/keyboard_key_301" />
         <Key
             app:code="302"
+            app:isUpper="true"
             app:text="@string/keyboard_key_302" />
         <Key
             app:code="303"
+            app:isUpper="true"
             app:text="@string/keyboard_key_303" />
         <Key
             app:code="304"
+            app:isUpper="true"
             app:text="@string/keyboard_key_304" />
         <Key
             app:code="305"
+            app:isUpper="true"
             app:text="@string/keyboard_key_305" />
         <Key
             app:code="306"
+            app:isUpper="true"
             app:text="@string/keyboard_key_306" />
         <Key
             app:code="307"
+            app:isUpper="true"
             app:text="@string/keyboard_key_307" />
         <Key
             app:code="308"
+            app:isUpper="true"
             app:text="@string/keyboard_key_308" />
         <Key
             app:code="309"
+            app:isUpper="true"
             app:text="@string/keyboard_key_309" />
         <Key
             app:code="310"
-            app:text="@string/keyboard_key_310"
             app:icon="@drawable/ic_keyboard_space"
             app:iconHeight="24dp"
-            app:iconWidth="24dp" />
+            app:iconWidth="24dp"
+            app:text="@string/keyboard_key_310" />
         <Key
             app:code="311"
             app:text="@string/keyboard_key_311"
@@ -129,24 +150,31 @@
     <Row>
         <Key
             app:code="401"
+            app:isUpper="true"
             app:text="@string/keyboard_key_401" />
         <Key
             app:code="402"
+            app:isUpper="true"
             app:text="@string/keyboard_key_402" />
         <Key
             app:code="403"
+            app:isUpper="true"
             app:text="@string/keyboard_key_403" />
         <Key
             app:code="404"
+            app:isUpper="true"
             app:text="@string/keyboard_key_404" />
         <Key
             app:code="405"
+            app:isUpper="true"
             app:text="@string/keyboard_key_405" />
         <Key
             app:code="406"
+            app:isUpper="true"
             app:text="@string/keyboard_key_406" />
         <Key
             app:code="407"
+            app:isUpper="true"
             app:text="@string/keyboard_key_407" />
         <Key
             app:code="408"
@@ -154,8 +182,10 @@
             app:textSize="14sp" />
         <Key
             app:code="409"
+            app:isSymbel="true"
             app:keyWidth="17%p"
-            app:text="@string/keyboard_key_409"
+            app:label="@string/keyboard_key_409_label"
+            app:text="@string/keyboard_key_409_letter"
             app:textSize="14sp" />
         <Key
             app:code="410"

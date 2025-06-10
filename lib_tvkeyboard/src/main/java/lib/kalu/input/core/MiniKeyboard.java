@@ -44,10 +44,6 @@ public final class MiniKeyboard {
     public static final int KEYCODE_DELETE = -5;
     public static final int KEYCODE_ALT = -6;
 
-    /**
-     * Keyboard label
-     **/
-    private CharSequence mLabel;
 
     /**
      * Horizontal gap default for all rows
@@ -68,6 +64,12 @@ public final class MiniKeyboard {
      * Default gap between rows
      */
     private int mDefaultVerticalGap;
+
+
+    /**
+     * 符号键盘
+     */
+    private boolean mSymbol;
 
     /**
      * Is the keyboard in the shifted state
@@ -234,6 +236,13 @@ public final class MiniKeyboard {
      * @attr ref android.R.styleable#Keyboard_Key_keyEdgeFlags
      */
     public static class Key {
+
+
+        public CharSequence label;
+        // 符号
+        public boolean isSymbel;
+        // 大写
+        public boolean isUpper;
 
         /**
          * All the key codes (unicode or custom code) that this key could generate, zero'th
@@ -405,6 +414,9 @@ public final class MiniKeyboard {
 //            return values;
 
             //
+            label = a.getText(R.styleable.Keyboard_Key_label);
+            isSymbel = a.getBoolean(R.styleable.Keyboard_Key_isSymbel, false);
+            isUpper = a.getBoolean(R.styleable.Keyboard_Key_isUpper, false);
             code = a.getInt(R.styleable.Keyboard_Key_code, -1);
             text = a.getText(R.styleable.Keyboard_Key_text);
             testSize = a.getDimensionPixelSize(R.styleable.Keyboard_Key_textSize, -1);
@@ -559,42 +571,9 @@ public final class MiniKeyboard {
     }
 
     public MiniKeyboard(Context context, int xmlLayoutResId) {
-        this(context, xmlLayoutResId, 0, true, true);
+        this(context, xmlLayoutResId, 0);
     }
 
-    /**
-     * Creates a keyboard from the given xml key layout file.
-     *
-     * @param context        the application or service context
-     * @param xmlLayoutResId the resource file that contains the keyboard layout and keys.
-     */
-    public MiniKeyboard(Context context, int xmlLayoutResId, boolean randomNumber, boolean randomLetter) {
-        this(context, xmlLayoutResId, 0, randomNumber, randomLetter);
-    }
-
-    /**
-     * Creates a keyboard from the given xml key layout file. Weeds out rows
-     * that have a keyboard mode defined but don't match the specified mode.
-     *
-     * @param context        the application or service context
-     * @param xmlLayoutResId the resource file that contains the keyboard layout and keys.
-     * @param modeId         keyboard mode identifier
-     * @param width          sets width of keyboard
-     * @param height         sets height of keyboard
-     */
-    public MiniKeyboard(Context context, int xmlLayoutResId, int modeId, int width,
-                        int height, boolean randomNumber, boolean randomLetter) {
-        mDisplayWidth = width;
-        mDisplayHeight = height;
-
-        mDefaultHorizontalGap = 0;
-        mDefaultWidth = mDisplayWidth / 10;
-        mDefaultVerticalGap = 0;
-        mDefaultHeight = mDefaultWidth;
-        mKeys = new ArrayList<>();
-        mKeyboardMode = modeId;
-        loadKeyboard(context, context.getResources().getXml(xmlLayoutResId), randomNumber, randomLetter, xmlLayoutResId);
-    }
 
     /**
      * Creates a keyboard from the given xml key layout file. Weeds out rows
@@ -604,7 +583,7 @@ public final class MiniKeyboard {
      * @param xmlLayoutResId the resource file that contains the keyboard layout and keys.
      * @param modeId         keyboard mode identifier
      */
-    public MiniKeyboard(Context context, int xmlLayoutResId, int modeId, boolean randomNumber, boolean randomLetter) {
+    public MiniKeyboard(Context context, int xmlLayoutResId, int modeId) {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         mDisplayWidth = dm.widthPixels;
         mDisplayHeight = dm.heightPixels;
@@ -616,71 +595,7 @@ public final class MiniKeyboard {
         mDefaultHeight = mDefaultWidth;
         mKeys = new ArrayList<>();
         mKeyboardMode = modeId;
-        loadKeyboard(context, context.getResources().getXml(xmlLayoutResId), randomNumber, randomLetter, xmlLayoutResId);
-    }
-
-    /**
-     * <p>Creates a blank keyboard from the given resource file and populates it with the specified
-     * characters in left-to-right, top-to-bottom fashion, using the specified number of columns.
-     * </p>
-     * <p>If the specified number of columns is -1, then the keyboard will fit as many keys as
-     * possible in each row.</p>
-     *
-     * @param context             the application or service context
-     * @param layoutTemplateResId the layout template file, containing no keys.
-     * @param characters          the list of characters to display on the keyboard. One key will be created
-     *                            for each character.
-     * @param columns             the number of columns of keys to display. If this number is greater than the
-     *                            number of keys that can fit in a row, it will be ignored. If this number is -1, the
-     *                            keyboard will fit as many keys as possible in each row.
-     */
-
-    public MiniKeyboard(Context context, int layoutTemplateResId,
-                        CharSequence characters, int columns, int horizontalPadding) {
-        this(context, layoutTemplateResId, characters, columns, horizontalPadding, true, true);
-    }
-
-    public MiniKeyboard(Context context, int layoutTemplateResId,
-                        CharSequence characters, int columns, int horizontalPadding, boolean randomNumber, boolean randomLetter) {
-        this(context, layoutTemplateResId, randomNumber, randomLetter);
-        int x = 0;
-        int y = 0;
-        int column = 0;
-        mTotalWidth = 0;
-
-        Row row = new Row(this);
-        row.defaultHeight = mDefaultHeight;
-        row.defaultWidth = mDefaultWidth;
-        row.defaultHorizontalGap = mDefaultHorizontalGap;
-        row.verticalGap = mDefaultVerticalGap;
-        row.rowEdgeFlags = EDGE_TOP | EDGE_BOTTOM;
-        final int maxColumns = columns == -1 ? Integer.MAX_VALUE : columns;
-        for (int i = 0; i < characters.length(); i++) {
-            char c = characters.charAt(i);
-            if (column >= maxColumns
-                    || x + mDefaultWidth + horizontalPadding > mDisplayWidth) {
-                x = 0;
-                y += mDefaultVerticalGap + mDefaultHeight;
-                column = 0;
-            }
-            final Key key = new Key(row);
-            key.x = x;
-            key.y = y;
-
-            CusUtil.log("MiniKeyboard -> i = " + i + ", c = " + c);
-            // TODO: 2025/5/30
-//            key.label = String.valueOf(c);
-//            key.codes = new int[]{c};
-            column++;
-            x += key.width + key.hzGap;
-            mKeys.add(key);
-            row.mKeys.add(key);
-            if (x > mTotalWidth) {
-                mTotalWidth = x;
-            }
-        }
-        mTotalHeight = y + mDefaultHeight;
-        rows.add(row);
+        loadKeyboard(context, context.getResources().getXml(xmlLayoutResId));
     }
 
     final void resize(int newWidth, int newHeight) {
@@ -780,6 +695,18 @@ public final class MiniKeyboard {
         return mShifted;
     }
 
+    public boolean setSymbol(boolean symbolState) {
+        if (mSymbol != symbolState) {
+            mSymbol = symbolState;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isSymbol() {
+        return mSymbol;
+    }
+
     /**
      * @hide
      */
@@ -847,7 +774,7 @@ public final class MiniKeyboard {
         return new Key(res, parent, x, y, parser);
     }
 
-    private void loadKeyboard(Context context, XmlResourceParser parser, boolean randomNumber, boolean randomLetter, @XmlRes int xmlLayoutResId) {
+    private void loadKeyboard(Context context, XmlResourceParser parser) {
         boolean inKey = false;
         boolean inRow = false;
         boolean leftMostKey = false;

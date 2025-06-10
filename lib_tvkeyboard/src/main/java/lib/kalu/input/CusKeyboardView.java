@@ -17,7 +17,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,20 +28,22 @@ final class CusKeyboardView extends MiniKeyboardView implements MiniKeyboardView
 
     public CusKeyboardView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setOnKeyboardActionListener(this);
-        show();
+        init();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public CusKeyboardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setOnKeyboardActionListener(this);
-        show();
+        init();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public CusKeyboardView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    private void init() {
         setOnKeyboardActionListener(this);
         show();
     }
@@ -83,34 +84,51 @@ final class CusKeyboardView extends MiniKeyboardView implements MiniKeyboardView
         if (null != key.codeExtra && null != key.textExtra && key.codeExtra.length == key.textExtra.length) {
             showPopu(key);
         }
-        // Enter
-        else if (primaryCode == 408) {
-            Toast.makeText(getContext(), "Enter", Toast.LENGTH_SHORT).show();
+        // 删除
+        else if (primaryCode == 111) {
+            delete();
         }
         // 大小写切换
-        else if (primaryCode == 210) {
+        else if (primaryCode == 211) {
             Toast.makeText(getContext(), "大小写切换", Toast.LENGTH_SHORT).show();
+            boolean shifted = getKeyboard().isShifted();
+            setShifted(!shifted);
+        }
+        // 空格
+        else if (primaryCode == 310) {
+            Toast.makeText(getContext(), "空格", Toast.LENGTH_SHORT).show();
+            input(key);
+        }
+        // 邮箱后缀
+        else if (primaryCode == 311) {
+            Toast.makeText(getContext(), "邮箱后缀", Toast.LENGTH_SHORT).show();
+            input(key);
+        }
+        // 收起键盘
+        else if (primaryCode == 408) {
+            Toast.makeText(getContext(), "收起键盘", Toast.LENGTH_SHORT).show();
+        }
+        // 切换键盘
+        else if (primaryCode == 409) {
+            Toast.makeText(getContext(), "切换键盘", Toast.LENGTH_SHORT).show();
+            boolean symbol = isSymbol();
+            setSymbol(!symbol);
         }
         // 多语言
         else if (primaryCode == 410) {
             Toast.makeText(getContext(), "多语言", Toast.LENGTH_SHORT).show();
         }
-        // 删除
-        else if (primaryCode == 111) {
-            delete();
-        }
         // 默认
         else {
-            input(key.text);
+            input(key);
         }
     }
 
     /*******************************************************************************************/
 
     private void show() {
-        setKeyboard(new MiniKeyboard(getContext(), R.xml.moudle_safe_keyboard_letter, false, false));
+        setKeyboard(new MiniKeyboard(getContext(), R.xml.moudle_safe_keyboard));
     }
-
 
     private void showPopu(MiniKeyboard.Key key) {
         try {
@@ -192,15 +210,20 @@ final class CusKeyboardView extends MiniKeyboardView implements MiniKeyboardView
         }
     }
 
-    /**
-     * 输入加密
-     *
-     * @param text
-     */
-    private void input(CharSequence text) {
-        CusUtil.log("CusKeyboardView -> input -> text = " + text + ", mOnKeyChangeListener = " + mOnKeyChangeListener);
+    private void input(MiniKeyboard.Key key) {
+//        CusUtil.log("CusKeyboardView -> input -> text = " + text + ", mOnKeyChangeListener = " + mOnKeyChangeListener);
         if (null != mOnKeyChangeListener) {
-            mOnKeyChangeListener.onInput(text);
+            boolean symbol = isSymbol();
+            if (symbol && key.isSymbel) {
+                mOnKeyChangeListener.onInput(key.label);
+            } else {
+                boolean shifted = isShifted();
+                if (shifted && key.isUpper) {
+                    mOnKeyChangeListener.onInput(key.text.toString().toUpperCase());
+                } else {
+                    mOnKeyChangeListener.onInput(key.text);
+                }
+            }
         }
     }
 

@@ -179,6 +179,18 @@ public class MiniKeyboardView extends View {
         mAbortKey = true; // Until the next ACTION_DOWN
     }
 
+    public void refresh(MiniKeyboard miniKeyboard) {
+        List<MiniKeyboard.Key> keys = miniKeyboard.getKeys();
+        mKeys = keys.toArray(new MiniKeyboard.Key[keys.size()]);
+        invalidateAllKeys();
+    }
+
+//    public void invalidateAllTextKeys() {
+//        mDirtyRect.union(0, 0, getWidth(), getHeight());
+//        mDrawPending = true;
+//        invalidate();
+//    }
+
     public MiniKeyboard getKeyboard() {
         return mMiniKeyboard;
     }
@@ -201,12 +213,22 @@ public class MiniKeyboardView extends View {
         return false;
     }
 
-    private CharSequence adjustCase(CharSequence label) {
-        if (mMiniKeyboard.isShifted() && label != null && label.length() < 3
-                && Character.isLowerCase(label.charAt(0))) {
-            label = label.toString().toUpperCase();
+    public boolean setSymbol(boolean symbol) {
+        if (mMiniKeyboard != null) {
+            if (mMiniKeyboard.setSymbol(symbol)) {
+                // The whole keyboard probably needs to be redrawn
+                invalidateAllKeys();
+                return true;
+            }
         }
-        return label;
+        return false;
+    }
+
+    public boolean isSymbol() {
+        if (mMiniKeyboard != null) {
+            return mMiniKeyboard.isSymbol();
+        }
+        return false;
     }
 
     @Override
@@ -311,9 +333,6 @@ public class MiniKeyboardView extends View {
             int[] drawableState = key.getCurrentDrawableState();
             keyBackground.setState(drawableState);
 
-            // Switch the character to uppercase if shift is pressed
-            String text = key.text == null ? null : adjustCase(key.text).toString();
-
             final Rect bounds = keyBackground.getBounds();
             if (key.width != bounds.right ||
                     key.height != bounds.bottom) {
@@ -324,29 +343,27 @@ public class MiniKeyboardView extends View {
 
             if (key.icon != null) {
 
+                float x = (key.width - padding.left - padding.right) / 2
+                        + padding.left;
+                float y = (key.height - padding.top - padding.bottom) / 2
+                        + (paint.getTextSize() - paint.descent()) / 2 + padding.top;
+                // canvas.translate(x, y);
+                CusUtil.log("MiniKeyboardView -> onBufferDraw -> x = " + x + ", y = " + y);
+
                 Rect iconBounds = key.icon.getBounds();
                 int widthBounds = iconBounds.width();
                 int heightBounds = iconBounds.height();
+
                 CusUtil.log("MiniKeyboardView -> onBufferDraw -> widthBounds = " + widthBounds + ", heightBounds = " + heightBounds);
-                int width = key.width;
-                int height = key.height;
-                CusUtil.log("MiniKeyboardView -> onBufferDraw -> key.width = " + width + ", key.height = " + height);
-
-                final int drawableX = (key.width - padding.left - padding.right
-                        - key.icon.getIntrinsicWidth()) / 2 + padding.left;
-                final int drawableY = (key.height - padding.top - padding.bottom
-                        - key.icon.getIntrinsicHeight()) / 2 + padding.top;
-                canvas.translate(drawableX, drawableY);
-
-                int left = width / 2 - widthBounds / 2;
-                int top = height / 2 - heightBounds / 2;
-                int right = left + widthBounds;
-                int bottom = top + heightBounds;
+                int left = (int) (x - widthBounds / 2);
+                int top = (int) (y - heightBounds / 2);
+                int right = (int) (x + widthBounds / 2);
+                int bottom = (int) (y + heightBounds / 2);
                 CusUtil.log("MiniKeyboardView -> onBufferDraw -> left = " + left + ", top = " + top + ", right = " + right + ", bottom = " + bottom);
                 key.icon.setBounds(left, top, right, bottom);
                 key.icon.draw(canvas);
-                canvas.translate(-drawableX, -drawableY);
-            } else if (text != null) {
+//                canvas.translate(-drawableX, -drawableY);
+            } else if (key.text != null) {
 //                // For characters, use large font. For labels like "Done", use small font.
 //                if (label.length() > 1 && key.codes.length < 2) {
 //                    paint.setTextSize(mLabelTextSize);
@@ -364,12 +381,29 @@ public class MiniKeyboardView extends View {
                 // Draw a drop shadow for the text
                 paint.setShadowLayer(mShadowRadius, 0, 0, mShadowColor);
                 // Draw the text
-                canvas.drawText(text,
-                        (key.width - padding.left - padding.right) / 2
-                                + padding.left,
-                        (key.height - padding.top - padding.bottom) / 2
-                                + (paint.getTextSize() - paint.descent()) / 2 + padding.top,
-                        paint);
+                float x = (key.width - padding.left - padding.right) / 2
+                        + padding.left;
+                float y = (key.height - padding.top - padding.bottom) / 2
+                        + (paint.getTextSize() - paint.descent()) / 2 + padding.top;
+
+
+                // drawText
+                boolean symbol = isSymbol();
+                if (symbol && key.isSymbel) {
+                    String text = key.label.toString();
+                    canvas.drawText(text, x, y, paint);
+                } else {
+                    boolean shifted = isShifted();
+                    if (shifted && key.isUpper) {
+                        String text = key.text.toString().toUpperCase();
+                        canvas.drawText(text, x, y, paint);
+                    } else {
+                        String text = key.text.toString();
+                        canvas.drawText(text, x, y, paint);
+                    }
+                }
+
+
                 // Turn off drop shadow
                 paint.setShadowLayer(0, 0, 0, 0);
             }

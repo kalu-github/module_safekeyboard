@@ -24,16 +24,27 @@
     <string name="keyboard_key_110" tools:ignore="ResourceName">0</string>
     <string name="keyboard_key_111" tools:ignore="ResourceName">del</string>
 
-    <string name="keyboard_key_201" tools:ignore="ResourceName">q</string>
-    <string name="keyboard_key_202" tools:ignore="ResourceName">w</string>
-    <string name="keyboard_key_203" tools:ignore="ResourceName">e</string>
-    <string name="keyboard_key_204" tools:ignore="ResourceName">r</string>
-    <string name="keyboard_key_205" tools:ignore="ResourceName">t</string>
-    <string name="keyboard_key_206" tools:ignore="ResourceName">y</string>
-    <string name="keyboard_key_207" tools:ignore="ResourceName">u</string>
-    <string name="keyboard_key_208" tools:ignore="ResourceName">i</string>
-    <string name="keyboard_key_209" tools:ignore="ResourceName">o</string>
-    <string name="keyboard_key_210" tools:ignore="ResourceName">p</string>
+    <string name="keyboard_key_201_letter" tools:ignore="ResourceName">q</string>
+    <string name="keyboard_key_202_letter" tools:ignore="ResourceName">w</string>
+    <string name="keyboard_key_203_letter" tools:ignore="ResourceName">e</string>
+    <string name="keyboard_key_204_letter" tools:ignore="ResourceName">r</string>
+    <string name="keyboard_key_205_letter" tools:ignore="ResourceName">t</string>
+    <string name="keyboard_key_206_letter" tools:ignore="ResourceName">y</string>
+    <string name="keyboard_key_207_letter" tools:ignore="ResourceName">u</string>
+    <string name="keyboard_key_208_letter" tools:ignore="ResourceName">i</string>
+    <string name="keyboard_key_209_letter" tools:ignore="ResourceName">o</string>
+    <string name="keyboard_key_210_letter" tools:ignore="ResourceName">p</string>
+
+    <string name="keyboard_key_201_label" tools:ignore="ResourceName">@</string>
+    <string name="keyboard_key_202_label" tools:ignore="ResourceName">#</string>
+    <string name="keyboard_key_203_label" tools:ignore="ResourceName">$</string>
+    <string name="keyboard_key_204_label" tools:ignore="ResourceName">%</string>
+    <string name="keyboard_key_205_label" tools:ignore="ResourceName">&amp;</string>
+    <string name="keyboard_key_206_label" tools:ignore="ResourceName">-</string>
+    <string name="keyboard_key_207_label" tools:ignore="ResourceName">+</string>
+    <string name="keyboard_key_208_label" tools:ignore="ResourceName">(</string>
+    <string name="keyboard_key_209_label" tools:ignore="ResourceName">)</string>
+    <string name="keyboard_key_210_label" tools:ignore="ResourceName">\</string>
 
     <string name="keyboard_key_301" tools:ignore="ResourceName">a</string>
     <string name="keyboard_key_302" tools:ignore="ResourceName">s</string>
@@ -55,6 +66,7 @@
     <string name="keyboard_key_406" tools:ignore="ResourceName">n</string>
     <string name="keyboard_key_407" tools:ignore="ResourceName">m</string>
     <string name="keyboard_key_408" tools:ignore="ResourceName">Enter</string>
-    <string name="keyboard_key_409" tools:ignore="ResourceName">&amp;123</string>
+    <string name="keyboard_key_409_letter" tools:ignore="ResourceName">&amp;123</string>
+    <string name="keyboard_key_409_label" tools:ignore="ResourceName">ABC</string>
 
 </resources>
