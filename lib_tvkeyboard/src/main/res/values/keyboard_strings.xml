@@ -46,27 +46,46 @@
     <string name="keyboard_key_209_label" tools:ignore="ResourceName">)</string>
     <string name="keyboard_key_210_label" tools:ignore="ResourceName">\</string>
 
-    <string name="keyboard_key_301" tools:ignore="ResourceName">a</string>
-    <string name="keyboard_key_302" tools:ignore="ResourceName">s</string>
-    <string name="keyboard_key_303" tools:ignore="ResourceName">d</string>
-    <string name="keyboard_key_304" tools:ignore="ResourceName">f</string>
-    <string name="keyboard_key_305" tools:ignore="ResourceName">g</string>
-    <string name="keyboard_key_306" tools:ignore="ResourceName">h</string>
-    <string name="keyboard_key_307" tools:ignore="ResourceName">j</string>
-    <string name="keyboard_key_308" tools:ignore="ResourceName">k</string>
-    <string name="keyboard_key_309" tools:ignore="ResourceName">l</string>
+    <string name="keyboard_key_301_letter" tools:ignore="ResourceName">a</string>
+    <string name="keyboard_key_302_letter" tools:ignore="ResourceName">s</string>
+    <string name="keyboard_key_303_letter" tools:ignore="ResourceName">d</string>
+    <string name="keyboard_key_304_letter" tools:ignore="ResourceName">f</string>
+    <string name="keyboard_key_305_letter" tools:ignore="ResourceName">g</string>
+    <string name="keyboard_key_306_letter" tools:ignore="ResourceName">h</string>
+    <string name="keyboard_key_307_letter" tools:ignore="ResourceName">j</string>
+    <string name="keyboard_key_308_letter" tools:ignore="ResourceName">k</string>
+    <string name="keyboard_key_309_letter" tools:ignore="ResourceName">l</string>
+
+    <string name="keyboard_key_301_label" tools:ignore="ResourceName">?</string>
+    <string name="keyboard_key_302_label" tools:ignore="ResourceName">!</string>
+    <string name="keyboard_key_303_label" tools:ignore="ResourceName">:</string>
+    <string name="keyboard_key_304_label" tools:ignore="ResourceName">;</string>
+    <string name="keyboard_key_305_label" tools:ignore="ResourceName">*</string>
+    <string name="keyboard_key_306_label" tools:ignore="ResourceName">=</string>
+    <string name="keyboard_key_307_label" tools:ignore="ResourceName">[</string>
+    <string name="keyboard_key_308_label" tools:ignore="ResourceName">]</string>
+    <string name="keyboard_key_309_label" tools:ignore="ResourceName">/</string>
+
     <string name="keyboard_key_310" tools:ignore="ResourceName"> </string>
     <string name="keyboard_key_311" tools:ignore="ResourceName">.com</string>
 
-    <string name="keyboard_key_401" tools:ignore="ResourceName">z</string>
-    <string name="keyboard_key_402" tools:ignore="ResourceName">x</string>
-    <string name="keyboard_key_403" tools:ignore="ResourceName">c</string>
-    <string name="keyboard_key_404" tools:ignore="ResourceName">v</string>
-    <string name="keyboard_key_405" tools:ignore="ResourceName">b</string>
-    <string name="keyboard_key_406" tools:ignore="ResourceName">n</string>
-    <string name="keyboard_key_407" tools:ignore="ResourceName">m</string>
+    <string name="keyboard_key_401_letter" tools:ignore="ResourceName">z</string>
+    <string name="keyboard_key_402_letter" tools:ignore="ResourceName">x</string>
+    <string name="keyboard_key_403_letter" tools:ignore="ResourceName">c</string>
+    <string name="keyboard_key_404_letter" tools:ignore="ResourceName">v</string>
+    <string name="keyboard_key_405_letter" tools:ignore="ResourceName">b</string>
+    <string name="keyboard_key_406_letter" tools:ignore="ResourceName">n</string>
+    <string name="keyboard_key_407_letter" tools:ignore="ResourceName">m</string>
     <string name="keyboard_key_408" tools:ignore="ResourceName">Enter</string>
     <string name="keyboard_key_409_letter" tools:ignore="ResourceName">&amp;123</string>
+
+    <string name="keyboard_key_401_label" tools:ignore="ResourceName">.</string>
+    <string name="keyboard_key_402_label" tools:ignore="ResourceName">,</string>
+    <string name="keyboard_key_403_label" tools:ignore="ResourceName">_</string>
+    <string name="keyboard_key_404_label" tools:ignore="ResourceName">^</string>
+    <string name="keyboard_key_405_label" tools:ignore="ResourceName">...</string>
+    <string name="keyboard_key_406_label" tools:ignore="ResourceName">~</string>
+    <string name="keyboard_key_407_label" tools:ignore="ResourceName">"</string>
     <string name="keyboard_key_409_label" tools:ignore="ResourceName">ABC</string>
 
 </resources>
