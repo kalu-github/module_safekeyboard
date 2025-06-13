@@ -107,6 +107,9 @@ final class CusKeyboardView extends MiniKeyboardView implements MiniKeyboardView
         // 收起键盘
         else if (primaryCode == 408) {
             Toast.makeText(getContext(), "收起键盘", Toast.LENGTH_SHORT).show();
+            if (null != mOnKeyChangeListener) {
+                mOnKeyChangeListener.onDismiss();
+            }
         }
         // 切换键盘
         else if (primaryCode == 409) {
@@ -250,5 +253,7 @@ final class CusKeyboardView extends MiniKeyboardView implements MiniKeyboardView
         void onInput(CharSequence text);
 
         void onDelete();
+
+        void onDismiss();
     }
 }

@@ -45,9 +45,15 @@ public class CusKeyboardDialog extends DialogFragment implements DialogInterface
 
             @Override
             public void onDelete() {
-
                 if (null != mOnInputChangeListener) {
                     mOnInputChangeListener.onDel();
+                }
+            }
+
+            @Override
+            public void onDismiss() {
+                if (null != mOnInputChangeListener) {
+                    mOnInputChangeListener.onDismiss();
                 }
             }
         });
@@ -59,7 +65,6 @@ public class CusKeyboardDialog extends DialogFragment implements DialogInterface
         dialog.setOnKeyListener(this);
         return dialog;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -154,5 +159,7 @@ public class CusKeyboardDialog extends DialogFragment implements DialogInterface
         void onInput(CharSequence text);
 
         void onDel();
+
+        void onDismiss();
     }
 }

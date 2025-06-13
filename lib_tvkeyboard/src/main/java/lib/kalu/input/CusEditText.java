@@ -13,7 +13,9 @@ import android.text.Editable;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -96,6 +98,16 @@ public final class CusEditText extends android.widget.EditText {
             } catch (Exception e) {
             }
         }
+
+        //
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "onClick", Toast.LENGTH_SHORT).show();
+                //
+                start();
+            }
+        });
     }
 
     @Override
@@ -106,10 +118,10 @@ public final class CusEditText extends android.widget.EditText {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_SPACE) {
-            show();
-            updateSelection();
-        }
+//        if (keyCode == KeyEvent.KEYCODE_SPACE) {
+//           // show();
+//            updateSelection();
+//        }
         return super.onKeyDown(keyCode, event);
     }
 
@@ -118,12 +130,14 @@ public final class CusEditText extends android.widget.EditText {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
 
         if (focused) {
-            show();
+            // 关闭系统键盘
+            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getWindowToken(), 0);
+            //
             updateSelection();
-        } else {
-            close();
         }
     }
+
 
     private void close() {
         try {
@@ -142,12 +156,8 @@ public final class CusEditText extends android.widget.EditText {
         }
     }
 
-    private void show() {
+    private void start() {
         try {
-            // 关闭系统键盘
-            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getWindowToken(), 0);
-
             // 显示自定义键盘
             Activity activity = CusUtil.getCurActivity(getContext());
             if (null == activity)
@@ -169,10 +179,15 @@ public final class CusEditText extends android.widget.EditText {
                     public void onDel() {
                         del();
                     }
+
+                    @Override
+                    public void onDismiss() {
+                        close();
+                    }
                 });
             }
         } catch (Exception e) {
-            CusUtil.log("CusEditText -> show -> Exception " + e.getMessage());
+            CusUtil.log("CusEditText -> start -> Exception " + e.getMessage());
         }
     }
 
