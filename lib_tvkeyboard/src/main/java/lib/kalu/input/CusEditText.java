@@ -105,7 +105,7 @@ public final class CusEditText extends android.widget.EditText {
             public void onClick(View view) {
                 Toast.makeText(getContext(), "onClick", Toast.LENGTH_SHORT).show();
                 //
-                start();
+                show();
             }
         });
     }
@@ -118,10 +118,11 @@ public final class CusEditText extends android.widget.EditText {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_SPACE) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            hide();
 //           // show();
 //            updateSelection();
-//        }
+        }
         return super.onKeyDown(keyCode, event);
     }
 
@@ -139,7 +140,7 @@ public final class CusEditText extends android.widget.EditText {
     }
 
 
-    private void close() {
+    private void hide() {
         try {
             Activity activity = CusUtil.getCurActivity(getContext());
             if (null == activity)
@@ -152,11 +153,11 @@ public final class CusEditText extends android.widget.EditText {
             ((CusKeyboardDialog) fragment).dismiss();
             fragmentManager.beginTransaction().show(fragment).commit();
         } catch (Exception e) {
-            CusUtil.log("CusEditText -> close -> Exception " + e.getMessage());
+            CusUtil.log("CusEditText -> hide -> Exception " + e.getMessage());
         }
     }
 
-    private void start() {
+    private void show() {
         try {
             // 显示自定义键盘
             Activity activity = CusUtil.getCurActivity(getContext());
@@ -182,12 +183,12 @@ public final class CusEditText extends android.widget.EditText {
 
                     @Override
                     public void onDismiss() {
-                        close();
+                        hide();
                     }
                 });
             }
         } catch (Exception e) {
-            CusUtil.log("CusEditText -> start -> Exception " + e.getMessage());
+            CusUtil.log("CusEditText -> show -> Exception " + e.getMessage());
         }
     }
 
