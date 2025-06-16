@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ResourceName">
+
+    <declare-styleable name="KeyboardView">
+        <attr name="keyTouch" format="boolean" />
+        <attr name="keyFocus" format="boolean" />
+        <attr name="keyboardViewStyle" format="reference" />
+        <attr name="keyBackground" format="reference" />
+        <attr name="keyTextSize" format="dimension" />
+        <attr name="keyTextColor" format="color" />
+        <attr name="keyVerticalCorrection" format="dimension" />
+        <attr name="keyShadowColor" format="color" />
+        <attr name="keyShadowRadius" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="KeyboardViewPreviewState">
+        <attr name="state_long_pressable" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="Keyboard">
+        <attr name="keyWidth" format="dimension|fraction" />
+        <attr name="keyHeight" format="dimension|fraction" />
+        <attr name="horizontalGap" format="dimension|fraction" />
+        <attr name="verticalGap" format="dimension|fraction" />
+    </declare-styleable>
+    <declare-styleable name="Keyboard_Row">
+        <attr name="rowEdgeFlags">
+            <flag name="top" value="4" />
+            <flag name="bottom" value="8" />
+        </attr>
+        <attr name="keyboardMode" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="Keyboard_Key">
+        <attr name="mult" format="reference|string" />
+        <attr name="code" format="reference|integer" />
+        <attr name="text" format="reference|string" />
+        <attr name="textSize" format="reference|dimension" />
+        <attr name="icon" format="reference" />
+        <attr name="iconWidth" format="reference|dimension" />
+        <attr name="iconHeight" format="reference|dimension" />
+        <attr name="symbel" format="reference|string" />
+        <attr name="isSymbel" format="boolean" />
+        <attr name="isUpper" format="boolean" />
+        <attr name="paddingLeft" format="dimension|fraction" />
+        <attr name="paddingRight" format="dimension|fraction" />
+        <attr name="marginLeft" format="dimension|fraction" />
+        <attr name="marginRight" format="dimension|fraction" />
+        <attr name="background" format="reference" />
+    </declare-styleable>
+</resources>

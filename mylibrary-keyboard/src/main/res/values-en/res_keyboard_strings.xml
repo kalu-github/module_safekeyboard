@@ -1,0 +1,103 @@
+<resources>
+
+
+    <string name="res_keyboard_popu_language_title">切换语言</string>
+
+    <!-- 安全键盘 -->
+    <string name="res_keyboard_key1">"&#64;"</string>
+    <string name="res_keyboard_key2">"&#38;"</string>
+    <string name="res_keyboard_key3">\"</string>
+    <string name="res_keyboard_key4">"&#60;"</string>
+    <string name="res_keyboard_key5">"&#62;"</string>
+    <string name="res_keyboard_key_space">\u7a7a\u683c</string>
+    <string name="res_keyboard_key_sure">完成</string>
+    <string name="res_keyboard_key_message">安全键盘</string>
+    <!-- 安全键盘 -->
+
+
+    <string name="res_keyboard_key_101">1</string>
+    <string name="res_keyboard_key_102">2</string>
+    <string name="res_keyboard_key_103">3</string>
+    <string name="res_keyboard_key_104">4</string>
+    <string name="res_keyboard_key_105">5</string>
+    <string name="res_keyboard_key_106">6</string>
+    <string name="res_keyboard_key_107">7</string>
+    <string name="res_keyboard_key_108">8</string>
+    <string name="res_keyboard_key_109">9</string>
+    <string name="res_keyboard_key_110">0</string>
+    <string name="res_keyboard_key_111">del</string>
+
+    <string name="res_keyboard_key_201_letter">q</string>
+    <string name="res_keyboard_key_202_letter">w</string>
+    <string name="res_keyboard_key_203_letter">e</string>
+    <string name="res_keyboard_key_203_letter_extra_text"/>
+
+    <string name="res_keyboard_key_204_letter">r</string>
+    <string name="res_keyboard_key_205_letter">t</string>
+    <string name="res_keyboard_key_206_letter">y</string>
+    <string name="res_keyboard_key_207_letter">u</string>
+    <string name="res_keyboard_key_207_letter_extra_text"/>
+    <string name="res_keyboard_key_208_letter">i</string>
+    <string name="res_keyboard_key_208_letter_extra_text"/>
+
+    <string name="res_keyboard_key_209_letter">o</string>
+    <string name="res_keyboard_key_209_letter_extra_text"/>
+    <string name="res_keyboard_key_210_letter">p</string>
+
+    <string name="res_keyboard_key_201_label">@</string>
+    <string name="res_keyboard_key_202_label">#</string>
+    <string name="res_keyboard_key_203_label">$</string>
+    <string name="res_keyboard_key_204_label">%</string>
+    <string name="res_keyboard_key_205_label">&amp;</string>
+    <string name="res_keyboard_key_206_label">-</string>
+    <string name="res_keyboard_key_207_label">+</string>
+    <string name="res_keyboard_key_208_label">(</string>
+    <string name="res_keyboard_key_209_label">)</string>
+    <string name="res_keyboard_key_210_label">\\</string>
+
+    <string name="res_keyboard_key_301_letter">a</string>
+    <string name="res_keyboard_key_301_letter_extra_text"/>
+
+    <string name="res_keyboard_key_302_letter">s</string>
+    <string name="res_keyboard_key_303_letter">d</string>
+    <string name="res_keyboard_key_304_letter">f</string>
+    <string name="res_keyboard_key_305_letter">g</string>
+    <string name="res_keyboard_key_306_letter">h</string>
+    <string name="res_keyboard_key_307_letter">j</string>
+    <string name="res_keyboard_key_308_letter">k</string>
+    <string name="res_keyboard_key_309_letter">l</string>
+
+    <string name="res_keyboard_key_301_label">?</string>
+    <string name="res_keyboard_key_302_label">!</string>
+    <string name="res_keyboard_key_303_label">:</string>
+    <string name="res_keyboard_key_304_label">;</string>
+    <string name="res_keyboard_key_305_label">*</string>
+    <string name="res_keyboard_key_306_label">=</string>
+    <string name="res_keyboard_key_307_label">[</string>
+    <string name="res_keyboard_key_308_label">]</string>
+    <string name="res_keyboard_key_309_label">/</string>
+
+    <string name="res_keyboard_key_310"> </string>
+    <string name="res_keyboard_key_311">.com</string>
+
+    <string name="res_keyboard_key_401_letter">z</string>
+    <string name="res_keyboard_key_402_letter">x</string>
+    <string name="res_keyboard_key_403_letter">c</string>
+    <string name="res_keyboard_key_404_letter">v</string>
+    <string name="res_keyboard_key_405_letter">b</string>
+    <string name="res_keyboard_key_406_letter">n</string>
+    <string name="res_keyboard_key_406_letter_extra_text"/>
+    <string name="res_keyboard_key_407_letter">m</string>
+    <string name="res_keyboard_key_408">Enter</string>
+    <string name="res_keyboard_key_409_letter">&amp;123</string>
+
+    <string name="res_keyboard_key_401_label">.</string>
+    <string name="res_keyboard_key_402_label">,</string>
+    <string name="res_keyboard_key_403_label">_</string>
+    <string name="res_keyboard_key_404_label">^</string>
+    <string name="res_keyboard_key_405_label">...</string>
+    <string name="res_keyboard_key_406_label">~</string>
+    <string name="res_keyboard_key_407_label">\"</string>
+    <string name="res_keyboard_key_409_label">ABC</string>
+
+</resources>

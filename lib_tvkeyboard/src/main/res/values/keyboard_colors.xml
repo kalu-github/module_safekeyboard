@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="safe_keyboard_color_ffffff" tools:ignore="ResourceName">#ffffff</color>
-    <color name="safe_keyboard_color_cccccc" tools:ignore="ResourceName">#cccccc</color>
-    <color name="safe_keyboard_color_e6e6e6" tools:ignore="ResourceName">#e6e6e6</color>
-    <color name="safe_keyboard_color_333333" tools:ignore="ResourceName">#333333</color>
-</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/res_keyboard_popu_language_item"
+    android:layout_width="600dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/res_keyboard_background_popu_language_item"
+    android:button="@android:color/transparent"
+    android:focusable="true"
+    android:gravity="center"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp"
+    android:textColor="@color/res_keyboard_textcolor_popu_language_item"
+    android:textSize="28sp" />
