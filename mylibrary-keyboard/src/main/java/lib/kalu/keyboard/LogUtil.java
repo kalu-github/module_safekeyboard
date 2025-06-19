@@ -20,31 +20,9 @@ public final class LogUtil {
         mEnable = enable;
     }
 
-    public static void log(@NonNull String content) {
-
-//        if (!BuildConfig.DEBUG)
-//            return;
-//
-//        if (null == content || content.length() == 0)
-//            return;
-//
-
+    public static void log(String content) {
         if (mEnable) {
             Log.d(TAG, content);
-        }
-    }
-
-    public static Activity getCurActivity(Context context) {
-        try {
-            if (context instanceof Activity) {
-                return (Activity) context;
-            } else if (context instanceof ContextWrapper) {
-                return getCurActivity(((ContextWrapper) context).getBaseContext());
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
         }
     }
 }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -443,7 +444,7 @@ public class EditText extends androidx.appcompat.widget.AppCompatEditText {
 
     private void show() {
         try {
-            Activity activity = LogUtil.getCurActivity(getContext());
+            Activity activity = getCurActivity(getContext());
             if (null == activity)
                 throw new Exception("warning: activity null");
             FragmentManager fragmentManager = activity.getFragmentManager();
@@ -514,6 +515,20 @@ public class EditText extends androidx.appcompat.widget.AppCompatEditText {
             setSelection(length);
         } catch (Exception e) {
             LogUtil.log("EditText -> updateSelection -> Exception " + e.getMessage());
+        }
+    }
+
+    private static Activity getCurActivity(Context context) {
+        try {
+            if (context instanceof Activity) {
+                return (Activity) context;
+            } else if (context instanceof ContextWrapper) {
+                return getCurActivity(((ContextWrapper) context).getBaseContext());
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
         }
     }
 

@@ -6,15 +6,15 @@
 
     <!-- 位移动画：向底部退出 -->
     <translate
-        android:duration="300"
-        android:interpolator="@android:anim/decelerate_interpolator"
+        android:duration="100"
         android:fromYDelta="0"
+        android:interpolator="@android:anim/decelerate_interpolator"
         android:toYDelta="100%p" />
 
     <!-- 淡出动画 -->
     <alpha
-        android:duration="300"
-        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        android:duration="100"
         android:fromAlpha="1.0"
+        android:interpolator="@android:anim/decelerate_interpolator"
         android:toAlpha="0.0" />
 </set>
