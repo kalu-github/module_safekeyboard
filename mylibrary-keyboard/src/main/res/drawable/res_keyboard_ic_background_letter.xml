@@ -2,16 +2,15 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_focused="true">
-        <shape android:shape="rectangle">
-            <gradient android:endColor="#ff6200" android:startColor="#ff3c3c" />
+        <shape>
+            <gradient android:centerColor="@color/res_keyboard_color_ff3c3c" android:endColor="@color/res_keyboard_color_ff6200" android:startColor="@color/res_keyboard_color_ff3c3c" />
             <corners android:radius="8dp" />
         </shape>
     </item>
 
-
     <item>
-        <shape android:shape="rectangle">
-            <solid android:color="#2c2f38" />
+        <shape>
+            <solid android:color="@color/res_keyboard_color_2c2f38" />
             <corners android:radius="8dp" />
         </shape>
 

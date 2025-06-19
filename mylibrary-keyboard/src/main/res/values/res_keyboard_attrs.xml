@@ -11,7 +11,6 @@
         <attr name="keyVerticalCorrection" format="dimension" />
         <attr name="keyShadowColor" format="color" />
         <attr name="keyShadowRadius" format="float" />
-        <attr name="keyShiftKeep" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="KeyboardViewPreviewState">
@@ -23,13 +22,6 @@
         <attr name="keyHeight" format="dimension|fraction" />
         <attr name="horizontalGap" format="dimension|fraction" />
         <attr name="verticalGap" format="dimension|fraction" />
-    </declare-styleable>
-    <declare-styleable name="Keyboard_Row">
-        <attr name="rowEdgeFlags">
-            <flag name="top" value="4" />
-            <flag name="bottom" value="8" />
-        </attr>
-        <attr name="keyboardMode" format="reference" />
     </declare-styleable>
     <declare-styleable name="Keyboard_Key">
         <attr name="mult" format="reference|string" />

@@ -1,0 +1,10 @@
+<resources>
+    <color name="res_keyboard_color_4dffffff">#4dffffff</color>
+    <color name="res_keyboard_color_33ffffff">#33ffffff</color>
+
+    <color name="res_keyboard_color_1a1a1b">#1a1a1b</color>
+    <color name="res_keyboard_color_2c2f38">#2c2f38</color>
+    <color name="res_keyboard_color_ff6200">#ff6200</color>
+    <color name="res_keyboard_color_ff3c3c">#ff3c3c</color>
+    <color name="res_keyboard_color_494e5e">#494e5e</color>
+</resources>

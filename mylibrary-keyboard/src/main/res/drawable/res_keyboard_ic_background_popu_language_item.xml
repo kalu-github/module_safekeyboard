@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
-        <shape android:shape="rectangle">
+        <shape>
             <corners android:radius="2dp" />
-            <gradient android:angle="0" android:endColor="#ffFF6200" android:startColor="#ffFF3C3C" android:type="linear" android:useLevel="true" />
+            <gradient android:centerColor="@color/res_keyboard_color_ff3c3c" android:endColor="@color/res_keyboard_color_ff6200" android:startColor="@color/res_keyboard_color_ff3c3c" />
         </shape>
     </item>
 </selector>

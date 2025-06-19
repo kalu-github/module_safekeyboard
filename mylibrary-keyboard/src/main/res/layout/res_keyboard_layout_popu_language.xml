@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/res_keyboard_ic_background_popu_language"
-    android:descendantFocusability="afterDescendants"
-    android:focusable="true"
+    android:focusable="false"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -22,8 +21,14 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
         android:layout_weight="1"
-        android:focusable="false">
+        android:focusable="false"
+        android:scrollbarSize="10dp"
+        android:scrollbarThumbVertical="@color/res_keyboard_color_4dffffff"
+        android:scrollbarTrackVertical="@color/res_keyboard_color_33ffffff"
+        android:scrollbars="vertical">
 
         <RadioGroup
             android:id="@+id/res_keyboard_popu_language_content"

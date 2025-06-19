@@ -13,7 +13,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
@@ -49,7 +48,7 @@ final class KeyboardView extends GoogleKeyboardView implements GoogleKeyboardVie
 
     private void init() {
         setOnKeyboardActionListener(this);
-        setKeyboard(new GoogleKeyboard(getContext(), R.xml.res_keyboard_keys));
+        setKeyboard(new GoogleKeyboard(getContext(), R.xml.res_keyboard_keys), 0);
     }
 
     @Override
@@ -170,7 +169,8 @@ final class KeyboardView extends GoogleKeyboardView implements GoogleKeyboardVie
                 resources.updateConfiguration(config, resources.getDisplayMetrics());
             }
 
-            updateKeyboard(new GoogleKeyboard(baseContext, R.xml.res_keyboard_keys));
+            GoogleKeyboard keyboard = new GoogleKeyboard(baseContext, R.xml.res_keyboard_keys);
+            setKeyboard(keyboard, keyboard.getKeys().size() - 1);
         } catch (Exception e) {
             LogUtil.log("KeyboardView -> language -> Exception " + e.getMessage());
         }
@@ -350,11 +350,12 @@ final class KeyboardView extends GoogleKeyboardView implements GoogleKeyboardVie
             });
 
 
-            String languageCode = getLanguageCode();
+            String languageCode = getKeyboard().mDefaultLanguageCode;
             LogUtil.log("KeyboardView -> showPopupLanguage -> languageCode = " + languageCode);
 
             //
             ViewGroup viewGroup = inflate.findViewById(R.id.res_keyboard_popu_language_content);
+
             for (int i = 0; i < size; i += 2) {
 
                 String name = list.get(i);
@@ -364,7 +365,7 @@ final class KeyboardView extends GoogleKeyboardView implements GoogleKeyboardVie
                 LayoutInflater.from(getContext()).inflate(R.layout.res_keyboard_layout_popu_language_item, viewGroup, true);
                 int index = i / 2;
                 RadioButton radioButton = (RadioButton) viewGroup.getChildAt(index);
-                if (code.equalsIgnoreCase(languageCode)) {
+                if (code.equalsIgnoreCase(languageCode) || languageCode.startsWith(code)) {
                     radioButton.setChecked(true);
                     radioButton.requestFocus();
                 } else {

@@ -24,7 +24,6 @@ import java.lang.ref.WeakReference;
 @SuppressLint("ValidFragment")
 final class KeyboardDialog extends DialogFragment implements DialogInterface.OnKeyListener {
 
-    public static final String TAG = "KeyboardDialog22";
     public static final String BUNDLE_SUPPORT_LANGUAGES = "bundle_support_languages";
 
     @Override
@@ -74,6 +73,8 @@ final class KeyboardDialog extends DialogFragment implements DialogInterface.OnK
         lp.gravity = Gravity.BOTTOM;
         //设置dialog的动画
         lp.windowAnimations = R.style.Res_Keyboadrd_Style;
+        // 设置透明度
+        lp.dimAmount = 0f;
         window.setAttributes(lp);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         return dialog;

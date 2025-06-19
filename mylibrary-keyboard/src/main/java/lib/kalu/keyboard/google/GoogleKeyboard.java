@@ -9,9 +9,6 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.util.Xml;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -26,20 +23,8 @@ public class GoogleKeyboard {
     private static final String TAG_ROW = "Row";
     private static final String TAG_KEY = "Key";
 
-    public static final int EDGE_LEFT = 0x01;
-    public static final int EDGE_RIGHT = 0x02;
-    public static final int EDGE_TOP = 0x04;
-    public static final int EDGE_BOTTOM = 0x08;
 
-    public static final int KEYCODE_SHIFT = -1;
-    public static final int KEYCODE_MODE_CHANGE = -2;
-    public static final int KEYCODE_CANCEL = -3;
-    public static final int KEYCODE_DONE = -4;
-    public static final int KEYCODE_DELETE = -5;
-    public static final int KEYCODE_ALT = -6;
-
-    public String mLanguageCode;
-
+    public String mDefaultLanguageCode;
 
     /**
      * Horizontal gap default for all rows
@@ -118,13 +103,6 @@ public class GoogleKeyboard {
      */
     private int mDisplayHeight;
 
-    /**
-     * Keyboard mode, or zero, if none.
-     */
-    private int mKeyboardMode;
-
-    // Variables for pre-computing nearest keys.
-
     private static final int GRID_WIDTH = 10;
     private static final int GRID_HEIGHT = 5;
     private static final int GRID_SIZE = GRID_WIDTH * GRID_HEIGHT;
@@ -174,18 +152,7 @@ public class GoogleKeyboard {
          */
         public int verticalGap;
 
-        public ArrayList<Key> mKeys = new ArrayList<>();
-
-        /**
-         * Edge flags for this row of keys. Possible values that can be assigned are
-         * {@link GoogleKeyboard#EDGE_TOP EDGE_TOP} and {@link GoogleKeyboard#EDGE_BOTTOM EDGE_BOTTOM}
-         */
-        public int rowEdgeFlags;
-
-        /**
-         * The keyboard mode for this row
-         */
-        public int mode;
+        public ArrayList<Key> mRowKeys = new ArrayList<>();
 
         private GoogleKeyboard parent;
 
@@ -206,10 +173,6 @@ public class GoogleKeyboard {
             verticalGap = getDimensionOrFraction(a, R.styleable.Keyboard_verticalGap,
                     parent.mDisplayHeight, parent.mDefaultVerticalGap);
             a.recycle();
-            a = res.obtainAttributes(Xml.asAttributeSet(parser), R.styleable.Keyboard_Row);
-            rowEdgeFlags = a.getInt(R.styleable.Keyboard_Row_rowEdgeFlags, 0);
-            mode = a.getResourceId(R.styleable.Keyboard_Row_keyboardMode,
-                    0);
         }
     }
 
@@ -294,17 +257,8 @@ public class GoogleKeyboard {
          * The current focused state of this key
          */
         public boolean focused;
-        /**
-         * If this is a sticky key, is it on?
-         */
-        public boolean on;
-        /**
-         * Flags that specify the anchoring to edges of the keyboard for detecting touch events
-         * that are just out of the boundary of the key. This is a bit mask of
-         * {@link GoogleKeyboard#EDGE_LEFT}, {@link GoogleKeyboard#EDGE_RIGHT}, {@link GoogleKeyboard#EDGE_TOP} and
-         * {@link GoogleKeyboard#EDGE_BOTTOM}.
-         */
-        public int edgeFlags;
+
+        public boolean shifted;
         /**
          * The keyboard that this key belongs to
          */
@@ -338,37 +292,15 @@ public class GoogleKeyboard {
                     ", x=" + x +
                     ", y=" + y +
                     ", focused=" + focused +
-                    ", on=" + on +
-                    ", edgeFlags=" + edgeFlags +
                     ", keyboard=" + keyboard +
                     '}';
         }
 
-        private final static int[] KEY_STATE_NORMAL_ON = {
-                android.R.attr.state_checkable,
-                android.R.attr.state_checked
-        };
-
-        private final static int[] KEY_STATE_FOCUSED_ON = {
+        private final static int[] KEY_STATE_FOCUSED = {
                 android.R.attr.state_focused,
-                android.R.attr.state_checkable,
-                android.R.attr.state_checked
-        };
-
-        private final static int[] KEY_STATE_NORMAL_OFF = {
-                android.R.attr.state_checkable
-        };
-
-        private final static int[] KEY_STATE_FOCUSED_OFF = {
-                android.R.attr.state_focused,
-                android.R.attr.state_checkable
         };
 
         private final static int[] KEY_STATE_NORMAL = {
-        };
-
-        private final static int[] KEY_STATE_PRESSED = {
-                android.R.attr.state_focused
         };
 
         /**
@@ -381,7 +313,6 @@ public class GoogleKeyboard {
             LogUtil.log("GoogleKeyboard33 -> width = " + width);
             vtGap = parent.defaultHorizontalGap;
             hzGap = parent.parent.mDefaultVerticalGap;
-            edgeFlags = parent.rowEdgeFlags;
         }
 
         /**
@@ -423,8 +354,6 @@ public class GoogleKeyboard {
 //            } else if (codesValue.type == TypedValue.TYPE_STRING) {
 //                codes = parseCSV(codesValue.string.toString());
 //            }
-
-            edgeFlags |= parent.rowEdgeFlags;
 
             iconWidth = a.getDimensionPixelOffset(R.styleable.Keyboard_Key_iconWidth, 0);
             iconHeight = a.getDimensionPixelOffset(R.styleable.Keyboard_Key_iconHeight, 0);
@@ -483,42 +412,6 @@ public class GoogleKeyboard {
             marginLeft = getDimensionOrFraction(a, R.styleable.Keyboard_Key_marginLeft, keyboard.mDisplayWidth, 0);
             marginRight = getDimensionOrFraction(a, R.styleable.Keyboard_Key_marginRight, keyboard.mDisplayWidth, 0);
 
-//            //
-//            try {
-//                String value = a.getString(R.styleable.Keyboard_Key_codeExtra);
-//                int count = 0;
-//                int lastIndex = 0;
-//                if (value.length() > 0) {
-//                    count++;
-//                    while ((lastIndex = value.indexOf(",", lastIndex + 1)) > 0) {
-//                        count++;
-//                    }
-//                }
-//                int[] values = new int[count];
-//                count = 0;
-//                StringTokenizer st = new StringTokenizer(value, ",");
-//                while (st.hasMoreTokens()) {
-//                    try {
-//                        values[count++] = Integer.parseInt(st.nextToken());
-//                    } catch (NumberFormatException nfe) {
-//                        LogUtil.log("Error parsing keycodes " + value);
-//                    }
-//                }
-//                codeExtra = values;
-//            } catch (Exception e) {
-//            }
-
-
-//            String string = a.getString(R.styleable.Keyboard_Key_texts);
-//            if (string.contains(",")) {
-//                texts = string.split(",");
-//            } else {
-//                texts = new String[]{string};
-//            }
-//
-//            if (codes == null) {
-//                codes = new int[]{-1};
-//            }
             a.recycle();
         }
 
@@ -552,7 +445,7 @@ public class GoogleKeyboard {
         public void onReleased(boolean inside) {
             focused = !focused;
             if (inside) {
-                on = !on;
+                shifted = !shifted;
             }
         }
 
@@ -566,14 +459,14 @@ public class GoogleKeyboard {
          * the key.
          */
         public boolean isInside(int x, int y) {
-            boolean leftEdge = (edgeFlags & EDGE_LEFT) > 0;
-            boolean rightEdge = (edgeFlags & EDGE_RIGHT) > 0;
-            boolean topEdge = (edgeFlags & EDGE_TOP) > 0;
-            boolean bottomEdge = (edgeFlags & EDGE_BOTTOM) > 0;
-            if ((x >= this.x || (leftEdge && x <= this.x + this.width))
-                    && (x < this.x + this.width || (rightEdge && x >= this.x))
-                    && (y >= this.y || (topEdge && y <= this.y + this.height))
-                    && (y < this.y + this.height || (bottomEdge && y >= this.y))) {
+//            boolean leftEdge = (edgeFlags & EDGE_LEFT) > 0;
+//            boolean rightEdge = (edgeFlags & EDGE_RIGHT) > 0;
+//            boolean topEdge = (edgeFlags & EDGE_TOP) > 0;
+//            boolean bottomEdge = (edgeFlags & EDGE_BOTTOM) > 0;
+            if ((x >= this.x || (x <= this.x + this.width))
+                    && (x < this.x + this.width || (x >= this.x))
+                    && (y >= this.y || (y <= this.y + this.height))
+                    && (y < this.y + this.height || (y >= this.y))) {
                 return true;
             } else {
                 return false;
@@ -600,27 +493,13 @@ public class GoogleKeyboard {
          * @see android.graphics.drawable.StateListDrawable#setState(int[])
          */
         public int[] getCurrentDrawableState() {
-            int[] states = KEY_STATE_NORMAL;
-
-            if (on) {
-                if (focused) {
-                    states = KEY_STATE_FOCUSED_ON;
-                } else {
-                    states = KEY_STATE_NORMAL_ON;
-                }
+            if (focused) {
+                return KEY_STATE_FOCUSED;
             } else {
-                if (focused) {
-                    states = KEY_STATE_PRESSED;
-                }
+                return KEY_STATE_NORMAL;
             }
-            return states;
         }
     }
-
-    public GoogleKeyboard(Context context, int xmlLayoutResId) {
-        this(context, xmlLayoutResId, 0);
-    }
-
 
     /**
      * Creates a keyboard from the given xml key layout file. Weeds out rows
@@ -628,9 +507,8 @@ public class GoogleKeyboard {
      *
      * @param context        the application or service context
      * @param xmlLayoutResId the resource file that contains the keyboard layout and keys.
-     * @param modeId         keyboard mode identifier
      */
-    public GoogleKeyboard(Context context, int xmlLayoutResId, int modeId) {
+    public GoogleKeyboard(Context context, int xmlLayoutResId) {
 
         // Android 7.0 (API 24) 及以下
         Locale locale = context.getResources().getConfiguration().locale;
@@ -648,7 +526,7 @@ public class GoogleKeyboard {
             builder.append("_");
             builder.append(country);
         }
-        mLanguageCode = builder.toString();
+        mDefaultLanguageCode = builder.toString();
 
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         mDisplayWidth = dm.widthPixels;
@@ -662,37 +540,36 @@ public class GoogleKeyboard {
         mDefaultHeight = mDefaultWidth;
         LogUtil.log("GoogleKeyboard33 -> mDefaultHorizontalGap = " + mDefaultHorizontalGap + ", mDefaultWidth = " + mDefaultWidth + ", mDefaultVerticalGap = " + mDefaultVerticalGap + ", mDefaultHeight = " + mDefaultHeight);
         mKeys = new ArrayList<>();
-        mKeyboardMode = modeId;
         loadKeyboard(context, context.getResources().getXml(xmlLayoutResId));
     }
 
     final void resize(int newWidth, int newHeight) {
-//        int numRows = rows.size();
-//        for (int rowIndex = 0; rowIndex < numRows; ++rowIndex) {
-//            Row row = rows.get(rowIndex);
-//            int numKeys = row.mKeys.size();
-//            int totalGap = 0;
-//            int totalWidth = 0;
-//            for (int keyIndex = 0; keyIndex < numKeys; ++keyIndex) {
-//                Key key = row.mKeys.get(keyIndex);
-//                if (keyIndex > 0) {
-//                    totalGap += key.hzGap;
-//                }
-//                totalWidth += key.width;
-//            }
-//            if (totalGap + totalWidth > newWidth) {
-//                int x = 0;
-//                float scaleFactor = (float) (newWidth - totalGap) / totalWidth;
-//                LogUtil.log("GoogleKeyboard33 -> scaleFactor = " + scaleFactor);
-//                for (int keyIndex = 0; keyIndex < numKeys; ++keyIndex) {
-//                    Key key = row.mKeys.get(keyIndex);
-//                    key.width *= scaleFactor;
-//                    key.x = x;
-//                    x += key.width + key.hzGap;
-//                }
-//            }
-//        }
-//        mTotalWidth = newWidth;
+        int numRows = rows.size();
+        for (int rowIndex = 0; rowIndex < numRows; ++rowIndex) {
+            Row row = rows.get(rowIndex);
+            int numKeys = row.mRowKeys.size();
+            int totalGap = 0;
+            int totalWidth = 0;
+            for (int keyIndex = 0; keyIndex < numKeys; ++keyIndex) {
+                Key key = row.mRowKeys.get(keyIndex);
+                if (keyIndex > 0) {
+                    totalGap += key.hzGap;
+                }
+                totalWidth += key.width;
+            }
+            if (totalGap + totalWidth > newWidth) {
+                int x = 0;
+                float scaleFactor = (float) (newWidth - totalGap) / totalWidth;
+                LogUtil.log("GoogleKeyboard33 -> scaleFactor = " + scaleFactor);
+                for (int keyIndex = 0; keyIndex < numKeys; ++keyIndex) {
+                    Key key = row.mRowKeys.get(keyIndex);
+                    key.width *= scaleFactor;
+                    key.x = x;
+                    x += key.width + key.hzGap;
+                }
+            }
+        }
+        mTotalWidth = newWidth;
 //        // TODO: This does not adjust the vertical placement according to the new size.
 //        // The main problem in the previous code was horizontal placement/size, but we should
 //        // also recalculate the vertical sizes/positions when we get this resize call.
@@ -748,9 +625,9 @@ public class GoogleKeyboard {
     }
 
     public boolean setShifted(boolean shiftState) {
-        for (Key shiftKey : mShiftKeys) {
-            if (shiftKey != null) {
-                shiftKey.on = shiftState;
+        for (Key key : mShiftKeys) {
+            if (key != null) {
+                key.shifted = shiftState;
             }
         }
         if (mShifted != shiftState) {
@@ -846,14 +723,12 @@ public class GoogleKeyboard {
     private void loadKeyboard(Context context, XmlResourceParser parser) {
         boolean inKey = false;
         boolean inRow = false;
-        boolean leftMostKey = false;
         int row = 0;
         int x = 0;
         int y = 0;
         Key key = null;
         Row currentRow = null;
         Resources res = context.getResources();
-        boolean skipRow = false;
 
         try {
             int event;
@@ -867,17 +742,12 @@ public class GoogleKeyboard {
                         x = 0;
                         currentRow = createRowFromXml(res, parser);
                         rows.add(currentRow);
-                        skipRow = currentRow.mode != 0 && currentRow.mode != mKeyboardMode;
-                        if (skipRow) {
-                            skipToEndOfRow(parser);
-                            inRow = false;
-                        }
                     } else if (TAG_KEY.equals(tag)) {
                         inKey = true;
                         key = createKeyFromXml(res, currentRow, x, y, parser);
                         LogUtil.log("GoogleKeyboard -> loadKeyboard -> TAG_KEY -> index = " + index + ", row = " + row + ", x = " + x + ", key.width = " + key.width + ", key.height = " + key.height + ", key.x = " + key.x + ", key.y = " + key.y);
                         mKeys.add(key);
-                        currentRow.mKeys.add(key);
+                        currentRow.mRowKeys.add(key);
                     } else if (TAG_KEYBOARD.equals(tag)) {
                         parseKeyboardAttributes(res, parser);
                     }
@@ -905,21 +775,10 @@ public class GoogleKeyboard {
                 }
             }
         } catch (Exception e) {
-            LogUtil.log("Parse error:" + e);
+            LogUtil.log("GoogleKeyboard -> loadKeyboard -> Exception " + e.getMessage());
         }
         mTotalHeight = y - mDefaultVerticalGap;
         mTotalWidth -= mDefaultHorizontalGap;
-    }
-
-    private void skipToEndOfRow(XmlResourceParser parser)
-            throws XmlPullParserException, IOException {
-        int event;
-        while ((event = parser.next()) != XmlResourceParser.END_DOCUMENT) {
-            if (event == XmlResourceParser.END_TAG
-                    && parser.getName().equals(TAG_ROW)) {
-                break;
-            }
-        }
     }
 
     private void parseKeyboardAttributes(Resources res, XmlResourceParser parser) {

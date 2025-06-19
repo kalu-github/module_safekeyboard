@@ -451,16 +451,16 @@ public class EditText extends androidx.appcompat.widget.AppCompatEditText {
             if (null == fragmentManager)
                 throw new Exception("warning: fragmentManager null");
 
-            // fix 启动动画
-            FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.setCustomAnimations(0, 0, 0, 0); // 进入、退出、进入下一个、退出下一个动画都设为0
+//            // fix 启动动画
+//            FragmentTransaction ft = fragmentManager.beginTransaction();
+//            ft.setCustomAnimations(0, 0, 0, 0); // 进入、退出、进入下一个、退出下一个动画都设为0
+//            dialog.show(ft, null);
 
             KeyboardDialog dialog = new KeyboardDialog();
             Bundle bundle = new Bundle();
             bundle.putStringArrayList(KeyboardDialog.BUNDLE_SUPPORT_LANGUAGES, initSupportLanguages());
             dialog.setArguments(bundle);
-            dialog.show(ft, KeyboardDialog.TAG);
-//            dialog.show(fragmentManager, KeyboardDialog.TAG);
+            dialog.show(fragmentManager, null);
 
             dialog.setOnInputChangeListener(new KeyboardDialog.OnInputChangeListener() {
                 @Override
