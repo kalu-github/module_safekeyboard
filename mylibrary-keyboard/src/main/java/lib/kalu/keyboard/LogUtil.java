@@ -9,7 +9,16 @@ import androidx.annotation.NonNull;
 
 public final class LogUtil {
 
+    private static boolean mEnable = true;
     private static final String TAG = "lib_keyboard";
+
+    public static boolean isLogger() {
+        return mEnable;
+    }
+
+    public static void setLogger(boolean enable) {
+        mEnable = enable;
+    }
 
     public static void log(@NonNull String content) {
 
@@ -19,7 +28,10 @@ public final class LogUtil {
 //        if (null == content || content.length() == 0)
 //            return;
 //
-        Log.d(TAG, content);
+
+        if (mEnable) {
+            Log.d(TAG, content);
+        }
     }
 
     public static Activity getCurActivity(Context context) {

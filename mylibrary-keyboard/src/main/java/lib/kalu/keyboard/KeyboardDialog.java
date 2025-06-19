@@ -1,10 +1,8 @@
 package lib.kalu.keyboard;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -20,35 +18,38 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 @SuppressLint("ValidFragment")
 final class KeyboardDialog extends DialogFragment implements DialogInterface.OnKeyListener {
 
     public static final String TAG = "KeyboardDialog";
-    public static final String BUNDLE_LANGUAGE = "bundle_language";
+    public static final String BUNDLE_SUPPORT_LANGUAGES = "bundle_support_languages";
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // 双重确认，确保动画被禁用
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setWindowAnimations(0);
+                // 可选：调整窗口属性，避免系统默认动画
+                window.getAttributes().windowAnimations = 0;
+                window.setBackgroundDrawableResource(android.R.color.transparent);
+            }
+        }
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LogUtil.log("CusKeyboardDialog -> onCreateDialog ->");
+        // LogUtil.log("CusKeyboardDialog -> onCreateDialog ->");
 
-        Context context;
-        String language = getArguments().getString(BUNDLE_LANGUAGE, null);
-        LogUtil.log("CusKeyboardDialog -> onCreateDialog -> language = "+language);
-        if (null == language) {
-            context = getActivity();
-        } else {
-            context = LanguageUtil.createLanguageContext(getActivity(), language);
-        }
-        Dialog dialog = new Dialog(context) {
-            @Override
-            protected void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                setStyle(STYLE_NORMAL, R.style.Res_Keyboadrd_Style);
-            }
-        };
 
         View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.res_keyboard_layout_dialog, null);
         KeyboardView keyboardView = inflate.findViewById(R.id.moudle_safe_id_keyboard);
+        keyboardView.setTag(getArguments().getStringArrayList(BUNDLE_SUPPORT_LANGUAGES));
         keyboardView.setOnKeyChangeListener(new KeyboardView.OnKeyChangeListener() {
             @Override
             public void onInput(CharSequence text) {
@@ -63,22 +64,9 @@ final class KeyboardDialog extends DialogFragment implements DialogInterface.OnK
                     mOnInputChangeListener.onDelete();
                 }
             }
-
-            @Override
-            public void onDismiss() {
-                if (null != mOnInputChangeListener) {
-                    mOnInputChangeListener.onDismiss();
-                }
-            }
-
-//            @Override
-//            public void onLanguage(String language) {
-//                if (null != mOnInputChangeListener) {
-//                    mOnInputChangeListener.onLanguage(language);
-//                }
-//            }
         });
 
+        Dialog dialog = new Dialog(new WeakReference<>(getActivity()).get(), R.style.Res_Keyboadrd_Style);
         dialog.setContentView(inflate);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
@@ -90,9 +78,13 @@ final class KeyboardDialog extends DialogFragment implements DialogInterface.OnK
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LogUtil.log("CusKeyboardDialog -> onCreateView ->");
         try {
+
             // 窗口边框
             Window window = getDialog().getWindow();
             window.getDecorView().setPadding(0, 0, 0, 0);
+
+            // 动画残留问题：如果禁用动画后仍有轻微过渡效果，可能是系统或设备特定的行为，可以尝试结合以下属性进一步消除：
+            window.getAttributes().windowAnimations = 0;
 
             // 禁止录屏和截屏
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE);
@@ -160,7 +152,5 @@ final class KeyboardDialog extends DialogFragment implements DialogInterface.OnK
         void onAppend(CharSequence text);
 
         void onDelete();
-
-        void onDismiss();
     }
 }

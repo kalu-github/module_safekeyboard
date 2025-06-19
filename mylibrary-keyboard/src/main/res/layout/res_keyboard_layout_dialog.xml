@@ -1,43 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="bottom"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:focusable="false"
-    tools:ignore="ResourceName">
+    android:focusable="false">
 
-    <!--    android:layout_width="1140dp"-->
-    <RelativeLayout
-        android:layout_width="800dp"
+    <lib.kalu.keyboard.KeyboardView
+        android:id="@+id/moudle_safe_id_keyboard"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/res_keyboard_ic_background"
+        android:background="@drawable/res_keyboard_ic_background_dialog"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:focusable="false"
-        android:paddingStart="0dp"
-        android:paddingTop="0dp"
-        android:paddingEnd="0dp"
-        android:paddingBottom="0dp">
-
-        <lib.kalu.keyboard.KeyboardView
-            android:id="@+id/moudle_safe_id_keyboard"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="24dp"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:focusable="true"
-            app:keyBackground="@drawable/res_keyboard_ic_background_letter"
-            app:keyFocus="true"
-            app:keyTextColor="#ffffff"
-            app:keyTextSize="30sp"
-            app:keyTouch="false" />
-
-    </RelativeLayout>
+        android:focusable="true"
+        android:padding="60dp"
+        app:keyBackground="@drawable/res_keyboard_ic_background_letter"
+        app:keyFocus="true"
+        app:keyTextColor="#ffffff"
+        app:keyTextSize="30sp"
+        app:keyTouch="false" />
 
 </RelativeLayout>

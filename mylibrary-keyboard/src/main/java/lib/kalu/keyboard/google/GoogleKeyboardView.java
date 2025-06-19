@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -35,12 +36,9 @@ public class GoogleKeyboardView extends View {
     private int mKeyTextColor;
     private int mKeyShadowColor;
     private float mKeyShadowRadius;
+    private boolean mKeyShiftKeep;
 
     public interface OnKeyboardActionListener {
-
-        void onPress(int primaryCode);
-
-        void onRelease(int primaryCode);
 
         void onKey(int primaryCode, GoogleKeyboard.Key key);
     }
@@ -120,6 +118,38 @@ public class GoogleKeyboardView extends View {
         init(context, attrs);
     }
 
+
+    @Override
+    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        try {
+            if (null == mKeyboard)
+                throw new Exception("error: mKeyboard null");
+            int paddingLeft = getPaddingLeft();
+            int paddingTop = getPaddingTop();
+            int paddingRight = getPaddingRight();
+            int paddingBottom = getPaddingBottom();
+            LogUtil.log("GoogleKeyboardView -> onMeasure -> paddingLeft = " + paddingLeft + ", paddingTop = " + paddingTop + ", paddingRight = " + paddingRight + ", paddingBottom = " + paddingBottom);
+
+
+            int totalWidth = mKeyboard.getTotalWidth();
+            int allWidth = paddingLeft + paddingRight + totalWidth;
+            int totalHeight = mKeyboard.getTotalHeight();
+            int allHeight = paddingTop + paddingBottom + totalHeight;
+            LogUtil.log("GoogleKeyboardView -> onMeasure -> totalWidth = " + totalWidth + ", allWidth = " + allWidth + ", totalHeight = " + totalHeight + ", allHeight = " + allHeight);
+
+            int specWidth = MeasureSpec.makeMeasureSpec(allWidth, MeasureSpec.EXACTLY);
+            int specHeight = MeasureSpec.makeMeasureSpec(allHeight, MeasureSpec.EXACTLY);
+            super.onMeasure(specWidth, specHeight);
+//            if (MeasureSpec.getSize(widthMeasureSpec) < width + 10) {
+//                width = MeasureSpec.getSize(widthMeasureSpec);
+//            }
+//            setMeasuredDimension(width, mKeyboard.getHeight() +);
+        } catch (Exception e) {
+            LogUtil.log("GoogleKeyboardView -> onMeasure -> Exception " + e.getMessage());
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
+    }
+
     private void init(Context context, AttributeSet attrs) {
 
         TypedArray typedArray = null;
@@ -133,6 +163,7 @@ public class GoogleKeyboardView extends View {
             mKeyTextColor = typedArray.getColor(R.styleable.KeyboardView_keyTextColor, 0xFF000000);
             mKeyShadowColor = typedArray.getColor(R.styleable.KeyboardView_keyShadowColor, 0);
             mKeyShadowRadius = typedArray.getFloat(R.styleable.KeyboardView_keyShadowRadius, 0f);
+            mKeyShiftKeep = typedArray.getBoolean(R.styleable.KeyboardView_keyShiftKeep, true);
         } catch (Exception e) {
         }
         if (null != typedArray) {
@@ -178,15 +209,26 @@ public class GoogleKeyboardView extends View {
         //
         List<GoogleKeyboard.Key> keys = mKeyboard.getKeys();
         mKeys = keys.toArray(new GoogleKeyboard.Key[keys.size()]);
-        invalidateAllKeys();
+
         //
-        if(mFocusIndex != -1){
-            onKeyDown(-200, null);
+        if (mFocusIndex != -1) {
+            mKeys[mFocusIndex].onFocused();
         }
+
+        invalidateAllKeys();
     }
 
     public GoogleKeyboard getKeyboard() {
         return mKeyboard;
+    }
+
+
+    public String getLanguageCode() {
+        try {
+            return mKeyboard.mLanguageCode;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public boolean setShifted(boolean shifted) {
@@ -225,24 +267,6 @@ public class GoogleKeyboardView extends View {
         return false;
     }
 
-    @Override
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // Round up a little
-        int paddingLeft = getPaddingLeft();
-        int paddingRight = getPaddingRight();
-        int paddingTop = getPaddingTop();
-        int paddingBottom = getPaddingBottom();
-        if (mKeyboard == null) {
-            setMeasuredDimension(paddingLeft + paddingRight, paddingTop + paddingBottom);
-        } else {
-            int width = mKeyboard.getMinWidth() + paddingLeft + paddingRight;
-            if (MeasureSpec.getSize(widthMeasureSpec) < width + 10) {
-                width = MeasureSpec.getSize(widthMeasureSpec);
-            }
-            setMeasuredDimension(width, mKeyboard.getHeight() + paddingTop + paddingBottom);
-        }
-    }
-
     private void computeProximityThreshold(GoogleKeyboard keyboard) {
         if (keyboard == null) return;
         final GoogleKeyboard.Key[] keys = mKeys;
@@ -262,6 +286,11 @@ public class GoogleKeyboardView extends View {
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         keyboardResize(w, h);
+
+        //
+        if (mFocusIndex == -1) {
+            onKeyDown(-100, null);
+        }
     }
 
     private void keyboardResize(int w, int h) {
@@ -279,17 +308,6 @@ public class GoogleKeyboardView extends View {
             onBufferDraw();
         }
         canvas.drawBitmap(mBuffer, 0, 0, null);
-
-        //
-        if(mFocusIndex == -1){
-            onKeyDown(-100, null);
-        }
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        LogUtil.log("GoogleKeyboardView -> onFinishInflate ->");
     }
 
     private void onBufferDraw() {
@@ -332,23 +350,37 @@ public class GoogleKeyboardView extends View {
             }
         }
         canvas.drawColor(0x00000000, PorterDuff.Mode.CLEAR);
-        final int keyCount = keys.length;
+        int keyCount = keys.length;
+        boolean shifted = isShifted();
         for (int i = 0; i < keyCount; i++) {
             final GoogleKeyboard.Key key = keys[i];
             if (drawSingleKey && invalidKey != key) {
                 continue;
             }
 
+            // fix
+            if (!key.focused) {
+                if (null == key.icon && null == key.text) {
+                    continue;
+                } else if (null == key.icon && key.text.length() == 0) {
+                    continue;
+                }
+            }
+
             Drawable drawable = key.background;
+            // LogUtil.log("GoogleKeyboardView -> onBufferDraw -> i = " + i + ", key.text = " + key.text + ", key.width = " + key.width);
             if (null == drawable) {
                 drawable = mKeyBackground;
             }
 
+
             // background
             int[] drawableState = key.getCurrentDrawableState();
+//            LogUtil.log("GoogleKeyboardView -> onBufferDraw -> i = " + i + ", drawableState = " + drawableState);
             drawable.setState(drawableState);
 
-            LogUtil.log("GoogleKeyboardView -> onBufferDraw -> i = " + i + ", key.text = " + key.text + ", key.width = " + key.width);
+
+            // LogUtil.log("GoogleKeyboardView -> onBufferDraw -> i = " + i + ", key.text = " + key.text + ", key.width = " + key.width);
 
             final Rect bounds = drawable.getBounds();
             if (key.width != bounds.right || key.height != bounds.bottom) {
@@ -358,6 +390,7 @@ public class GoogleKeyboardView extends View {
                 int bottom = key.height;
                 drawable.setBounds(left, top, right, bottom);
             }
+            LogUtil.log("GoogleKeyboardView -> onBufferDraw -> i = " + i + ", key = " + key.toString());
             canvas.translate(key.x + kbdPaddingLeft, key.y + kbdPaddingTop);
             drawable.draw(canvas);
 
@@ -368,26 +401,29 @@ public class GoogleKeyboardView extends View {
                         + padding.left;
                 float y = (key.height - padding.top - padding.bottom) / 2
                         + (paint.getTextSize() - paint.descent()) / 2 + padding.top;
-                // canvas.translate(x, y);
-                // CusUtil.log("GoogleKeyboardView -> onBufferDraw -> x = " + x + ", y = " + y);
 
                 Rect iconBounds = key.icon.getBounds();
                 int widthBounds = iconBounds.width();
                 int heightBounds = iconBounds.height();
 
-                // CusUtil.log("GoogleKeyboardView -> onBufferDraw -> widthBounds = " + widthBounds + ", heightBounds = " + heightBounds);
-
                 float halfWidthBounds = widthBounds * 0.5f;
                 float halfHeightBounds = heightBounds * 0.5f;
 
-                int left = (int) (x - halfWidthBounds);
-                int top = (int) (y - halfHeightBounds);
-                int right = (int) (x + halfWidthBounds);
-                int bottom = (int) (y + halfHeightBounds);
+                int gap = key.vtGap / 2;
+                int marginLeft = key.marginLeft / 2;
+                int left = (int) (x - halfWidthBounds) + marginLeft;
+                int top = (int) (y - halfHeightBounds) - gap;
+                int right = (int) (x + halfWidthBounds) + marginLeft;
+                int bottom = (int) (y + halfHeightBounds) - gap;
 
-                //  CusUtil.log("GoogleKeyboardView -> onBufferDraw -> left = " + left + ", top = " + top + ", right = " + right + ", bottom = " + bottom);
-                key.icon.setBounds(left, top, right, bottom);
-                key.icon.draw(canvas);
+                if (shifted && null != key.iconUpper && mFocusIndex != i) {
+                    key.iconUpper.setBounds(left, top, right, bottom);
+                    key.iconUpper.draw(canvas);
+                } else {
+                    key.icon.setBounds(left, top, right, bottom);
+                    key.icon.draw(canvas);
+                }
+
 //                canvas.translate(-drawableX, -drawableY);
             }
             // txt
@@ -398,8 +434,9 @@ public class GoogleKeyboardView extends View {
 //                    paint.setTypeface(Typeface.DEFAULT_BOLD);
 //                } else {
 
-                if (key.textSize != -1) {
+                if (key.textSize > 0) {
                     paint.setTextSize(key.textSize);
+
                 } else {
                     paint.setTextSize(mKeyTextSize);
                 }
@@ -417,14 +454,18 @@ public class GoogleKeyboardView extends View {
 
                 // drawText
                 boolean symbol = isSymbol();
-                if (symbol && key.isSymbel) {
+                if (symbol && key.supportSymbel) {
                     String text = key.symbel.toString();
                     canvas.drawText(text, x, y, paint);
                 } else {
-                    boolean shifted = isShifted();
-                    if (shifted && key.isUpper) {
-                        String text = key.text.toString().toUpperCase();
-                        canvas.drawText(text, x, y, paint);
+                    if (shifted && key.supportUpper) {
+                        if (null != key.textUpper && key.textUpper.length() > 0) {
+                            String text = key.textUpper.toString();
+                            canvas.drawText(text, x, y, paint);
+                        } else {
+                            String text = key.text.toString().toUpperCase();
+                            canvas.drawText(text, x, y, paint);
+                        }
                     } else {
                         String text = key.text.toString();
                         canvas.drawText(text, x, y, paint);
@@ -508,7 +549,7 @@ public class GoogleKeyboardView extends View {
             }
             if (mCurrentKeyIndex != NOT_A_KEY && keys.length > mCurrentKeyIndex) {
                 GoogleKeyboard.Key newKey = keys[mCurrentKeyIndex];
-                newKey.onPressed();
+                newKey.onFocused();
                 invalidateKey(mCurrentKeyIndex);
             }
         }
@@ -537,7 +578,6 @@ public class GoogleKeyboardView extends View {
             Arrays.fill(codes, NOT_A_KEY);
             getKeyIndices(x, y, codes);
             mKeyboardActionListener.onKey(code, key);
-            mKeyboardActionListener.onRelease(code);
 //            }
         }
     }
@@ -594,18 +634,6 @@ public class GoogleKeyboardView extends View {
                 mCurrentKey = keyIndex;
                 mDownTime = me.getEventTime();
                 mLastMoveTime = mDownTime;
-                mKeyboardActionListener.onPress(keyIndex != NOT_A_KEY ?
-                        mKeys[keyIndex].code : 0);
-//                if (mCurrentKey >= 0 && mKeys[mCurrentKey].repeatable) {
-//                    mRepeatKeyIndex = mCurrentKey;
-//                    // Delivering the key could have caused an abort
-//                    if (mAbortKey) {
-//                        mRepeatKeyIndex = NOT_A_KEY;
-//                        break;
-//                    }
-//                }
-                if (mCurrentKey != NOT_A_KEY) {
-                }
                 showPreview(keyIndex);
                 break;
 
@@ -695,13 +723,14 @@ public class GoogleKeyboardView extends View {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        LogUtil.log("GoogleKeyboardView -> onKeyDown -> keyCode = " + keyCode+", mFocusIndex = "+mFocusIndex);
+        LogUtil.log("GoogleKeyboardView -> onKeyDown -> keyCode = " + keyCode + ", mFocusIndex = " + mFocusIndex);
         // TV
         if (mKeyFocus) {
-            if (keyCode == -200) {
-                showPreview(mFocusIndex);
-            } else if (keyCode == -100) {
+            if (keyCode == -100) {
                 if (mFocusIndex == -1) {
+                    //
+                    playSoundEffect();
+                    //
                     mFocusIndex = 0;
                     showPreview(mFocusIndex);
                 }
@@ -709,37 +738,65 @@ public class GoogleKeyboardView extends View {
             // action_down -> keycode_dpad_down
             else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
                 if (mFocusIndex <= 29) {
+                    //
+                    playSoundEffect();
+                    //
                     mFocusIndex += 11;
                     showPreview(mFocusIndex);
                 } else if (mFocusIndex == 30 || mFocusIndex == 31) {
+                    //
+                    playSoundEffect();
+                    //
                     mFocusIndex = 41;
                     showPreview(mFocusIndex);
                 } else if (mFocusIndex == 32) {
+                    //
+                    playSoundEffect();
+                    //
                     mFocusIndex = 42;
                     showPreview(mFocusIndex);
                 }
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-                if (mFocusIndex <= 40) {
-                    mFocusIndex -= 11;
+                if (mFocusIndex == 42) {
+                    //
+                    playSoundEffect();
+                    //
+                    mFocusIndex = 32;
                     showPreview(mFocusIndex);
                 } else if (mFocusIndex == 41) {
+                    //
+                    playSoundEffect();
+                    //
                     mFocusIndex = 30;
                     showPreview(mFocusIndex);
-                } else if (mFocusIndex == 42) {
-                    mFocusIndex = 32;
+                } else if (mFocusIndex >= 11 && mFocusIndex <= 40) {
+                    //
+                    playSoundEffect();
+                    //
+                    mFocusIndex -= 11;
                     showPreview(mFocusIndex);
                 }
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 if (mFocusIndex + 1 < mKeys.length) {
+                    //
+                    playSoundEffect();
+                    //
                     mFocusIndex += 1;
                     showPreview(mFocusIndex);
                 }
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 if (mFocusIndex > 0) {
+                    //
+                    playSoundEffect();
+                    //
+
                     mFocusIndex -= 1;
                     showPreview(mFocusIndex);
                 }
             } else if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+                //
+                playSoundEffect();
+                //
                 GoogleKeyboard.Key mKey = mKeys[mFocusIndex];
                 detectAndSendKey(mFocusIndex, mKey.x, mKey.y, 0);
             }
@@ -749,4 +806,16 @@ public class GoogleKeyboardView extends View {
         }
     }
 
+    private void playSoundEffect() {
+        try {
+            Context context = ((View) this).getContext().getApplicationContext();
+            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            // 设置获得焦点时的声音
+            audioManager.playSoundEffect(AudioManager.FX_FOCUS_NAVIGATION_DOWN);
+//                // 设置失去焦点时的声音
+//                audioManager.playSoundEffect(AudioManager.FX_FOCUS_NAVIGATION_DOWN);
+        } catch (Exception e) {
+            LogUtil.log("GoogleKeyboardView -> playSoundEffect -> Exception " + e.getMessage());
+        }
+    }
 }

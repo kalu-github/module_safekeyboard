@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ResourceName">
+<resources>
 
     <declare-styleable name="KeyboardView">
         <attr name="keyTouch" format="boolean" />
@@ -11,6 +11,7 @@
         <attr name="keyVerticalCorrection" format="dimension" />
         <attr name="keyShadowColor" format="color" />
         <attr name="keyShadowRadius" format="float" />
+        <attr name="keyShiftKeep" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="KeyboardViewPreviewState">
@@ -32,19 +33,127 @@
     </declare-styleable>
     <declare-styleable name="Keyboard_Key">
         <attr name="mult" format="reference|string" />
+        <attr name="multUpper" format="reference|string" />
         <attr name="code" format="reference|integer" />
         <attr name="text" format="reference|string" />
+        <attr name="textUpper" format="reference|string" />
         <attr name="textSize" format="reference|dimension" />
         <attr name="icon" format="reference" />
+        <attr name="iconUpper" format="reference" />
         <attr name="iconWidth" format="reference|dimension" />
         <attr name="iconHeight" format="reference|dimension" />
         <attr name="symbel" format="reference|string" />
-        <attr name="isSymbel" format="boolean" />
-        <attr name="isUpper" format="boolean" />
         <attr name="paddingLeft" format="dimension|fraction" />
         <attr name="paddingRight" format="dimension|fraction" />
         <attr name="marginLeft" format="dimension|fraction" />
         <attr name="marginRight" format="dimension|fraction" />
         <attr name="background" format="reference" />
+        <attr name="supportSymbel" format="boolean" />
+        <attr name="supportUpper" format="boolean" />
+    </declare-styleable>
+
+
+    <declare-styleable name="EditText">
+
+        <attr name="et_intercept_top" format="boolean" />
+        <attr name="et_intercept_bottom" format="boolean" />
+        <attr name="et_intercept_left" format="boolean" />
+        <attr name="et_intercept_right" format="boolean" />
+
+        <attr name="et_rate_width" format="float" />
+        <attr name="et_rate_width_focused" format="float" />
+        <attr name="et_rate_width_checked" format="float" />
+        <attr name="et_rate_width_hovered" format="float" />
+        <attr name="et_rate_height" format="float" />
+        <attr name="et_rate_height_focused" format="float" />
+        <attr name="et_rate_height_checked" format="float" />
+        <attr name="et_rate_height_hovered" format="float" />
+
+        <attr name="et_focus_scale" format="float" />
+        <attr name="et_focus_scale_duration" format="integer" />
+
+        <attr name="et_stroke_width" format="reference|dimension" />
+        <attr name="et_stroke_color" format="reference" />
+        <attr name="et_stroke_color_focused" format="reference|color" />
+        <attr name="et_stroke_color_checked" format="reference|color" />
+        <attr name="et_stroke_color_hovered" format="reference|color" />
+
+        <attr name="et_corner" format="reference|dimension" />
+        <attr name="et_corner_focused" format="reference|dimension" />
+        <attr name="et_corner_hovered" format="reference|dimension" />
+        <attr name="et_corner_top_left" format="reference|dimension" />
+        <attr name="et_corner_top_left_focused" format="reference|dimension" />
+        <attr name="et_corner_top_left_hovered" format="reference|dimension" />
+        <attr name="et_corner_top_right" format="reference|dimension" />
+        <attr name="et_corner_top_right_focused" format="reference|dimension" />
+        <attr name="et_corner_top_right_hovered" format="reference|dimension" />
+        <attr name="et_corner_bottom_left" format="reference|dimension" />
+        <attr name="et_corner_bottom_left_focused" format="reference|dimension" />
+        <attr name="et_corner_bottom_left_hovered" format="reference|dimension" />
+        <attr name="et_corner_bottom_right" format="reference|dimension" />
+        <attr name="et_corner_bottom_right_focused" format="reference|dimension" />
+        <attr name="et_corner_bottom_right_hovered" format="reference|dimension" />
+
+        <attr name="et_text_marquee" format="boolean" />
+        <attr name="et_text_bold" format="boolean" />
+        <attr name="et_text_color" format="reference|color" />
+        <attr name="et_text_color_unchecked" format="reference|color" />
+        <attr name="et_text_color_checked" format="reference|color" />
+        <attr name="et_text_color_focused" format="reference|color" />
+        <attr name="et_text_color_hovered" format="reference|color" />
+
+
+        <attr name="et_button_tint_color" format="reference|color" />
+        <attr name="et_button_tint_color_checked" format="reference|color" />
+
+        <attr name="et_text_drawable_left" format="reference" />
+        <attr name="et_text_drawable_left_hovered" format="reference" />
+        <attr name="et_text_drawable_left_checked" format="reference" />
+        <attr name="et_text_drawable_left_focused" format="reference" />
+        <attr name="et_text_drawable_left_width" format="dimension|reference" />
+        <attr name="et_text_drawable_left_height" format="dimension|reference" />
+        <attr name="et_text_drawable_top" format="reference" />
+        <attr name="et_text_drawable_top_hovered" format="reference" />
+        <attr name="et_text_drawable_top_checked" format="reference" />
+        <attr name="et_text_drawable_top_focused" format="reference" />
+        <attr name="et_text_drawable_top_width" format="dimension|reference" />
+        <attr name="et_text_drawable_top_height" format="dimension|reference" />
+        <attr name="et_text_drawable_right" format="reference" />
+        <attr name="et_text_drawable_right_hovered" format="reference" />
+        <attr name="et_text_drawable_right_checked" format="reference" />
+        <attr name="et_text_drawable_right_focused" format="reference" />
+        <attr name="et_text_drawable_right_width" format="dimension|reference" />
+        <attr name="et_text_drawable_right_height" format="dimension|reference" />
+        <attr name="et_text_drawable_bottom" format="reference" />
+        <attr name="et_text_drawable_bottom_hovered" format="reference" />
+        <attr name="et_text_drawable_bottom_checked" format="reference" />
+        <attr name="et_text_drawable_bottom_focused" format="reference" />
+        <attr name="et_text_drawable_bottom_width" format="dimension|reference" />
+        <attr name="et_text_drawable_bottom_height" format="dimension|reference" />
+
+        <attr name="et_background_mode" format="enum">
+            <enum name="top_bottom" value="1" />
+            <enum name="tr_bl" value="2" />
+            <enum name="right_left" value="3" />
+            <enum name="br_tl" value="4" />
+            <enum name="bottom_top" value="5" />
+            <enum name="bl_tr" value="6" />
+            <enum name="left_right" value="7" />
+            <enum name="tl_br" value="8" />
+        </attr>
+        <attr name="et_background_color" format="reference|color" />
+        <attr name="et_background_color_focused" format="reference|color" />
+        <attr name="et_background_color_checked" format="reference|color" />
+        <attr name="et_background_color_hovered" format="reference|color" />
+        <attr name="et_background_color_array" format="reference" />
+        <attr name="et_background_color_array_focused" format="reference" />
+        <attr name="et_background_color_array_checked" format="reference" />
+        <attr name="et_background_color_array_hovered" format="reference" />
+
+        <attr name="et_background_inset_left" format="dimension|reference" />
+        <attr name="et_background_inset_top" format="dimension|reference" />
+        <attr name="et_background_inset_right" format="dimension|reference" />
+        <attr name="et_background_inset_bottom" format="dimension|reference" />
+
     </declare-styleable>
 </resources>

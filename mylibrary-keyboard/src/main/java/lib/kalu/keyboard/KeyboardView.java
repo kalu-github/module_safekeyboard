@@ -1,7 +1,6 @@
 package lib.kalu.keyboard;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -14,17 +13,16 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import lib.kalu.keyboard.google.GoogleKeyboard;
@@ -55,75 +53,50 @@ final class KeyboardView extends GoogleKeyboardView implements GoogleKeyboardVie
     }
 
     @Override
-    public void onPress(int primaryCode) {
-
-//        // 震动
-//        try {
-//            Vibrator vib = (Vibrator) getContext().getSystemService(Service.VIBRATOR_SERVICE);
-//            vib.vibrate(12);
-//        } catch (Exception e) {
-//        }
-
-//        // 大小写
-//        if (primaryCode == Keyboard.KEYCODE_SHIFT) {
-//            setPreviewEnabled(false);
-//        }
-//        // 删除
-//        else if (primaryCode == Keyboard.KEYCODE_DELETE) {
-//            setPreviewEnabled(false);
-//        } else if (primaryCode == 32 || primaryCode == -2 || primaryCode == 3000) {
-//            setPreviewEnabled(false);
-//        } else {
-//            setPreviewEnabled(true);
-//        }
-    }
-
-    @Override
-    public void onRelease(int primaryCode) {
-    }
-
-    @Override
     public void onKey(int primaryCode, GoogleKeyboard.Key key) {
-        LogUtil.log("CusKeyboardView -> onKey -> primaryCode = " + primaryCode + ", key.text = " + key.text + ", key.mult = " + key.mult + ", key.symbel = " + key.symbel);
+        LogUtil.log("CusKeyboardView -> onKey -> primaryCode = " + primaryCode + ", key.text = " + key.text + ", key.mult = " + key.mult + ", key.symbel = " + key.symbel + ", isSymbol = " + isSymbol());
 
         // Mulit Key
         if (null != key.mult && key.mult.length() > 0) {
-            showPopuMult(key);
+            boolean symbol = isSymbol();
+            if (symbol) {
+                input(key);
+            } else {
+                showPopupMult(key);
+            }
         }
         // 多语言
         else if (primaryCode == 410) {
-            showPopuLanguage();
+            showPopupLanguage();
         }
         // 删除
         else if (primaryCode == 111) {
-            delete();
+            if (null != mOnKeyChangeListener) {
+                mOnKeyChangeListener.onDelete();
+            }
         }
         // 大小写切换
         else if (primaryCode == 211) {
-            Toast.makeText(getContext(), "大小写切换", Toast.LENGTH_SHORT).show();
-            boolean shifted = getKeyboard().isShifted();
-            setShifted(!shifted);
+            boolean symbol = isSymbol();
+            if (!symbol) {
+                boolean shifted = isShifted();
+                setShifted(!shifted);
+            }
         }
         // 空格
         else if (primaryCode == 310) {
-            Toast.makeText(getContext(), "空格", Toast.LENGTH_SHORT).show();
             input(key);
         }
         // 邮箱后缀
         else if (primaryCode == 311) {
-            Toast.makeText(getContext(), "邮箱后缀", Toast.LENGTH_SHORT).show();
             input(key);
         }
-        // 收起键盘
+        // 特殊处理 西班牙语ñ
         else if (primaryCode == 408) {
-            Toast.makeText(getContext(), "收起键盘", Toast.LENGTH_SHORT).show();
-            if (null != mOnKeyChangeListener) {
-                mOnKeyChangeListener.onDismiss();
-            }
+            input(key);
         }
         // 切换键盘
         else if (primaryCode == 409) {
-            Toast.makeText(getContext(), "切换键盘", Toast.LENGTH_SHORT).show();
             boolean symbol = isSymbol();
             setSymbol(!symbol);
         }
@@ -139,34 +112,82 @@ final class KeyboardView extends GoogleKeyboardView implements GoogleKeyboardVie
 //        CusUtil.log("CusKeyboardView -> input -> text = " + text + ", mOnKeyChangeListener = " + mOnKeyChangeListener);
         if (null != mOnKeyChangeListener) {
             boolean symbol = isSymbol();
-            if (symbol && key.isSymbel) {
+            if (symbol && key.supportSymbel) {
                 mOnKeyChangeListener.onInput(key.symbel);
             } else {
                 boolean shifted = isShifted();
-                if (shifted && key.isUpper) {
+                if (shifted && key.supportUpper) {
                     mOnKeyChangeListener.onInput(key.text.toString().toUpperCase());
                 } else {
                     mOnKeyChangeListener.onInput(key.text);
                 }
             }
         }
-    }
 
-    /**
-     * 删除字符
-     */
-    private void delete() {
-        LogUtil.log("delete =>");
-        if (null != mOnKeyChangeListener) {
-            mOnKeyChangeListener.onDelete();
+        // 大写仅锁定一次
+        boolean shifted = isShifted();
+        if (shifted) {
+            setShifted(false);
         }
     }
 
-    private void showPopuMult(GoogleKeyboard.Key key) {
+    private void language(String languageCode) {
+        try {
+
+            if (null == languageCode)
+                throw new Exception("error: languageCode null");
+            if (languageCode.isEmpty())
+                throw new Exception("error: languageCode isEmpty");
+
+            String[] split = languageCode.split("-");
+            int length = split.length;
+            if (length > 2)
+                throw new Exception("error: split.length = " + length);
+
+            Locale targetLocale;
+            if (length == 2) {
+                targetLocale = new Locale(split[0], split[1]);
+            } else {
+                targetLocale = new Locale(split[0]);
+            }
+
+            Context baseContext = getContext();
+            Resources resources = baseContext.getResources();
+            Configuration config = new Configuration(resources.getConfiguration());
+
+            // 设置 Locale
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                config.setLocales(new LocaleList(targetLocale));
+            } else {
+                config.locale = targetLocale;
+            }
+
+            // 更新配置
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                config.densityDpi = resources.getDisplayMetrics().densityDpi;
+                baseContext = baseContext.createConfigurationContext(config);
+            } else {
+                resources.updateConfiguration(config, resources.getDisplayMetrics());
+            }
+
+            updateKeyboard(new GoogleKeyboard(baseContext, R.xml.res_keyboard_keys));
+        } catch (Exception e) {
+            LogUtil.log("KeyboardView -> language -> Exception " + e.getMessage());
+        }
+    }
+
+    private void showPopupMult(GoogleKeyboard.Key key) {
 
         try {
 
-            CharSequence mult = key.mult;
+            CharSequence mult;
+            boolean shifted = isShifted();
+            if (shifted) {
+                mult = key.multUpper;
+            } else {
+                mult = key.mult;
+            }
+
             if (null == mult)
                 throw new Exception("error: mult null");
             if (mult.length() == 0)
@@ -175,83 +196,65 @@ final class KeyboardView extends GoogleKeyboardView implements GoogleKeyboardVie
             if (split.length == 0)
                 throw new Exception("error: split.length == 0");
 
-            View inflate = LayoutInflater.from(getContext()).inflate(R.layout.res_keyboard_layout_popu_letter, null);
-            PopupWindow popupWindow = new PopupWindow(
-                    inflate, // 内容视图
-                    ViewGroup.LayoutParams.WRAP_CONTENT, // 宽度
-                    ViewGroup.LayoutParams.WRAP_CONTENT // 高度
-            );
-            // 设置背景，使点击外部可关闭弹窗
-            popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            popupWindow.setFocusable(true);
-            popupWindow.setOutsideTouchable(false);
-            // 设置动画
-//            popupWindow.setAnimationStyle(R.style.PopupAnimation);
-//                    // 1. 相对于某个锚点视图显示
-//                    popupWindow.showAsDropDown(anchorView); // 在锚点视图下方显示
-//                    // 2. 相对于某个锚点视图显示，并设置偏移量
-            /**
-             * anchor：锚定视图。
-             * xoff：X 轴偏移量（像素），正值向右偏移，负值向左偏移。
-             * yoff：Y 轴偏移量（像素），正值向下偏移，负值向上偏移。
-             * gravity：对齐方式，例如 Gravity.START | Gravity.BOTTOM。
-             */
-            int xoff = key.x - key.width + getLeft() / 3 * 2;
-            int yoff = key.y - getTop();
-//            LogUtil.log("CusKeyboardView -> showPopu -> xoff = " + xoff + ", yoff = " + yoff + ", height = " + height);
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                popupWindow.showAsDropDown(viewById, xoff, yoff, Gravity.NO_GRAVITY);
-//            }
-
-
-            popupWindow.showAtLocation((View) getParent(), Gravity.LEFT, xoff, yoff);
-
-
             int width = key.width;
             int height = key.height;
             int horizontalGap = key.hzGap;
             int verticalGap = key.vtGap;
-//            CusUtil.log("CusKeyboardView -> showPopu -> width = " + width + ", height = " + height + ", horizontalGap = " + horizontalGap + ", verticalGap = " + verticalGap);
+
+            int popuWidth = key.width * 3 + horizontalGap * 2;
+            int popuHeight = key.height * 3 + verticalGap * 2;
+            // LogUtil.log("CusKeyboardView -> showPopupMult -> popuWidth = " + popuWidth + ", popuHeight = " + popuHeight);
+            View inflate = LayoutInflater.from(getContext()).inflate(R.layout.res_keyboard_layout_popu_letter, null);
+            PopupWindow popupWindow = new PopupWindow(
+                    inflate, // 内容视图
+                    popuWidth, // 宽度
+                    popuHeight // 高度
+            );
+            // 禁用动画
+            popupWindow.setAnimationStyle(0);
+            // 设置背景，使点击外部可关闭弹窗
+            popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            popupWindow.setFocusable(true);
+            popupWindow.setOutsideTouchable(false);
+
+            int xoff = key.x - key.width - horizontalGap + getPaddingLeft();
+            int yoff = key.y + key.height * 2 + verticalGap + getPaddingTop();
+            //  LogUtil.log("CusKeyboardView -> showPopupMult -> xoff = " + xoff + ", yoff = " + yoff);
+            popupWindow.showAsDropDown(this, xoff, yoff);
+
+
             for (int i = 0; i < 5; i++) {
 
-                TextView textView;
+                int id;
                 // center
                 if (i == 0) {
-                    textView = inflate.findViewById(R.id.popu_center);
+                    id = R.id.popu_center;
                 }
                 // top
                 else if (i == 1) {
-                    textView = inflate.findViewById(R.id.popu_top);
+                    id = R.id.popu_top;
                 }
                 // left
                 else if (i == 2) {
-                    textView = inflate.findViewById(R.id.popu_left);
-//                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
-//                    layoutParams.width = width;
-//                    layoutParams.height = height;
-//                    layoutParams.setMargins(horizontalGap, 0, horizontalGap, 0);
-//                    textView.setLayoutParams(layoutParams);
+                    id = R.id.popu_left;
                 }
                 // right
                 else if (i == 3) {
-                    textView = inflate.findViewById(R.id.popu_right);
+                    id = R.id.popu_right;
                 }
                 // bottom
                 else {
-                    textView = inflate.findViewById(R.id.popu_bottom);
-//                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
-//                    layoutParams.width = width;
-//                    layoutParams.height = height;
-//                    layoutParams.setMargins(0, verticalGap, 0, 0);
-//                    textView.setLayoutParams(layoutParams);
+                    id = R.id.popu_bottom;
                 }
 
+                TextView textView = inflate.findViewById(id);
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
                 layoutParams.width = width;
                 layoutParams.height = height;
 
                 // center
                 if (i == 0) {
+                    textView.requestFocus();
                 }
                 // top
                 else if (i == 1) {
@@ -259,12 +262,15 @@ final class KeyboardView extends GoogleKeyboardView implements GoogleKeyboardVie
                 }
                 // left
                 else if (i == 2) {
+                    layoutParams.setMargins(0, 0, horizontalGap, 0);
                 }
                 // right
                 else if (i == 3) {
+                    layoutParams.setMargins(horizontalGap, 0, 0, 0);
                 }
                 // bottom
                 else {
+                    layoutParams.setMargins(0, verticalGap, 0, 0);
                 }
                 textView.setLayoutParams(layoutParams);
 
@@ -283,108 +289,52 @@ final class KeyboardView extends GoogleKeyboardView implements GoogleKeyboardVie
                                 CharSequence text = ((TextView) view).getText();
                                 mOnKeyChangeListener.onInput(text);
                             }
+                            // 大写仅锁定一次
+                            boolean shifted = isShifted();
+                            if (shifted) {
+                                setShifted(false);
+                            }
                         }
                     });
                 }
             }
-
-//                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            View viewById1 = inflate.findViewById(R.id.popu_center);
-//                            viewById1.requestFocus();
-//                            CusUtil.log("CusKeyboardView -> showPopu -> viewById1 = "+viewById1);
-//                        }
-//                    });
-            return;
-
-//            List<Keyboard.Key> keys = keyboard.getKeys();
-//            SafeKeyboardLogUtil.log("CusKeyboardView -> showPopu -> keys = " + keys);
-//            for (Keyboard.Key key : keys) {
-//
-//            }
         } catch (Exception e) {
-            LogUtil.log("KeyboardView -> showPopuMult -> Exception " + e.getMessage());
+            LogUtil.log("KeyboardView -> showPopupMult -> Exception " + e.getMessage());
         }
     }
 
-    private void showPopuLanguage() {
-        LogUtil.log("KeyboardView -> showPopuLanguage");
-
+    private void showPopupLanguage() {
         try {
 
-            Context context = getContext();
-            Resources resources = context.getResources();
-            Configuration configuration = resources.getConfiguration();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                String curLanguage = configuration.getLocales().get(0).getLanguage();
-                LogUtil.log("KeyboardView -> showPopuLanguage -> curLanguage = " + curLanguage);
-            } else {
-                String curLanguage = configuration.locale.getLanguage();
-                LogUtil.log("KeyboardView -> showPopuLanguage -> curLanguage = " + curLanguage);
-            }
+            Object tag = getTag();
+            if (null == tag)
+                throw new Exception("error: tag null");
+            ArrayList<String> list = (ArrayList<String>) tag;
+            if (null == list)
+                throw new Exception("error: list null");
+            if (list.isEmpty())
+                throw new Exception("error: list isEmpty");
+            int size = list.size();
+            if (size % 2 != 0)
+                throw new Exception("error: size % 2 != 0");
 
-            Locale aDefault = Locale.getDefault();
-            LogUtil.log("KeyboardView -> showPopuLanguage -> aDefault.language = " + aDefault.getLanguage() + ", aDefault.country = " + aDefault);
-
-            Locale[] locales = Locale.getAvailableLocales();
-            for (Locale locale : locales) {
-                if (null == locale)
-                    continue;
-                String language = locale.getLanguage();
-                String country = locale.getCountry();
-                if (country.isEmpty())
-                    continue;
-                if (language.isEmpty())
-                    continue;
-
-                LogUtil.log("KeyboardView -> showPopuLanguage -> language = " + language + ", country = " + country);
-
-                String symble = language + "-r" + country;
-                String result = getStringByLanguage(getContext(), R.string.res_keyboard_popu_language_title, symble);
-                LogUtil.log("KeyboardView -> showPopuLanguage -> result = " + result);
-
-//                // 尝试设置为当前语言
-//
-//                 testResources;
-//                try {
-//                    testResources = new Resources(assetManager, resources.getDisplayMetrics(), config);
-//                } catch (Exception e) {
-//                    continue;
-//                }
-//
-//                // 比较资源是否存在差异
-//                String testString = testResources.getString(R.string.app_name);
-//                String defaultString = resources.getString(R.string.app_name);
-//
-//                // 如果字符串不同，说明该语言有独立资源
-//                if (!testString.equals(defaultString)) {
-//                    supportedLanguages.add(locale.getLanguage());
-//                }
-            }
-
-            int width = getWidth();
-            int height = (int) (getHeight() * 1.5);
-            LogUtil.log("KeyboardView -> showPopuLanguage -> width = " + width + ", height = " + height);
+            int popuWidth = getWidth();
+            int popuHeight = getHeight();
+            LogUtil.log("KeyboardView -> showPopupLanguage -> popuWidth = " + popuWidth + ", popuHeight = " + popuHeight);
 
             View inflate = LayoutInflater.from(getContext()).inflate(R.layout.res_keyboard_layout_popu_language, null);
             PopupWindow popupWindow = new PopupWindow(
                     inflate, // 内容视图
-                    width, // 宽度
-                    height // 高度
+                    popuWidth, // 宽度
+                    popuHeight // 高度
             );
-
+            // 禁用动画
+            popupWindow.setAnimationStyle(0);
             // 必须设置背景，否则无法处理触摸事件
             popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             popupWindow.setFocusable(true);
             popupWindow.setOutsideTouchable(false);
-            popupWindow.showAtLocation((View) getParent(), Gravity.TOP, 0, 0);
-//            popupWindow.showAsDropDown((View) getParent());
-            // 设置动画
-//            popupWindow.setAnimationStyle(R.style.PopupAnimation);
-//                    // 1. 相对于某个锚点视图显示
-//                    popupWindow.showAsDropDown(anchorView); // 在锚点视图下方显示
-//                    // 2. 相对于某个锚点视图显示，并设置偏移量
+            popupWindow.showAtLocation(this, Gravity.BOTTOM, 0, 0);
 
             // 拦截返回键事件
             inflate.setOnKeyListener(new View.OnKeyListener() {
@@ -399,83 +349,41 @@ final class KeyboardView extends GoogleKeyboardView implements GoogleKeyboardVie
                 }
             });
 
+
+            String languageCode = getLanguageCode();
+            LogUtil.log("KeyboardView -> showPopupLanguage -> languageCode = " + languageCode);
+
             //
             ViewGroup viewGroup = inflate.findViewById(R.id.res_keyboard_popu_language_content);
-            List<String> list = Arrays.asList("英语", "Português (Brasil) 巴葡", "Español 西班牙语");
-            for (String s : list) {
+            for (int i = 0; i < size; i += 2) {
+
+                String name = list.get(i);
+                String code = list.get(i + 1);
+                LogUtil.log("KeyboardView -> showPopupLanguage -> i = " + i + ", name = " + name + ", code = " + code);
+
                 LayoutInflater.from(getContext()).inflate(R.layout.res_keyboard_layout_popu_language_item, viewGroup, true);
-                int indexOf = list.indexOf(s);
-                RadioButton radioButton = (RadioButton) viewGroup.getChildAt(indexOf);
-                radioButton.setText(s);
+                int index = i / 2;
+                RadioButton radioButton = (RadioButton) viewGroup.getChildAt(index);
+                if (code.equalsIgnoreCase(languageCode)) {
+                    radioButton.setChecked(true);
+                    radioButton.requestFocus();
+                } else {
+                    radioButton.setChecked(false);
+                }
+                radioButton.setText(name);
                 radioButton.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //
                         popupWindow.dismiss();
-//                        //
-
                         //
-                        Context context;
-                        if ("英语".equals(s)) {
-                            context = LanguageUtil.createLanguageContext(getContext(), "en");
-                        } else {
-                            context = LanguageUtil.createLanguageContext(getContext(), "es");
-                        }
-                        // closing();
-                        updateKeyboard(new GoogleKeyboard(context, R.xml.res_keyboard_keys));
-//                        update(context, R.xml.res_keyboard_keys);
+                        language(code);
                     }
                 });
             }
 
-            // 6. 强制PopupWindow的ContentView获取焦点
-            inflate.setFocusableInTouchMode(true);
-            inflate.requestFocus();
-
         } catch (Exception e) {
-            LogUtil.log("KeyboardView -> showPopuLanguage -> Exception " + e.getMessage());
-        }
-    }
-
-    /**
-     * 获取指定语言的字符串资源
-     *
-     * @param context  上下文
-     * @param resId    资源ID（如 R.string.hello_world）
-     * @param language 语言代码（如 "en"、"zh"、"zh-rCN"）
-     * @return 指定语言的字符串，若不存在则返回默认语言
-     */
-    private String getStringByLanguage(Context context, int resId, String language) {
-        Resources defaultResources = context.getResources();
-        AssetManager assetManager = defaultResources.getAssets();
-        Configuration config = new Configuration(defaultResources.getConfiguration());
-
-        // 解析语言代码（支持 "zh" 或 "zh-rCN" 格式）
-        Locale targetLocale;
-        if (language.contains("-")) {
-            String[] parts = language.split("-");
-            targetLocale = new Locale(parts[0], parts[1]);
-        } else {
-            targetLocale = new Locale(language);
-        }
-
-        // 设置语言环境
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            config.setLocales(new LocaleList(targetLocale));
-        } else {
-            config.locale = targetLocale;
-        }
-
-        Resources targetResources = new Resources(assetManager,
-                defaultResources.getDisplayMetrics(),
-                config);
-
-        try {
-            // 尝试获取指定语言的字符串
-            return targetResources.getString(resId);
-        } catch (Exception e) {
-            // 若不存在该语言资源，返回默认语言
-            return "null";
+            LogUtil.log("KeyboardView -> showPopupLanguage -> Exception " + e.getMessage());
         }
     }
 
@@ -492,7 +400,5 @@ final class KeyboardView extends GoogleKeyboardView implements GoogleKeyboardVie
         void onInput(CharSequence text);
 
         void onDelete();
-
-        void onDismiss();
     }
 }
